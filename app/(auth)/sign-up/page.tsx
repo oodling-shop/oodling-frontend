@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Asterisk, Eye, EyeSlash } from '@phosphor-icons/react';
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row bg-white">
@@ -32,8 +32,8 @@ export default function SignInPage() {
           className="h-full w-full"
         >
           <Image
-            src="https://images.unsplash.com/photo-1510706019500-d23a509eecd4?q=80&w=1974&auto=format&fit=crop"
-            alt="Sign In Hero"
+            src="https://images.unsplash.com/photo-1549439602-43ebca2327af?q=80&w=2070&auto=format&fit=crop"
+            alt="Sign Up Hero"
             fill
             className="object-cover object-center"
             priority
@@ -41,7 +41,7 @@ export default function SignInPage() {
         </motion.div>
       </div>
 
-      {/* Right Side: Sign In Form */}
+      {/* Right Side: Sign Up Form */}
       <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-16 lg:px-24 xl:px-40">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -58,12 +58,12 @@ export default function SignInPage() {
           </div>
 
           <h1 className="mb-3 text-[40px] font-medium leading-[44px] tracking-tight text-[#141718]">
-            Sign in
+            Sign up
           </h1>
           <p className="mb-10 text-base text-[#6C7275]">
-            Don't have an account yet?{' '}
-            <Link href="/sign-up" className="font-semibold text-[#141718] hover:underline transition-colors leading-[26px]">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/sign-in" className="font-semibold text-[#141718] hover:underline transition-colors leading-[26px]">
+              Sign in
             </Link>
           </p>
 
@@ -71,7 +71,25 @@ export default function SignInPage() {
             <div className="relative border-b border-[#E8ECEF]">
               <input
                 type="text"
-                placeholder="Your username or email"
+                placeholder="Your name"
+                required
+                className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718]"
+              />
+            </div>
+
+            <div className="relative border-b border-[#E8ECEF]">
+              <input
+                type="text"
+                placeholder="Username"
+                required
+                className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718]"
+              />
+            </div>
+
+            <div className="relative border-b border-[#E8ECEF]">
+              <input
+                type="email"
+                placeholder="Email address"
                 required
                 className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718]"
               />
@@ -93,14 +111,14 @@ export default function SignInPage() {
               </button>
             </div>
 
-            <div className="flex items-center justify-between py-1">
+            <div className="flex items-center gap-3 py-1">
               <label className="flex cursor-pointer items-center gap-3 group select-none">
                 <div className="relative flex items-center justify-center">
                   <input
                     type="checkbox"
                     className="peer sr-only"
-                    checked={rememberMe}
-                    onChange={() => setRememberMe(!rememberMe)}
+                    checked={agreed}
+                    onChange={() => setAgreed(!agreed)}
                   />
                   <div className="h-5 w-5 rounded-sm border border-[#6C7275] transition-all peer-checked:bg-[#141718] peer-checked:border-[#141718] group-hover:border-[#141718]" />
                   <svg
@@ -114,23 +132,16 @@ export default function SignInPage() {
                   </svg>
                 </div>
                 <span className="text-sm font-normal text-[#6C7275]">
-                  Remember me
+                  I agree with <Link href="/privacy" className="font-semibold text-[#141718] hover:underline">Privacy Policy</Link> and <Link href="/terms" className="font-semibold text-[#141718] hover:underline">Terms of Use</Link>
                 </span>
               </label>
-
-              <Link
-                href="/forgot-password"
-                className="text-sm font-semibold text-[#141718] hover:underline transition-colors"
-              >
-                Forgot password?
-              </Link>
             </div>
 
             <Button
               className="h-[52px] w-full bg-[#141718] text-base font-semibold text-white hover:bg-[#141718]/90 rounded-md transition-all active:scale-[0.98]"
               size="lg"
             >
-              Sign in
+              Signup
             </Button>
           </form>
         </motion.div>
