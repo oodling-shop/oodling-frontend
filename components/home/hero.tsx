@@ -81,12 +81,10 @@ export const Hero = () => {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full min-h-[85vh] flex items-center overflow-hidden bg-[#fafafa]"
+      className="relative w-full min-h-[85vh] flex items-center overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('/images/bg.png')" }}
     >
-      {/* Background Gradients - Static for now, could be animated per slide */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-100/40 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none z-0" />
-      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-red-100/40 rounded-full blur-[120px] translate-y-1/3 translate-x-1/4 pointer-events-none z-0" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-pink-100/40 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4 pointer-events-none z-0" />
+      {/* Background Image is handled via inline style on the section */}
 
       {/* Slides Container */}
       <motion.div 
