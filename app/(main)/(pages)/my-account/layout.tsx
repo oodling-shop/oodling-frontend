@@ -1,4 +1,5 @@
 import { AccountSidebar } from "@/components/my-account/sidebar";
+import { AccountHeader } from "@/components/my-account/account-header";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,9 +14,7 @@ export default function MyAccountLayout({
 }) {
   return (
     <div className="container mx-auto px-4 py-20 min-h-[60vh]">
-      <h1 className="text-4xl md:text-5xl font-medium text-center mb-16">
-        My account
-      </h1>
+      <AccountHeader />
       
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <aside className="w-full md:w-[260px] flex-shrink-0">
