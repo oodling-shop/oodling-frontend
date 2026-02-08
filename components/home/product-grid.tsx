@@ -14,7 +14,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div className="group flex flex-col gap-3">
       {/* Image Container */}
-      <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[32px] overflow-hidden flex items-center justify-center p-8">
+      <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[32px] overflow-hidden flex items-center justify-center p-4 md:p-8">
         <div className="relative w-full h-full transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3">
           <Image
             src={product.image}
@@ -27,7 +27,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       {/* Product Info */}
-      <div className="flex flex-col gap-1 px-1 mt-1">
+      <div className="flex flex-col gap-1">
         {/* Rating */}
         <div className="flex items-center gap-0.5 mb-1">
           {[...Array(5)].map((_, i) => (
@@ -69,17 +69,17 @@ export const ProductGrid = () => {
   const [activeTab, setActiveTab] = useState('Best Sellers');
 
   return (
-    <section className="py-16 md:py-24 bg-white">
+    <section className="py-12 md:py-24 bg-white">
       <Container>
         {/* Tabs */}
-        <div className="flex justify-center mb-12 sm:mb-16">
-          <div className="flex items-center gap-8 sm:gap-12">
+        <div className="flex justify-center mb-10 md:mb-16">
+          <div className="flex items-center gap-8 md:gap-12 overflow-x-auto scrollbar-none py-2">
             {TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "relative pb-2 text-base sm:text-xl transition-colors duration-300",
+                  "relative pb-2 text-lg md:text-xl transition-colors duration-300 whitespace-nowrap",
                   activeTab === tab 
                     ? "text-[#141718] font-semibold" 
                     : "text-neutral-400 hover:text-neutral-600"
@@ -95,7 +95,7 @@ export const ProductGrid = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12 mb-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-12 mb-12 md:mb-16">
           {PRODUCTS.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

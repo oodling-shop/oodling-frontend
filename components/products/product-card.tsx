@@ -18,7 +18,7 @@ export const ProductCard = ({ product, layout = 'grid' }: ProductCardProps) => {
     return (
       <Link href={href} className="group flex gap-8 py-6 border-b border-neutral-100 last:border-0 items-center">
         {/* Image Container */}
-        <div className="relative w-48 aspect-[3/4] overflow-hidden bg-[#F3F5F7] flex-shrink-0 rounded-lg">
+        <div className="relative w-48 aspect-[3/4] overflow-hidden bg-[#F3F5F7] flex-shrink-0">
           <Image
             src={product.image}
             alt={product.name}
@@ -37,7 +37,7 @@ export const ProductCard = ({ product, layout = 'grid' }: ProductCardProps) => {
                 key={i}
                 className={cn(
                   "size-4",
-                  i < product.rating ? "fill-[#FFAB00] text-[#FFAB00]" : "text-neutral-200"
+                  i < product.rating ? "fill-[#141718] text-[#141718]" : "text-neutral-300"
                 )}
               />
             ))}
@@ -77,38 +77,38 @@ export const ProductCard = ({ product, layout = 'grid' }: ProductCardProps) => {
           src={product.image}
           alt={product.name}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
       </div>
 
       {/* Product Info */}
-      <div className="flex flex-col gap-1.5 mt-1">
+      <div className="flex flex-col gap-1">
         {/* Stars */}
-        <div className="flex gap-0.5">
+        <div className="flex gap-0.5 mb-1">
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
               className={cn(
-                "size-3.5",
-                i < product.rating ? "fill-[#FFAB00] text-[#FFAB00]" : "text-neutral-200"
+                "size-4",
+                i < product.rating ? "fill-[#141718] text-[#141718]" : "text-neutral-300"
               )}
             />
           ))}
         </div>
 
         {/* Name */}
-        <h3 className="text-sm md:text-base font-semibold text-[#141718]">
+        <h3 className="text-base font-semibold text-[#141718]">
           {product.name}
         </h3>
 
         {/* Pricing */}
         <div className="flex items-center gap-2">
-          <span className="text-xs md:text-sm font-semibold text-[#141718]">
+          <span className="text-sm font-semibold text-[#141718]">
             {product.price}
           </span>
           {product.originalPrice && (
-            <span className="text-xs md:text-sm text-neutral-400 line-through">
+            <span className="text-sm text-neutral-400 line-through">
               {product.originalPrice}
             </span>
           )}
