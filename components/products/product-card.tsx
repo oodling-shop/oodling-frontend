@@ -2,15 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Star } from 'lucide-react';
 import { cn } from '@/helpers/cn';
-
-export interface Product {
-  id: number;
-  name: string;
-  image: string;
-  price: string;
-  originalPrice?: string;
-  rating: number;
-}
+import { Product } from '@/types';
 
 interface ProductCardProps {
   product: Product;

@@ -2,111 +2,13 @@
 
 import React, { useState } from 'react';
 import { Container } from '@/components/container';
-import { ProductCard, Product } from '@/components/products/product-card';
+import { ProductCard } from '@/components/products/product-card';
 import { FilterBar } from '@/components/products/filter-bar';
 import { Button } from '@/components/ui/button';
 import { FilterSidebar } from '@/components/products/filter-sidebar';
 import { ActiveFilters } from '@/components/products/active-filters';
 import { cn } from '@/helpers/cn';
-
-const MOCK_PRODUCTS: Product[] = [
-  {
-    id: 1,
-    name: 'Product Name',
-    image: '/images/folka.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: 'Product Name',
-    image: '/images/kopia.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: 'Product Name',
-    image: '/images/lola.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: 'Product Name',
-    image: '/images/categories/brown_sugar.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: 'Product Name',
-    image: '/images/categories/gold_crest.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 6,
-    name: 'Product Name',
-    image: '/images/categories/hot_slips.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 7,
-    name: 'Product Name',
-    image: '/images/categories/red_velvet.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 8,
-    name: 'Product Name',
-    image: '/images/folka.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 9,
-    name: 'Product Name',
-    image: '/images/kopia.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 10,
-    name: 'Product Name',
-    image: '/images/lola.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 11,
-    name: 'Product Name',
-    image: '/images/categories/brown_sugar.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 12,
-    name: 'Product Name',
-    image: '/images/categories/gold_crest.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-];
+import { MOCK_PRODUCTS } from '@/constants';
 
 export default function ProductsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

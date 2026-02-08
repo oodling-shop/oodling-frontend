@@ -3,34 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Container } from '../container';
-
-const PRODUCTS = [
-  {
-    id: 1,
-    name: 'Aero Dive',
-    image: '/images/shoes/aero_dive.png',
-  },
-  {
-    id: 2,
-    name: 'AirKan II',
-    image: '/images/shoes/airkan_ii.png',
-  },
-  {
-    id: 3,
-    name: 'Halo+',
-    image: '/images/shoes/halo.png',
-  },
-  {
-    id: 4,
-    name: 'Trainer Speed',
-    image: '/images/shoes/nike.png',
-  },
-  {
-    id: 5,
-    name: 'Aero Dive Pro',
-    image: '/images/shoes/aero_dive.png',
-  },
-];
+import { NEW_ARRIVALS as PRODUCTS } from '@/constants';
 
 export const NewArrivals = () => {
   return (

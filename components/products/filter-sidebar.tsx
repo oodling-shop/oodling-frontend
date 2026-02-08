@@ -10,13 +10,12 @@ import {
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/helpers/index"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { CATEGORIES } from "@/constants"
 
 interface FilterSidebarProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
-
-const CATEGORIES = ["Home & Decor", "Clothing", "Accessories", "Outdoor"]
 const COLORS = [
   { name: "Green", value: "#2DD4BF" },
   { name: "Purple", value: "#A78BFA" },

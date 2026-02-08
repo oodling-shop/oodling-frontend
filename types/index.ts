@@ -11,6 +11,15 @@ export interface Feature {
   icon?: string;
 }
 
+export interface Product {
+  id: number;
+  name: string;
+  image: string;
+  price: string;
+  originalPrice?: string;
+  rating: number;
+}
+
 export interface SiteConfig {
   name: string;
   description: string;
