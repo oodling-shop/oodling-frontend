@@ -7,6 +7,7 @@ import { useScroll } from '@/hooks/use-scroll';
 import { cn } from '@/helpers';
 import { CaretDown, MagnifyingGlass, User, ShoppingBag } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
+import { MobileMenu } from './mobile-menu';
 
 // Megamenu data - organized by columns exactly as shown in Figma
 const homepageLinks = [
@@ -78,9 +79,12 @@ export const Navbar = () => {
           : 'bg-transparent py-6'
       )}
     >
-      <Container className="flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex-shrink-0">
+      <Container className="flex items-center justify-between gap-4">
+        {/* Left: Hamburger Menu (Mobile) */}
+        <MobileMenu />
+
+        {/* Logo - Centered on mobile, left-aligned on desktop */}
+        <Link href="/" className="flex-shrink-0 md:order-none order-2">
           <Image
             src="/images/logo.png"
             alt="Nayzak Logo"
@@ -91,7 +95,7 @@ export const Navbar = () => {
           />
         </Link>
 
-        {/* Center Navigation */}
+        {/* Center Navigation - Desktop Only */}
         <div className="hidden md:flex items-center gap-8">
           {['Home', 'Shop', 'Product', 'Pages'].map((item) => (
             <div
@@ -191,8 +195,8 @@ export const Navbar = () => {
           ))}
         </div>
 
-        {/* Right Icons */}
-        <div className="flex items-center gap-6">
+        {/* Right Icons - Order 3 on mobile to appear last */}
+        <div className="flex items-center gap-4 md:gap-6 order-3">
           <button
             type="button"
             className="text-foreground hover:text-primary transition-colors"
@@ -200,14 +204,6 @@ export const Navbar = () => {
           >
             <MagnifyingGlass size={24} />
           </button>
-
-          <Link
-            href="/account"
-            className="text-foreground hover:text-primary transition-colors"
-            aria-label="Account"
-          >
-            <User size={24} />
-          </Link>
 
           <Link
             href="/cart"
@@ -218,6 +214,14 @@ export const Navbar = () => {
             <span className="absolute -top-1.5 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-[11px] font-bold text-background ring-2 ring-background">
               2
             </span>
+          </Link>
+
+          <Link
+            href="/account"
+            className="hidden md:block text-foreground hover:text-primary transition-colors"
+            aria-label="Account"
+          >
+            <User size={24} />
           </Link>
         </div>
       </Container>
