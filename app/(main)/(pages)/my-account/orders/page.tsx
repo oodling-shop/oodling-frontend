@@ -1,33 +1,58 @@
+import { Button } from "@/components/ui/button";
+
+const orders = [
+  {
+    id: "#98224",
+    date: "July 24, 2022",
+    status: "Delivered",
+    price: "$28.00",
+  },
+  {
+    id: "#98222",
+    date: "July 24, 2022",
+    status: "Delivered",
+    price: "$28.00",
+  },
+  {
+    id: "#98224",
+    date: "July 24, 2022",
+    status: "Delivered",
+    price: "$28.00",
+  },
+];
+
 export default function OrdersPage() {
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold mb-8">Orders history</h2>
-      <div className="w-full overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b border-[#E8ECEF]">
-              <th className="py-4 font-semibold text-[#6C7275] text-sm uppercase">Number</th>
-              <th className="py-4 font-semibold text-[#6C7275] text-sm uppercase">Date</th>
-              <th className="py-4 font-semibold text-[#6C7275] text-sm uppercase">Status</th>
-              <th className="py-4 font-semibold text-[#6C7275] text-sm uppercase">Price</th>
+    <div className="w-full overflow-x-auto scrollbar-none">
+      <table className="w-full text-left border-collapse min-w-[700px] md:min-w-0">
+        <tbody>
+          {orders.map((order, index) => (
+            <tr key={index} className="border-b border-[#E8ECEF]">
+              <td className="py-6 pr-4 text-[#141718] font-semibold text-base">
+                {order.id}
+              </td>
+              <td className="py-6 px-4 text-[#141718] text-base">
+                {order.date}
+              </td>
+              <td className="py-6 px-4 text-[#141718] text-base">
+                {order.status}
+              </td>
+              <td className="py-6 px-4 text-[#141718] text-base">
+                {order.price}
+              </td>
+              <td className="py-6 pl-4 text-right">
+                <Button 
+                  className="bg-[#141718] text-white hover:bg-black px-8 h-10 rounded-[6px] font-medium text-sm transition-colors"
+                >
+                  Track
+                </Button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-[#F3F5F7]">
-              <td className="py-6 text-[#141718]">#3456_768</td>
-              <td className="py-6 text-[#141718]">October 17, 2023</td>
-              <td className="py-6 text-[#141718]">Delivered</td>
-              <td className="py-6 text-[#141718]">$1,234.00</td>
-            </tr>
-            <tr className="border-b border-[#F3F5F7]">
-              <td className="py-6 text-[#141718]">#3456_987</td>
-              <td className="py-6 text-[#141718]">October 19, 2023</td>
-              <td className="py-6 text-[#141718]">Delivered</td>
-              <td className="py-6 text-[#141718]">$845.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
+
+
