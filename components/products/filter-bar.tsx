@@ -9,9 +9,17 @@ interface FilterBarProps {
   productCount: number;
   onToggleSidebar?: () => void;
   isSidebarOpen?: boolean;
+  currentView: number;
+  onViewChange: (view: number) => void;
 }
 
-export const FilterBar = ({ productCount, onToggleSidebar, isSidebarOpen = false }: FilterBarProps) => {
+export const FilterBar = ({ 
+  productCount, 
+  onToggleSidebar, 
+  isSidebarOpen = false,
+  currentView,
+  onViewChange
+}: FilterBarProps) => {
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between py-6 gap-4 border-b border-neutral-100 mb-8">
       {/* Filter Sidebar - Mobile Drawer */}
@@ -43,22 +51,42 @@ export const FilterBar = ({ productCount, onToggleSidebar, isSidebarOpen = false
         </div>
 
         {/* View Switchers */}
-        <div className="hidden lg:flex items-center border border-neutral-200 rounded-md overflow-hidden bg-white">
+        <div className="hidden lg:flex items-center border border-neutral-100 rounded-md overflow-hidden bg-white shadow-sm">
           {[5, 4, 3, 2, 1].map((cols, i) => (
             <button 
               key={cols}
+              onClick={() => onViewChange(cols)}
               className={cn(
-                "p-2.5 hover:bg-neutral-50 transition-colors",
-                i !== 4 && "border-r border-neutral-200",
-                cols === 5 && "bg-neutral-100" // Active state for the default view
+                "p-3 hover:bg-neutral-50 transition-all flex items-center justify-center min-w-[46px] h-[46px]",
+                i !== 4 && "border-r border-neutral-100",
+                currentView === cols ? "bg-[#F3F5F7]" : "bg-white"
               )}
             >
-              <div className="flex gap-0.5">
+              <div className={cn(
+                "flex gap-[3px]",
+                cols === 1 ? "flex-col" : "flex-row"
+              )}>
                 {cols === 1 ? (
-                  <div className="w-5 h-4 border-2 border-neutral-300 rounded-xs" />
+                  // List view: 2 horizontal bars
+                  <>
+                    <div className={cn(
+                      "w-4 h-[2px] rounded-full transition-colors", 
+                      currentView === cols ? "bg-[#141718]" : "bg-neutral-300"
+                    )} />
+                    <div className={cn(
+                      "w-4 h-[2px] rounded-full transition-colors", 
+                      currentView === cols ? "bg-[#141718]" : "bg-neutral-300"
+                    )} />
+                  </>
                 ) : (
                   Array.from({ length: cols }).map((_, idx) => (
-                    <div key={idx} className="w-1 h-4 bg-neutral-300 rounded-full" />
+                    <div 
+                      key={idx} 
+                      className={cn(
+                        "w-[2.5px] h-4 rounded-full transition-colors", 
+                        currentView === cols ? "bg-[#141718]" : "bg-neutral-300"
+                      )} 
+                    />
                   ))
                 )}
               </div>

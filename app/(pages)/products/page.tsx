@@ -110,6 +110,7 @@ const MOCK_PRODUCTS: Product[] = [
 
 export default function ProductsPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [view, setView] = useState(4);
 
   return (
     <main className="min-h-screen bg-white pb-20 pt-10">
@@ -130,6 +131,8 @@ export default function ProductsPage() {
               productCount={134} 
               onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
               isSidebarOpen={isSidebarOpen}
+              currentView={view}
+              onViewChange={setView}
             />
 
             {/* Active Filters */}
@@ -137,13 +140,19 @@ export default function ProductsPage() {
 
             {/* Product Grid */}
             <div className={cn(
-              "grid gap-x-6 gap-y-10 transition-all duration-300",
-              isSidebarOpen 
-                ? "grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
-                : "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+              "transition-all duration-300",
+              view === 1 ? "flex flex-col" : "grid gap-x-6 gap-y-10",
+              view === 2 ? "grid-cols-2" :
+              view === 3 ? "grid-cols-2 md:grid-cols-3" :
+              view === 4 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" :
+              view === 5 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" : ""
             )}>
               {MOCK_PRODUCTS.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  layout={view === 1 ? 'list' : 'grid'}
+                />
               ))}
             </div>
 
