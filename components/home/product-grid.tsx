@@ -14,7 +14,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div className="group flex flex-col gap-3">
       {/* Image Container */}
-      <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[32px] overflow-hidden flex items-center justify-center p-4 md:p-8">
+      <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] overflow-hidden flex items-center justify-center p-4 md:p-8">
         <div className="relative w-full h-full transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3">
           <Image
             src={product.image}

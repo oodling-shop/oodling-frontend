@@ -139,13 +139,13 @@ export const Hero = () => {
 
       {/* Navigation Controls */}
       <div className="absolute bottom-10 left-0 right-0 z-20 flex justify-center items-center gap-4">
-          <button 
+          {/* <button 
             onClick={prevSlide}
             className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-100 transition-colors bg-white/80 backdrop-blur-sm"
             aria-label="Previous slide"
           >
             <ChevronLeft className="w-6 h-6 text-neutral-700" />
-          </button>
+          </button> */}
           
           <div className="flex gap-2">
             {HERO_SLIDES.map((_, i) => (
@@ -159,14 +159,14 @@ export const Hero = () => {
               />
             ))}
           </div>
-
+{/* 
           <button 
             onClick={nextSlide}
             className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-100 transition-colors bg-white/80 backdrop-blur-sm"
              aria-label="Next slide"
           >
             <ChevronRight className="w-6 h-6 text-neutral-700" />
-          </button>
+          </button> */}
       </div>
 
     </section>
