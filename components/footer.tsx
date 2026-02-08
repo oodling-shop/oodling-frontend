@@ -24,7 +24,7 @@ const footerSections = [
       { label: 'Shipping Policy', href: '#' },
       { label: 'Returns & Refunds', href: '#' },
       { label: 'Cookies Policy', href: '#' },
-      { label: 'Frequently asked', href: '#' },
+      { label: 'Frequently asked', href: '/faq' },
     ],
   },
   {
