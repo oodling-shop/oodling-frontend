@@ -147,11 +147,12 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex gap-3">
                   {PRODUCT.colors.map((color) => (
-                    <button
+                    <Button
                       key={color.name}
+                      variant="ghost"
                       onClick={() => setSelectedColor(color.name)}
                       className={cn(
-                        "w-8 h-8 rounded-full cursor-pointer transition-all ring-offset-2 ring-2",
+                        "w-8 h-8 rounded-full cursor-pointer transition-all ring-offset-2 ring-2 p-0 hover:bg-transparent",
                         selectedColor === color.name ? "ring-[#141718]" : "ring-transparent hover:ring-neutral-200"
                       )}
                       style={{ backgroundColor: color.hex }}
@@ -169,28 +170,29 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex gap-3 flex-wrap">
                   {PRODUCT.sizes.map((size) => (
-                    <button
+                    <Button
                       key={size}
+                      variant="ghost"
                       onClick={() => setSelectedSize(size)}
                       className={cn(
-                        "min-w-12 h-10 px-4 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all",
+                        "min-w-12 h-10 px-4 flex items-center justify-center rounded-lg border text-sm font-semibold transition-all hover:bg-transparent",
                         selectedSize === size 
-                          ? "border-[#141718] bg-[#141718] text-white" 
+                          ? "border-[#141718] bg-[#141718] text-white hover:text-white" 
                           : "border-neutral-200 hover:border-[#141718] text-neutral-900"
                       )}
                     >
                       {size}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
 
               {/* Size Guide & Stock */}
               <div className="flex items-center justify-between py-2">
-                <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-opacity-70 transition-all">
+                <Button variant="ghost" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-opacity-70 transition-all h-auto p-0 hover:bg-transparent">
                   <Package size={20} weight="bold" />
                   SIZE GUIDE
-                </button>
+                </Button>
                 <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#38CB89]">
                   <Check size={18} weight="bold" />
                   ONLY 2 LEFT
@@ -202,19 +204,23 @@ export default function ProductDetailPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* Quantity */}
                 <div className="flex items-center justify-between border border-neutral-200 rounded-lg px-4 h-12 w-full sm:w-36 bg-[#F3F5F7]">
-                  <button 
+                  <Button 
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                    className="text-neutral-500 hover:text-black transition-colors"
+                    className="text-neutral-500 hover:text-black transition-colors h-auto w-auto p-0 hover:bg-transparent"
                   >
                     <Minus size={18} weight="bold" />
-                  </button>
+                  </Button>
                   <span className="font-bold text-[#141718]">{quantity}</span>
-                  <button 
+                  <Button 
+                    variant="ghost"
+                    size="icon"
                     onClick={() => setQuantity(quantity + 1)} 
-                    className="text-neutral-500 hover:text-black transition-colors"
+                    className="text-neutral-500 hover:text-black transition-colors h-auto w-auto p-0 hover:bg-transparent"
                   >
                     <Plus size={18} weight="bold" />
-                  </button>
+                  </Button>
                 </div>
 
                 {/* Add to Cart */}
@@ -225,18 +231,18 @@ export default function ProductDetailPage() {
 
               {/* Additional Actions */}
               <div className="flex items-center gap-8 py-2">
-                <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-neutral-500 transition-colors">
+                <Button variant="ghost" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-neutral-500 transition-colors h-auto p-0 hover:bg-transparent">
                   <Heart size={20} />
                   Wishlist
-                </button>
-                <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-neutral-500 transition-colors">
+                </Button>
+                <Button variant="ghost" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-neutral-500 transition-colors h-auto p-0 hover:bg-transparent">
                   <QuestionIcon size={20} />
                   Ask question
-                </button>
-                <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-neutral-500 transition-colors">
+                </Button>
+                <Button variant="ghost" className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#141718] hover:text-neutral-500 transition-colors h-auto p-0 hover:bg-transparent">
                   <ShareNetwork size={20} />
                   Share
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -349,12 +355,12 @@ export default function ProductDetailPage() {
               You might also like
             </h2>
             <div className="flex gap-3">
-              <button className="size-11 flex items-center justify-center rounded-full border border-neutral-200 hover:bg-[#F3F5F7] transition-all active:scale-90">
+              <Button variant="ghost" size="icon" className="size-11 flex items-center justify-center rounded-full border border-neutral-200 hover:bg-[#F3F5F7] transition-all active:scale-90">
                 <ArrowLeft size={24} weight="light" />
-              </button>
-              <button className="size-11 flex items-center justify-center rounded-full border border-neutral-200 hover:bg-[#F3F5F7] transition-all active:scale-90">
+              </Button>
+              <Button variant="ghost" size="icon" className="size-11 flex items-center justify-center rounded-full border border-neutral-200 hover:bg-[#F3F5F7] transition-all active:scale-90">
                 <ArrowRight size={24} weight="light" />
-              </button>
+              </Button>
             </div>
           </div>
           

@@ -7,6 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/helpers/index"
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -54,17 +55,18 @@ export const FilterSidebarContent = () => {
           <ul className="space-y-4">
             {CATEGORIES.map((category) => (
               <li key={category}>
-                <button
+                <Button
+                  variant="ghost"
                   onClick={() => setActiveCategory(category)}
                   className={cn(
-                    "text-sm transition-colors",
+                    "text-sm transition-colors h-auto p-0 hover:bg-transparent rounded-none",
                     activeCategory === category
                       ? "font-semibold text-neutral-900 underline underline-offset-[12px] decoration-2"
                       : "text-neutral-500 hover:text-neutral-900"
                   )}
                 >
                   {category}
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
@@ -77,11 +79,12 @@ export const FilterSidebarContent = () => {
           </h3>
           <div className="flex gap-4">
             {COLORS.map((color) => (
-              <button
+              <Button
                 key={color.name}
+                variant="ghost"
                 onClick={() => setActiveColor(color.name)}
                 className={cn(
-                  "size-8 rounded-full border-2 transition-all p-0.5",
+                  "size-8 rounded-full border-2 transition-all p-0.5 hover:bg-transparent",
                   activeColor === color.name ? "border-neutral-900" : "border-transparent"
                 )}
                 title={color.name}
@@ -90,7 +93,7 @@ export const FilterSidebarContent = () => {
                   className="w-full h-full rounded-full"
                   style={{ backgroundColor: color.value }}
                 />
-              </button>
+              </Button>
             ))}
           </div>
         </section>
@@ -102,18 +105,19 @@ export const FilterSidebarContent = () => {
           </h3>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {SIZES.map((size) => (
-              <button
+              <Button
                 key={size}
+                variant="ghost"
                 onClick={() => setActiveSize(size)}
                 className={cn(
-                  "h-11 flex items-center justify-center border text-sm font-medium transition-colors",
+                  "h-11 flex items-center justify-center border text-sm font-medium transition-colors hover:bg-transparent rounded-none",
                   activeSize === size
                     ? "border-neutral-900 bg-white text-neutral-900"
                     : "border-neutral-200 text-neutral-500 hover:border-neutral-900 hover:text-neutral-900"
                 )}
               >
                 {size}
-              </button>
+              </Button>
             ))}
           </div>
         </section>
@@ -146,17 +150,18 @@ export const FilterSidebarContent = () => {
             <ul className="space-y-4 max-h-[220px] overflow-y-auto pr-6 scrollbar-none">
               {STYLES.map((style) => (
                 <li key={style}>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => setActiveStyle(style)}
                     className={cn(
-                      "text-sm transition-colors",
+                      "text-sm transition-colors h-auto p-0 hover:bg-transparent rounded-none",
                       activeStyle === style
                         ? "font-semibold text-neutral-900 underline underline-offset-[12px] decoration-2"
                         : "text-neutral-500 hover:text-neutral-900"
                     )}
                   >
                     {style}
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Asterisk, Eye, EyeSlash } from '@phosphor-icons/react';
 
@@ -69,28 +70,30 @@ export default function SignInPage() {
 
           <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
             <div className="relative border-b border-[#E8ECEF]">
-              <input
+              <Input
                 type="text"
                 placeholder="Your username or email"
                 required
-                className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718]"
+                className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718] border-none shadow-none h-auto px-0 rounded-none focus-visible:ring-0"
               />
             </div>
 
             <div className="relative border-b border-[#E8ECEF]">
-              <input
+              <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 required
-                className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718]"
+                className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718] border-none shadow-none h-auto px-0 rounded-none focus-visible:ring-0"
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-[#6C7275] hover:text-[#141718]"
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-[#6C7275] hover:text-[#141718] hover:bg-transparent h-auto w-auto p-0"
               >
                 {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
-              </button>
+              </Button>
             </div>
 
             <div className="flex items-center justify-between py-1">

@@ -5,6 +5,7 @@ import { Container } from './container';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Mail, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/helpers/cn';
 
 const footerSections = [
@@ -61,9 +62,10 @@ const AccordionItem = ({
 
   return (
     <div className="border-b border-border last:border-0">
-      <button
+      <Button
+        variant="ghost"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between py-4 text-left font-semibold text-foreground transition-all hover:text-primary"
+        className="flex w-full items-center justify-between py-4 text-left font-semibold text-foreground transition-all hover:text-primary h-auto px-0 hover:bg-transparent rounded-none"
       >
         {title}
         <ChevronDown
@@ -73,7 +75,7 @@ const AccordionItem = ({
             isOpen && 'rotate-180'
           )}
         />
-      </button>
+      </Button>
       <div
         className={cn(
           'grid transition-[grid-template-rows] duration-200 ease-in-out',
@@ -168,17 +170,17 @@ export const Footer = () => {
           </p>
           
           <div className="flex items-center gap-6">
-            <button className="flex items-center gap-2 hover:text-foreground transition-colors group">
+            <Button variant="ghost" className="flex items-center gap-2 hover:text-foreground transition-colors group h-auto p-0 hover:bg-transparent">
               <span className="text-base group-hover:scale-110 transition-transform">
                 🇺🇸
               </span>
               <span>English</span>
               <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
-            </button>
-            <button className="flex items-center gap-2 hover:text-foreground transition-colors group">
+            </Button>
+            <Button variant="ghost" className="flex items-center gap-2 hover:text-foreground transition-colors group h-auto p-0 hover:bg-transparent">
               <span>USD</span>
               <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
-            </button>
+            </Button>
           </div>
         </div>
       </Container>

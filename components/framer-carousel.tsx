@@ -1,6 +1,10 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, animate } from 'motion/react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/helpers';
+
+const MotionButton = motion(Button);
 
 export const items = [
   {
@@ -81,15 +85,17 @@ export function FramerCarousel() {
         </motion.div>
 
         {/* Navigation Buttons */}
-        <motion.button
+        <MotionButton
+          variant="ghost"
+          size="icon"
           disabled={index === 0}
           onClick={() => setIndex((i) => Math.max(0, i - 1))}
-          className={`absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-10
-            ${
-              index === 0
-                ? 'bg-white/50 cursor-not-allowed'
-                : 'bg-white hover:scale-110 hover:opacity-100 opacity-70'
-            }`}
+          className={cn(
+            "absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-10",
+            index === 0
+              ? 'bg-white/50 cursor-not-allowed h-10 w-10'
+              : 'bg-white hover:scale-110 hover:opacity-100 opacity-70 h-10 w-10 hover:bg-white'
+          )}
         >
           <svg
             className='w-6 h-6'
@@ -104,19 +110,21 @@ export function FramerCarousel() {
               d='M15 19l-7-7 7-7'
             />
           </svg>
-        </motion.button>
+        </MotionButton>
 
         {/* Next Button */}
-        <motion.button
+        <MotionButton
+          variant="ghost"
+          size="icon"
           disabled={index === items.length - 1}
           aria-label="Next slide"
           onClick={() => setIndex((i) => Math.min(items.length - 1, i + 1))}
-          className={`absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-10
-            ${
-              index === items.length - 1
-                ? 'bg-white/50 cursor-not-allowed'
-                : 'bg-white hover:scale-110 hover:opacity-100 opacity-70'
-            }`}
+          className={cn(
+            "absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-transform z-10",
+            index === items.length - 1
+              ? 'bg-white/50 cursor-not-allowed h-10 w-10'
+              : 'bg-white hover:scale-110 hover:opacity-100 opacity-70 h-10 w-10 hover:bg-white'
+          )}
         >
           <svg
             className='w-6 h-6'
@@ -131,18 +139,20 @@ export function FramerCarousel() {
               d='M9 5l7 7-7 7'
             />
           </svg>
-        </motion.button>
+        </MotionButton>
         {/* Progress Indicator */}
         <div className='absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 p-2 bg-white/20 rounded-xl border border-white/30 backdrop-blur-sm'>
           {items.map((_, i) => (
-            <button
+            <Button
               key={i}
+              variant="ghost"
               onClick={() => setIndex(i)}
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === index ? 'true' : undefined}
-              className={`h-1.5 rounded-full transition-all ${
+              className={cn(
+                "h-1.5 rounded-full transition-all p-0 hover:bg-transparent min-w-0 border-none rounded-none",
                 i === index ? 'w-8 bg-white' : 'w-2 bg-white/50'
-              }`}
+              )}
             />
           ))}
         </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Container } from '../container';
 import { Mail } from 'lucide-react';
 import Image from 'next/image';
@@ -48,18 +50,19 @@ export const Newsletter = () => {
             <form className="w-full max-w-md mx-auto lg:mx-0 space-y-6" onSubmit={(e) => e.preventDefault()}>
               <div className="relative flex items-center border-b border-black/10 pb-2 group transition-all focus-within:border-black/30">
                 <Mail className="w-5 h-5 text-black/40 mr-3 group-focus-within:text-black transition-colors" />
-                <input 
+                <Input 
                   type="email" 
                   placeholder="Your email" 
-                  className="bg-transparent border-none outline-none flex-grow text-base md:text-lg text-black placeholder:text-black/40 focus:ring-0 py-1"
+                  className="bg-transparent border-none outline-none flex-grow text-base md:text-lg text-black placeholder:text-black/40 focus-visible:ring-0 py-1 shadow-none h-auto px-0 rounded-none"
                   required
                 />
-                <button 
+                <Button 
                   type="submit" 
-                  className="text-base md:text-lg font-semibold text-black hover:opacity-60 transition-opacity px-2"
+                  variant="ghost"
+                  className="text-base md:text-lg font-semibold text-black hover:opacity-60 transition-opacity px-2 h-auto hover:bg-transparent"
                 >
                   Signup
-                </button>
+                </Button>
               </div>
               
               <label className="flex items-center gap-3 cursor-pointer group select-none justify-center lg:justify-start">

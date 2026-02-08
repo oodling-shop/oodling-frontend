@@ -7,6 +7,7 @@ import { cn } from '@/helpers/cn';
 import { Star } from 'lucide-react';
 import { Product } from '@/types';
 import { PRODUCTS } from '@/constants';
+import { Button } from '@/components/ui/button';
 
 const TABS = ['Best Sellers', 'New Arrivals', 'Sale'];
 
@@ -75,11 +76,12 @@ export const ProductGrid = () => {
         <div className="flex justify-center mb-10 md:mb-16">
           <div className="flex items-center gap-8 md:gap-12 overflow-x-auto scrollbar-none py-2">
             {TABS.map((tab) => (
-              <button
+              <Button
                 key={tab}
+                variant="ghost"
                 onClick={() => setActiveTab(tab)}
                 className={cn(
-                  "relative pb-2 text-lg md:text-xl transition-colors duration-300 whitespace-nowrap",
+                  "relative pb-2 text-lg md:text-xl transition-colors duration-300 whitespace-nowrap h-auto px-0 hover:bg-transparent rounded-none",
                   activeTab === tab 
                     ? "text-[#141718] font-semibold" 
                     : "text-neutral-400 hover:text-neutral-600"
@@ -87,9 +89,9 @@ export const ProductGrid = () => {
               >
                 {tab}
                 {activeTab === tab && (
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#141718]" />
+                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#141718]" />
                 )}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -103,9 +105,9 @@ export const ProductGrid = () => {
 
         {/* Load More */}
         <div className="flex justify-center">
-          <button className="bg-[#141718] text-white px-10 py-3.5 rounded-full font-semibold text-base transition-transform duration-300 hover:scale-105 active:scale-95">
+          <Button className="bg-[#141718] text-white px-10 py-3.5 rounded-full font-semibold text-base transition-transform duration-300 hover:scale-105 active:scale-95 h-auto">
             Load More
-          </button>
+          </Button>
         </div>
       </Container>
     </section>

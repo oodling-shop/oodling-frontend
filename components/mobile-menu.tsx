@@ -22,6 +22,8 @@ import {
   TwitterLogo,
   EnvelopeSimple,
 } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/helpers';
 
 // Navigation items
@@ -43,13 +45,15 @@ export const MobileMenu = () => {
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button
+        <Button
           type="button"
-          className="md:hidden text-foreground hover:text-primary transition-colors focus:outline-none"
+          variant="ghost"
+          size="icon"
+          className="md:hidden text-foreground hover:text-primary transition-colors focus:outline-none h-auto w-auto p-0 hover:bg-transparent"
           aria-label="Menu"
         >
           <List size={24} weight="regular" />
-        </button>
+        </Button>
       </SheetTrigger>
 
       <SheetContent
@@ -72,13 +76,15 @@ export const MobileMenu = () => {
               className="h-7 w-auto object-contain"
             />
           </Link>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => setIsOpen(false)}
-            className="text-foreground hover:text-primary transition-colors focus:outline-none"
+            className="text-foreground hover:text-primary transition-colors focus:outline-none h-auto w-auto p-0 hover:bg-transparent"
             aria-label="Close menu"
           >
             <X size={24} weight="regular" />
-          </button>
+          </Button>
         </div>
 
         {/* Scrollable Content */}
@@ -86,10 +92,10 @@ export const MobileMenu = () => {
           <div className="px-6 space-y-7">
             {/* Search Bar */}
             <div className="relative mt-2">
-              <input
+              <Input
                 type="text"
                 placeholder="Search"
-                className="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-[15px] font-normal text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 transition-all"
+                className="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-[15px] font-normal text-gray-900 placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-gray-300 transition-all shadow-none"
               />
               <MagnifyingGlass
                 size={20}
@@ -102,9 +108,10 @@ export const MobileMenu = () => {
             <nav className="space-y-0">
               {navItems.map((item) => (
                 <div key={item.label} className="border-b border-gray-100 last:border-b-0">
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => item.hasDropdown && toggleExpanded(item.label)}
-                    className="w-full flex items-center justify-between py-4 text-left group"
+                    className="w-full flex items-center justify-between py-4 text-left group h-auto px-0 hover:bg-transparent rounded-none"
                   >
                     <span className="text-base font-medium text-gray-900 group-hover:text-black transition-colors">
                       {item.label}
@@ -119,7 +126,7 @@ export const MobileMenu = () => {
                         )}
                       />
                     )}
-                  </button>
+                  </Button>
                 </div>
               ))}
             </nav>
@@ -160,27 +167,27 @@ export const MobileMenu = () => {
               {/* Currency Selector */}
               <div className="flex items-center justify-between py-3">
                 <span className="text-base font-normal text-gray-400">Currency</span>
-                <button className="flex items-center gap-2 text-base font-semibold text-gray-900">
+                <Button variant="ghost" className="flex items-center gap-2 text-base font-semibold text-gray-900 h-auto p-0 hover:bg-transparent">
                   USD
                   <CaretDown size={14} weight="bold" />
-                </button>
+                </Button>
               </div>
 
               {/* Language Selector */}
               <div className="flex items-center justify-between py-3">
                 <span className="text-base font-normal text-gray-400">Language</span>
-                <button className="flex items-center gap-2 text-base font-semibold text-gray-900">
+                <Button variant="ghost" className="flex items-center gap-2 text-base font-semibold text-gray-900 h-auto p-0 hover:bg-transparent">
                   English
                   <CaretDown size={14} weight="bold" />
-                </button>
+                </Button>
               </div>
             </div>
 
             {/* Sign In Button */}
             <div className="pt-2">
-              <button className="w-full h-12 bg-gray-950 text-white text-base font-semibold rounded-lg hover:bg-gray-800 transition-colors active:scale-[0.98]">
+              <Button className="w-full h-12 bg-gray-950 text-white text-base font-semibold rounded-lg hover:bg-gray-800 transition-colors active:scale-[0.98]">
                 Sign in
-              </button>
+              </Button>
             </div>
 
             {/* Social Media Icons */}

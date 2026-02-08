@@ -8,6 +8,7 @@ import { cn } from '@/helpers';
 import { CaretDown, MagnifyingGlass, User, ShoppingBag } from '@phosphor-icons/react';
 import { useState, useEffect } from 'react';
 import { MobileMenu } from './mobile-menu';
+import { Button } from '@/components/ui/button';
 
 // Megamenu data - organized by columns exactly as shown in Figma
 const homepageLinks = [
@@ -197,13 +198,15 @@ export const Navbar = () => {
 
         {/* Right Icons - Order 3 on mobile to appear last */}
         <div className="flex items-center gap-4 md:gap-6 order-3">
-          <button
+          <Button
             type="button"
-            className="text-foreground hover:text-primary transition-colors"
+            variant="ghost"
+            size="icon"
+            className="text-foreground hover:text-primary transition-colors h-auto w-auto p-0 hover:bg-transparent"
             aria-label="Search"
           >
             <MagnifyingGlass size={24} />
-          </button>
+          </Button>
 
           <Link
             href="/cart"

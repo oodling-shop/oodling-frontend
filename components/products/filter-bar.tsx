@@ -4,6 +4,7 @@ import React from 'react';
 import { SlidersHorizontal, ChevronDown } from 'lucide-react';
 import { cn } from '@/helpers/cn';
 import { FilterSidebar } from './filter-sidebar';
+import { Button } from '@/components/ui/button';
 
 interface FilterBarProps {
   productCount: number;
@@ -37,27 +38,29 @@ export const FilterBar = ({
       <div className="flex items-center justify-between md:justify-end gap-6 md:gap-8 order-1 md:order-2">
         {/* Filter & Sort */}
         <div className="flex items-center gap-6">
-          <button 
+          <Button 
+            variant="ghost"
             onClick={onToggleSidebar}
-            className="flex items-center gap-2 text-sm font-semibold hover:text-neutral-600 transition-colors"
+            className="flex items-center gap-2 text-sm font-semibold hover:text-neutral-600 transition-colors h-auto p-0 hover:bg-transparent"
           >
             Filter
             <SlidersHorizontal className="size-4" />
-          </button>
-          <button className="flex items-center gap-1.5 text-sm font-semibold hover:text-neutral-600 transition-colors">
+          </Button>
+          <Button variant="ghost" className="flex items-center gap-1.5 text-sm font-semibold hover:text-neutral-600 transition-colors h-auto p-0 hover:bg-transparent">
             Sort by
             <ChevronDown className="size-4" />
-          </button>
+          </Button>
         </div>
 
         {/* View Switchers */}
         <div className="hidden lg:flex items-center border border-neutral-100 rounded-md overflow-hidden bg-white shadow-sm">
           {[5, 4, 3, 2, 1].map((cols, i) => (
-            <button 
+            <Button 
               key={cols}
+              variant="ghost"
               onClick={() => onViewChange(cols)}
               className={cn(
-                "p-3 hover:bg-neutral-50 transition-all flex items-center justify-center min-w-[46px] h-[46px]",
+                "p-3 hover:bg-neutral-50 transition-all flex items-center justify-center min-w-[46px] h-[46px] rounded-none",
                 i !== 4 && "border-r border-neutral-100",
                 currentView === cols ? "bg-[#F3F5F7]" : "bg-white"
               )}
@@ -90,7 +93,7 @@ export const FilterBar = ({
                   ))
                 )}
               </div>
-            </button>
+            </Button>
           ))}
         </div>
       </div>
