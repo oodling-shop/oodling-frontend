@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/helpers/index"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 interface FilterSidebarProps {
   open: boolean
@@ -171,7 +172,10 @@ export const FilterSidebarContent = () => {
   )
 }
 
+
 export const FilterSidebar = ({ open, onOpenChange, inline = false }: FilterSidebarProps & { inline?: boolean }) => {
+  const isDesktop = useMediaQuery("(min-width: 1024px)")
+
   if (inline) {
     return (
       <aside className="hidden lg:block w-[300px] flex-shrink-0 border-r border-neutral-100 min-h-screen">
@@ -181,7 +185,7 @@ export const FilterSidebar = ({ open, onOpenChange, inline = false }: FilterSide
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={!isDesktop && open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[320px] sm:w-[350px] p-0 overflow-y-auto lg:hidden">
         <FilterSidebarContent />
       </SheetContent>
