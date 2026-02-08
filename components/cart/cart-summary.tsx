@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/helpers';
 
@@ -71,8 +72,10 @@ export const CartSummary = ({ subtotal }: CartSummaryProps) => {
         </div>
       </div>
 
-      <Button className="w-full mt-10 h-14 text-base font-bold bg-slate-950 text-white rounded-xl hover:bg-slate-800 transition-all shadow-[0_10px_20px_-5px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_30px_-5px_rgba(0,0,0,0.4)] active:scale-[0.98] mt-auto">
-        Checkout
+      <Button asChild className="w-full mt-10 h-14 text-base font-bold bg-slate-950 text-white rounded-xl hover:bg-slate-800 transition-all shadow-[0_10px_20px_-5px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_30px_-5px_rgba(0,0,0,0.4)] active:scale-[0.98] mt-auto">
+        <Link href="/checkout">
+          Checkout
+        </Link>
       </Button>
       
       <p className="text-center text-xs text-slate-400 mt-6 px-4">
