@@ -5,6 +5,7 @@ import NewArrivals from '@/components/home/new-arrivals';
 import ProductGrid from '@/components/home/product-grid';
 import Features from '@/components/home/features';
 import Newsletter from '@/components/home/newsletter';
+import FeaturedProduct from '@/components/home/featured-product';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Categories />
       <Collections />
       <NewArrivals />
+      <FeaturedProduct />
       <ProductGrid />
       <Newsletter />
       <Features />
