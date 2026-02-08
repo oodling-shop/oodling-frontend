@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Star } from 'lucide-react';
 import { cn } from '@/helpers/cn';
 import { Product } from '@/types';
@@ -10,9 +11,12 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, layout = 'grid' }: ProductCardProps) => {
+  const slug = product.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+  const href = `/products/${slug}`;
+
   if (layout === 'list') {
     return (
-      <div className="group flex gap-8 py-6 border-b border-neutral-100 last:border-0 items-center">
+      <Link href={href} className="group flex gap-8 py-6 border-b border-neutral-100 last:border-0 items-center">
         {/* Image Container */}
         <div className="relative w-48 aspect-[3/4] overflow-hidden bg-[#F3F5F7] flex-shrink-0 rounded-lg">
           <Image
@@ -61,12 +65,12 @@ export const ProductCard = ({ product, layout = 'grid' }: ProductCardProps) => {
             High-quality product crafted with precision and care, perfect for your daily needs and style.
           </p>
         </div>
-      </div>
+      </Link>
     );
   }
 
   return (
-    <div className="group flex flex-col gap-3">
+    <Link href={href} className="group flex flex-col gap-3">
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-[#F3F5F7]">
         <Image
@@ -110,6 +114,7 @@ export const ProductCard = ({ product, layout = 'grid' }: ProductCardProps) => {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
+
