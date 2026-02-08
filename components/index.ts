@@ -6,6 +6,7 @@ export { Categories } from './home/categories';
 export { Newsletter } from './home/newsletter';
 export { NewArrivals } from './home/new-arrivals';
 export { Features } from './home/features';
+export { Collections } from './home/collections';
 
 // Re-export Shadcn UI components
 export { Button, buttonVariants } from './ui/button';
