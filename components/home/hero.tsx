@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Container } from '../container';
+import { FramerCarousel } from '../framer-carousel';
 
 export const Hero = () => {
   return (
@@ -36,28 +36,11 @@ export const Hero = () => {
           </Link>
         </div>
 
-        {/* Right Content - Hero Image */}
-        <div className="relative w-full aspect-square flex items-center justify-center">
-          {/* Main Shoe Image */}
-          <div className="relative w-full max-w-[600px] aspect-[4/3]">
-             <Image
-              src="/images/hero_img.png"
-              alt="AirNags Shoe"
-              fill
-              className="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700 ease-out"
-              priority
-              quality={100}
-            />
-          </div>
+        {/* Right Content - Framer Carousel */}
+        <div className="relative w-full aspect-square flex items-center justify-center max-w-[600px] mx-auto lg:mx-0">
+          <FramerCarousel />
         </div>
-
-        {/* Pagination Dots - Absolute Bottom Center */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
-          <button className="w-8 h-1.5 rounded-full bg-white shadow-sm transition-all hover:bg-white/90" aria-label="Go to slide 1" />
-          <button className="w-2 h-2 rounded-full bg-white/50 transition-all hover:bg-white/80" aria-label="Go to slide 2" />
-          <button className="w-2 h-2 rounded-full bg-white/50 transition-all hover:bg-white/80" aria-label="Go to slide 3" />
-        </div>
-
+        
       </Container>
     </section>
   );
