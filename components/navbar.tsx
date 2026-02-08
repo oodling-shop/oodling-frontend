@@ -220,7 +220,7 @@ export const Navbar = () => {
           </Link>
 
           <Link
-            href="/account"
+            href="/my-account"
             className="hidden md:block text-foreground hover:text-primary transition-colors"
             aria-label="Account"
           >
