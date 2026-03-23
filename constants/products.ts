@@ -67,42 +67,6 @@ export const PRODUCTS: MockProduct[] = [
   },
 ];
 
-export const MOCK_PRODUCTS: MockProduct[] = [
-  ...PRODUCTS,
-  {
-    id: 9,
-    name: 'Nike Air Max',
-    image: '/images/folka.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 10,
-    name: 'Nike Kopia',
-    image: '/images/kopia.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 11,
-    name: 'Nike Lola',
-    image: '/images/lola.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-  {
-    id: 12,
-    name: 'Brown Sugar',
-    image: '/images/categories/brown_sugar.png',
-    price: '$56.00',
-    originalPrice: '$130.00',
-    rating: 5,
-  },
-];
-
 export const NEW_ARRIVALS = [
   {
     id: 1,
