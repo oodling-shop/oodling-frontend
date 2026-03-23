@@ -49,10 +49,11 @@ export default function ProductsPage() {
               view === 4 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4" :
               view === 5 ? "grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" : ""
             )}>
-              {MOCK_PRODUCTS.map((product) => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {(MOCK_PRODUCTS as any[]).map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
                   layout={view === 1 ? 'list' : 'grid'}
                 />
               ))}

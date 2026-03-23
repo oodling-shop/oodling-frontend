@@ -365,7 +365,8 @@ export default function ProductDetailPage() {
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {MOCK_PRODUCTS.slice(0, 4).map((product) => (
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {(MOCK_PRODUCTS.slice(0, 4) as any[]).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

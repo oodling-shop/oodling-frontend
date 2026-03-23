@@ -11,7 +11,7 @@ export interface Feature {
   icon?: string;
 }
 
-export interface Product {
+export interface MockProduct {
   id: number;
   name: string;
   image: string;

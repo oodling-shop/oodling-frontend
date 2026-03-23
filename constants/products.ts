@@ -1,6 +1,6 @@
-import { Product } from "@/types";
+import { MockProduct } from "@/types";
 
-export const PRODUCTS: Product[] = [
+export const PRODUCTS: MockProduct[] = [
   {
     id: 1,
     name: 'AirForce One',
@@ -67,7 +67,7 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-export const MOCK_PRODUCTS: Product[] = [
+export const MOCK_PRODUCTS: MockProduct[] = [
   ...PRODUCTS,
   {
     id: 9,

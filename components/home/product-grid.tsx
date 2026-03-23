@@ -5,13 +5,13 @@ import Image from 'next/image';
 import { Container } from '../container';
 import { cn } from '@/helpers/cn';
 import { Star } from 'lucide-react';
-import { Product } from '@/types';
+import { MockProduct } from '@/types';
 import { PRODUCTS } from '@/constants';
 import { Button } from '@/components/ui/button';
 
 const TABS = ['Best Sellers', 'New Arrivals', 'Sale'];
 
-const ProductCard = ({ product }: { product: Product }) => {
+const ProductCard = ({ product }: { product: MockProduct }) => {
   return (
     <div className="group flex flex-col gap-3">
       {/* Image Container */}
