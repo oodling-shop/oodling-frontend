@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getProduct } from '@/lib/shopify/products';
+import { AddToCartButton } from './_components/add-to-cart-button';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -51,17 +52,5 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
       </div>
     </main>
-  );
-}
-
-// Inline placeholder — will be wired to cart in Task 19
-function AddToCartButton({ variantId }: { variantId: string }) {
-  return (
-    <button
-      data-variant-id={variantId}
-      className="h-14 w-full bg-[#141718] text-white font-semibold rounded-lg hover:bg-[#141718]/90 transition-all active:scale-[0.98]"
-    >
-      Add to cart
-    </button>
   );
 }
