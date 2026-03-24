@@ -1,4 +1,5 @@
-import { Button, Input } from "@/components";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function AdminLoginPage() {
   return (
@@ -11,7 +12,7 @@ export default function AdminLoginPage() {
             <Input 
               type="email" 
               className="w-full h-10 rounded-md border border-input bg-background px-3 focus-visible:ring-2 focus-visible:ring-primary-500 shadow-none ring-0"
-              placeholder="admin@nayzak.com"
+              placeholder="admin@oodling.com"
             />
           </div>
           <div>

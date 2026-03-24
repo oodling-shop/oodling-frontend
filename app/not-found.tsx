@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { CartProvider } from "@/providers/cart-provider";
 
 export default function NotFound() {
   return (
-    <>
+    <CartProvider>
       <Navbar />
       <main className="pt-16 min-h-screen flex flex-col">
         <div className="flex-grow flex flex-col items-center justify-center px-4 text-center py-20">
@@ -79,6 +80,6 @@ export default function NotFound() {
         </div>
         <Footer />
       </main>
-    </>
+    </CartProvider>
   );
 }

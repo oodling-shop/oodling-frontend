@@ -1,11 +1,11 @@
 export const siteConfig = {
-  name: 'Nayzak',
+  name: 'Oodling',
   description: 'Premium Next.js Frontend Framework',
-  url: 'https://nayzak.com',
-  ogImage: 'https://nayzak.com/og.jpg',
+  url: 'https://oodling.com',
+  ogImage: 'https://oodling.com/og.jpg',
   links: {
-    twitter: 'https://twitter.com/nayzak',
-    github: 'https://github.com/nayzak',
+    twitter: 'https://twitter.com/oodling',
+    github: 'https://github.com/oodling',
   },
   mainNav: [
     {

@@ -1,4 +1,4 @@
-import { Container } from "@/components";
+import { Container } from "@/components/container";
 
 export default function AboutUsPage() {
   return (
