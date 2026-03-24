@@ -7,10 +7,35 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { Asterisk, Eye, EyeSlash } from '@phosphor-icons/react';
+import { useRouter } from 'next/navigation';
+import { register } from '@/lib/shopify/customer';
 
 export default function SignUpPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [agreed, setAgreed] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+    const fd = new FormData(e.currentTarget);
+    const result = await register(
+      fd.get('firstName') as string,
+      fd.get('lastName') as string,
+      fd.get('email') as string,
+      fd.get('password') as string,
+    );
+    if (result.error) {
+      setError(result.error);
+      setIsLoading(false);
+    } else {
+      router.push('/my-account');
+      router.refresh();
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row bg-white">
@@ -68,11 +93,12 @@ export default function SignUpPage() {
             </Link>
           </p>
 
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="relative border-b border-[#E8ECEF]">
               <Input
+                name="firstName"
                 type="text"
-                placeholder="Your name"
+                placeholder="First name"
                 required
                 className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718] border-none shadow-none h-auto px-0 rounded-none focus-visible:ring-0"
               />
@@ -80,8 +106,9 @@ export default function SignUpPage() {
 
             <div className="relative border-b border-[#E8ECEF]">
               <Input
+                name="lastName"
                 type="text"
-                placeholder="Username"
+                placeholder="Last name"
                 required
                 className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718] border-none shadow-none h-auto px-0 rounded-none focus-visible:ring-0"
               />
@@ -89,6 +116,7 @@ export default function SignUpPage() {
 
             <div className="relative border-b border-[#E8ECEF]">
               <Input
+                name="email"
                 type="email"
                 placeholder="Email address"
                 required
@@ -98,6 +126,7 @@ export default function SignUpPage() {
 
             <div className="relative border-b border-[#E8ECEF]">
               <Input
+                name="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 required
@@ -113,6 +142,8 @@ export default function SignUpPage() {
                 {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
               </Button>
             </div>
+
+            {error && <p className="text-red-600 text-sm">{error}</p>}
 
             <div className="flex items-center gap-3 py-1">
               <label className="flex cursor-pointer items-center gap-3 group select-none">
@@ -141,10 +172,12 @@ export default function SignUpPage() {
             </div>
 
             <Button
-              className="h-[52px] w-full bg-[#141718] text-base font-semibold text-white hover:bg-[#141718]/90 rounded-md transition-all active:scale-[0.98]"
+              type="submit"
+              disabled={isLoading}
+              className="h-[52px] w-full bg-[#141718] text-base font-semibold text-white hover:bg-[#141718]/90 rounded-md transition-all active:scale-[0.98] disabled:opacity-60"
               size="lg"
             >
-              Signup
+              {isLoading ? 'Creating account...' : 'Sign up'}
             </Button>
           </form>
         </motion.div>
