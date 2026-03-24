@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { CartProvider } from "@/providers/cart-provider";
 
 export default function MainLayout({
   children,
@@ -7,7 +8,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <CartProvider>
       <Navbar />
       <div className="pt-16 min-h-screen flex flex-col">
         <div className="flex-grow">
@@ -15,6 +16,6 @@ export default function MainLayout({
         </div>
         <Footer />
       </div>
-    </>
+    </CartProvider>
   );
 }
