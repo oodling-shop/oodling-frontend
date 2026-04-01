@@ -122,3 +122,14 @@ export const ORDER_FRAGMENT = `
     }
   }
 `
+
+export const COLLECTION_FRAGMENT = `
+  fragment CollectionFields on Collection {
+    handle
+    title
+    image {
+      url
+      altText
+    }
+  }
+`

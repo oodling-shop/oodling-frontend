@@ -91,3 +91,9 @@ export type ShopifyUserError = {
   field: string[] | null
   message: string
 }
+
+export type ShopifyCollection = {
+  handle: string
+  title: string
+  image: { url: string; altText: string } | null
+}
