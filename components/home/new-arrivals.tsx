@@ -3,9 +3,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Container } from '../container';
-import { NEW_ARRIVALS as PRODUCTS } from '@/constants';
+import type { ShopifyProduct } from '@/lib/shopify/types';
 
-export const NewArrivals = () => {
+export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -64,29 +64,31 @@ export const NewArrivals = () => {
             onMouseLeave={() => setIsHovered(false)}
             className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth"
           >
-            {PRODUCTS.map((product) => (
-              <div 
-                key={product.id} 
+            {products.map((product) => (
+              <div
+                key={product.id}
                 className="flex-none w-[280px] md:w-[325px] snap-start"
               >
                 <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] p-8 flex flex-col items-center justify-center group cursor-pointer transition-all duration-300 hover:shadow-lg">
-                  
+
                   {/* Shoe Image */}
                   <div className="relative w-full h-[60%] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      className="object-contain"
-                      priority
-                    />
+                    {product.images.edges[0]?.node && (
+                      <Image
+                        src={product.images.edges[0].node.url}
+                        alt={product.images.edges[0].node.altText || product.title}
+                        fill
+                        className="object-contain"
+                        priority
+                      />
+                    )}
                   </div>
 
                   {/* Product Pill Button */}
                   <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-fit max-w-[90%]">
                     <div className="bg-white rounded-full px-8 py-3 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:px-10">
                       <span className="text-sm font-semibold text-[#141718] whitespace-nowrap">
-                        {product.name}
+                        {product.title}
                       </span>
                     </div>
                   </div>
