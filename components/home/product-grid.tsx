@@ -2,34 +2,44 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Container } from '../container';
 import { cn } from '@/helpers/cn';
 import { Star } from 'lucide-react';
-import { MockProduct } from '@/types';
-import { PRODUCTS } from '@/constants';
 import { Button } from '@/components/ui/button';
+import type { ShopifyProduct } from '@/lib/shopify/types';
 
-const TABS = ['Best Sellers', 'New Arrivals', 'Sale'];
+const TABS = ['Best Sellers', 'New Arrivals', 'Sale'] as const;
 
-const ProductCard = ({ product }: { product: MockProduct }) => {
+type Tab = typeof TABS[number];
+
+type Props = {
+  bestSellers: ShopifyProduct[]
+  newArrivals: ShopifyProduct[]
+  sale: ShopifyProduct[]
+}
+
+const ProductCard = ({ product }: { product: ShopifyProduct }) => {
+  const image = product.images.edges[0]?.node
+  const price = parseFloat(product.priceRange.minVariantPrice.amount)
+  const currency = product.priceRange.minVariantPrice.currencyCode
+
   return (
-    <div className="group flex flex-col gap-3">
-      {/* Image Container */}
+    <Link href={`/products/${product.handle}`} className="group flex flex-col gap-3">
       <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] overflow-hidden flex items-center justify-center p-4 md:p-8">
         <div className="relative w-full h-full transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-contain"
-            priority
-          />
+          {image && (
+            <Image
+              src={image.url}
+              alt={image.altText || product.title}
+              fill
+              className="object-contain"
+              priority
+            />
+          )}
         </div>
       </div>
-
-      {/* Product Info */}
       <div className="flex flex-col gap-1">
-        {/* Rating */}
         <div className="flex items-center gap-0.5 mb-1">
           {[...Array(5)].map((_, i) => (
             <Star
@@ -37,42 +47,38 @@ const ProductCard = ({ product }: { product: MockProduct }) => {
               size={16}
               className={cn(
                 "transition-colors duration-300",
-                i < product.rating 
-                  ? "fill-[#141718] text-[#141718]" 
-                  : "text-neutral-300"
+                i < 5 ? "fill-[#141718] text-[#141718]" : "text-neutral-300"
               )}
             />
           ))}
         </div>
-
-        {/* Name */}
         <h3 className="text-base font-semibold text-[#141718] leading-tight">
-          {product.name}
+          {product.title}
         </h3>
-
-        {/* Price */}
         <div className="flex items-center gap-2">
           <span className="text-base font-semibold text-[#141718]">
-            {product.price}
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price)}
           </span>
-          {product.originalPrice && (
-            <span className="text-base text-neutral-400 font-medium line-through decoration-1">
-              {product.originalPrice}
-            </span>
-          )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
-export const ProductGrid = () => {
-  const [activeTab, setActiveTab] = useState('Best Sellers');
+export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
+  const [activeTab, setActiveTab] = useState<Tab>('Best Sellers');
+
+  const tabProducts: Record<Tab, ShopifyProduct[]> = {
+    'Best Sellers': bestSellers,
+    'New Arrivals': newArrivals,
+    'Sale': sale,
+  }
+
+  const products = tabProducts[activeTab]
 
   return (
     <section className="py-12 md:py-24 bg-white">
       <Container>
-        {/* Tabs */}
         <div className="flex justify-center mb-10 md:mb-16">
           <div className="flex items-center gap-8 md:gap-12 overflow-x-auto scrollbar-none py-2">
             {TABS.map((tab) => (
@@ -82,28 +88,30 @@ export const ProductGrid = () => {
                 onClick={() => setActiveTab(tab)}
                 className={cn(
                   "relative pb-2 text-lg md:text-xl transition-colors duration-300 whitespace-nowrap h-auto px-0 hover:bg-transparent rounded-none",
-                  activeTab === tab 
-                    ? "text-[#141718] font-semibold" 
+                  activeTab === tab
+                    ? "text-[#141718] font-semibold"
                     : "text-neutral-400 hover:text-neutral-600"
                 )}
               >
                 {tab}
                 {activeTab === tab && (
-                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#141718]" />
+                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#141718]" />
                 )}
               </Button>
             ))}
           </div>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-12 mb-12 md:mb-16">
-          {PRODUCTS.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-12 mb-12 md:mb-16">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-neutral-400 py-16">No products found.</p>
+        )}
 
-        {/* Load More */}
         <div className="flex justify-center">
           <Button className="bg-[#141718] text-white px-10 py-3.5 rounded-full font-semibold text-base transition-transform duration-300 hover:scale-105 active:scale-95 h-auto">
             Load More
