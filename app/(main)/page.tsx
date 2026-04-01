@@ -6,16 +6,61 @@ import ProductGrid from '@/components/home/product-grid';
 import Features from '@/components/home/features';
 import Newsletter from '@/components/home/newsletter';
 import FeaturedProduct from '@/components/home/featured-product';
+import { getProducts } from '@/lib/shopify/products';
+import { getCollectionByHandle } from '@/lib/shopify/collections';
+import type { ShopifyProduct, ShopifyCollection } from '@/lib/shopify/types';
 
-export default function Home() {
+export default async function Home() {
+  let bestSellers: ShopifyProduct[] = []
+  let newArrivals: ShopifyProduct[] = []
+  let saleProducts: ShopifyProduct[] = []
+  let collectionItems: ShopifyCollection[] = []
+  let categoryItems: ShopifyCollection[] = []
+
+  try {
+    const [
+      bestSellerConn,
+      newArrivalConn,
+      saleConn,
+      kopla,
+      lola,
+      folka,
+      pinkPanther,
+      goldCrest,
+      hotLips,
+      brownSugar,
+      redVelvet,
+    ] = await Promise.all([
+      getProducts({ first: 8, sortKey: 'BEST_SELLING' }),
+      getProducts({ first: 8, sortKey: 'CREATED_AT', reverse: true }),
+      getProducts({ first: 8, query: 'tag:sale' }),
+      getCollectionByHandle('kopla'),
+      getCollectionByHandle('lola'),
+      getCollectionByHandle('folka'),
+      getCollectionByHandle('pink-panther'),
+      getCollectionByHandle('gold-crest'),
+      getCollectionByHandle('hot-lips'),
+      getCollectionByHandle('brown-sugar'),
+      getCollectionByHandle('red-velvet'),
+    ])
+
+    bestSellers = bestSellerConn.edges.map(e => e.node)
+    newArrivals = newArrivalConn.edges.map(e => e.node)
+    saleProducts = saleConn.edges.map(e => e.node)
+    collectionItems = [kopla, lola, folka].filter((c): c is ShopifyCollection => c !== null)
+    categoryItems = [pinkPanther, goldCrest, hotLips, brownSugar, redVelvet].filter((c): c is ShopifyCollection => c !== null)
+  } catch (err) {
+    console.error('Home page data fetch failed:', err)
+  }
+
   return (
     <main className="min-h-screen">
       <Hero />
-      <Categories />
-      <Collections />
-      <NewArrivals />
+      <Categories categories={categoryItems} />
+      <Collections collections={collectionItems} />
+      <NewArrivals products={newArrivals} />
       <FeaturedProduct />
-      <ProductGrid />
+      <ProductGrid bestSellers={bestSellers} newArrivals={newArrivals} sale={saleProducts} />
       <Newsletter />
       <Features />
     </main>
