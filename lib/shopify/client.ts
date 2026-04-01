@@ -4,6 +4,7 @@ type ShopifyFetchOptions = {
   query: string
   variables?: Record<string, unknown>
   cache?: RequestCache
+  next?: NextFetchRequestConfig
   token?: string
 }
 
@@ -21,7 +22,8 @@ export class ShopifyError extends Error {
 export async function shopifyFetch<T>({
   query,
   variables,
-  cache = 'no-store',
+  cache,
+  next,
   token,
 }: ShopifyFetchOptions): Promise<T> {
   const domain = process.env.SHOPIFY_STORE_DOMAIN
@@ -51,7 +53,8 @@ export async function shopifyFetch<T>({
       method: 'POST',
       headers,
       body: JSON.stringify({ query, variables }),
-      cache,
+      ...(cache ? { cache } : {}),
+      next,
     })
   } catch (err) {
     throw new ShopifyError(`Network request failed: ${err}`, 'network')

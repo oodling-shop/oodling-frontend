@@ -67,6 +67,7 @@ export async function login(
       }
     `,
     variables: { input: { email, password } },
+    cache: 'no-store',
   });
 
   const { customerAccessToken, customerUserErrors } = data.customerAccessTokenCreate;
@@ -97,6 +98,7 @@ export async function logout(): Promise<void> {
           }
         `,
         variables: { customerAccessToken: token },
+        cache: 'no-store',
       });
     } catch {
       // Ignore errors — clear cookies regardless
@@ -133,6 +135,7 @@ export async function register(
       }
     `,
     variables: { input: { firstName, lastName, email, password } },
+    cache: 'no-store',
   });
 
   const { customer, customerUserErrors } = data.customerCreate;
@@ -167,6 +170,7 @@ export async function renewCustomerToken(token: string): Promise<void> {
       }
     `,
     variables: { customerAccessToken: token },
+    cache: 'no-store',
   });
 
   const renewed = data.customerAccessTokenRenew.customerAccessToken;
@@ -207,6 +211,7 @@ export async function getCustomer(token: string): Promise<ShopifyCustomer | null
       }
     `,
     token,
+    cache: 'no-store',
   });
 
   return data.customer;
@@ -234,6 +239,7 @@ export async function updateCustomer(
     `,
     variables: { customerAccessToken: token, customer: input },
     token,
+    cache: 'no-store',
   });
 
   const { customerUserErrors } = data.customerUpdate;
@@ -267,6 +273,7 @@ export async function getOrders(token: string): Promise<ShopifyOrder[]> {
       }
     `,
     token,
+    cache: 'no-store',
   });
 
   return data.customer?.orders.edges.map((e) => e.node) ?? [];
@@ -295,6 +302,7 @@ export async function getAddresses(token: string): Promise<ShopifyAddress[]> {
       }
     `,
     token,
+    cache: 'no-store',
   });
 
   return data.customer?.addresses.edges.map((e) => e.node) ?? [];
@@ -322,6 +330,7 @@ export async function createAddress(
     `,
     variables: { customerAccessToken: token, address },
     token,
+    cache: 'no-store',
   });
 
   const { customerUserErrors } = data.customerAddressCreate;
@@ -352,6 +361,7 @@ export async function updateAddress(
     `,
     variables: { customerAccessToken: token, id: addressId, address },
     token,
+    cache: 'no-store',
   });
 
   const { customerUserErrors } = data.customerAddressUpdate;
@@ -381,6 +391,7 @@ export async function deleteAddress(
     `,
     variables: { customerAccessToken: token, id: addressId },
     token,
+    cache: 'no-store',
   });
 
   const { customerUserErrors } = data.customerAddressDelete;
@@ -410,6 +421,7 @@ export async function setDefaultAddress(
     `,
     variables: { customerAccessToken: token, addressId },
     token,
+    cache: 'no-store',
   });
 
   const { customerUserErrors } = data.customerDefaultAddressUpdate;

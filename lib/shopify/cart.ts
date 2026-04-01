@@ -90,6 +90,7 @@ async function deleteCartId() {
 export async function createCart(): Promise<ShopifyCart> {
   const data = await shopifyFetch<CartCreateResponse>({
     query: CART_CREATE_MUTATION,
+    cache: 'no-store',
   });
   const cart = data.cartCreate.cart;
   await setCartId(cart.id);
@@ -103,6 +104,7 @@ export async function getCart(): Promise<ShopifyCart | null> {
   const data = await shopifyFetch<CartResponse>({
     query: CART_QUERY,
     variables: { id: cartId },
+    cache: 'no-store',
   });
 
   if (!data.cart) {
@@ -129,6 +131,7 @@ export async function addToCart(
       cartId,
       lines: [{ merchandiseId: variantId, quantity }],
     },
+    cache: 'no-store',
   });
   return data.cartLinesAdd.cart;
 }
@@ -146,6 +149,7 @@ export async function updateCartItem(
       cartId,
       lines: [{ id: lineId, quantity }],
     },
+    cache: 'no-store',
   });
   return data.cartLinesUpdate.cart;
 }
@@ -157,6 +161,7 @@ export async function removeCartItem(lineId: string): Promise<ShopifyCart> {
   const data = await shopifyFetch<CartLinesRemoveResponse>({
     query: CART_LINES_REMOVE_MUTATION,
     variables: { cartId, lineIds: [lineId] },
+    cache: 'no-store',
   });
   return data.cartLinesRemove.cart;
 }
