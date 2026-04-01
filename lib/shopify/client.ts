@@ -54,7 +54,7 @@ export async function shopifyFetch<T>({
       headers,
       body: JSON.stringify({ query, variables }),
       ...(cache ? { cache } : {}),
-      next,
+      ...(next ? { next } : {}),
     })
   } catch (err) {
     throw new ShopifyError(`Network request failed: ${err}`, 'network')
