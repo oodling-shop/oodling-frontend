@@ -19,7 +19,7 @@ Redesign the product detail page (`app/(main)/(pages)/products/[slug]/page.tsx`)
 
 ### Left: Image Gallery (2×2 grid)
 - Render up to 4 images from `product.images.edges` in a 2-column CSS grid
-- Each cell is a fixed `aspect-[3/4]` container with a light grey background (`#F3F5F7`)
+- Each cell is a fixed `aspect-3/4` container with a light grey background (`#F3F5F7`)
 - If fewer than 4 images exist: only render cells for available images; the grid will naturally collapse (no empty placeholder cells)
 - Badges: "NEW" (white, top-left of first image) and discount % (green) — render discount badge only when compare-at price > current price
 
@@ -61,7 +61,7 @@ Below the hero, full-width tabs section:
 - Server fetch: `getProducts({ first: 8, query: \`NOT id:${product.id.split('/').pop()}\` })` at page level — Shopify's Storefront API query filter expects a plain numeric ID, not the full base64 GID (`gid://shopify/Product/123`), so `.split('/').pop()` extracts the numeric portion; pass result as prop to client carousel component
 - Display 4 cards at a time; prev/next arrows shift the visible window by 1 (client-side `startIndex` state, clamped to valid range)
 - Cards link to `/products/[handle]`
-- Use a local `RelatedProductCard` component (new file in `_components/`) — do NOT modify the shared `ProductCard` component at `components/products/product-card.tsx`, as it is used across the products grid and does not currently support compare-at price. The local card should render: image (aspect-[3/4], bg grey), product title, current price + strikethrough compare-at price (if available)
+- Use a local `RelatedProductCard` component (new file in `_components/`) — do NOT modify the shared `ProductCard` component at `components/products/product-card.tsx`, as it is used across the products grid and does not currently support compare-at price. The local card should render: image (aspect-3/4, bg grey), product title, current price + strikethrough compare-at price (if available)
 
 ---
 
