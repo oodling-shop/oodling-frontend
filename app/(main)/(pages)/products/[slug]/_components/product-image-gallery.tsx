@@ -32,7 +32,7 @@ export function ProductImageGallery({
     : 0;
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-2 h-fit">
       {images.map((image, index) => (
         <div
           key={image.url}
@@ -42,7 +42,7 @@ export function ProductImageGallery({
             src={image.url}
             alt={image.altText || title}
             fill
-            className="object-contain p-4"
+            className="object-cover"
             sizes="(max-width: 768px) 50vw, 25vw"
             priority={index === 0}
           />
