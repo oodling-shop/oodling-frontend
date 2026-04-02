@@ -188,7 +188,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Add to Cart */}
-      <AddToCartButton variantId={variantId} quantity={quantity} />
+      <AddToCartButton variantId={variantId} quantity={quantity} productTitle={product.title} />
 
       {/* Action links */}
       <div className="flex items-center gap-6 text-sm text-[#141718]">

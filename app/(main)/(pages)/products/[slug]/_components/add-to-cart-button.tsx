@@ -2,13 +2,15 @@
 
 import { useTransition } from 'react';
 import { useCart } from '@/providers/cart-provider';
+import { showSuccessNotification } from '@/components/ui/notification';
 
 interface AddToCartButtonProps {
   variantId: string | null;
   quantity?: number;
+  productTitle?: string;
 }
 
-export function AddToCartButton({ variantId, quantity = 1 }: AddToCartButtonProps) {
+export function AddToCartButton({ variantId, quantity = 1, productTitle }: AddToCartButtonProps) {
   const { addItem } = useCart();
   const [isPending, startTransition] = useTransition();
 
@@ -18,6 +20,9 @@ export function AddToCartButton({ variantId, quantity = 1 }: AddToCartButtonProp
     if (!variantId) return;
     startTransition(async () => {
       await addItem(variantId, quantity);
+      if (productTitle) {
+        showSuccessNotification(`${productTitle} was successfully added to your cart.`);
+      }
     });
   };
 
