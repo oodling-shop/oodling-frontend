@@ -3,6 +3,7 @@
 import { Container } from './container';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, AnimatePresence } from 'motion/react';
 import { useScroll } from '@/hooks/use-scroll';
 import { cn } from '@/helpers';
 import { CaretDown, MagnifyingGlass, User, ShoppingBag } from '@phosphor-icons/react';
@@ -10,6 +11,7 @@ import { useState, useEffect } from 'react';
 import { MobileMenu } from './mobile-menu';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/providers/cart-provider';
+import { SearchPopup } from './search-popup';
 
 // Megamenu data - organized by columns exactly as shown in Figma
 // Megamenu data - organized by category
@@ -185,6 +187,7 @@ const MEGAMENUS: Record<string, {
 export const Navbar = () => {
   const scrolled = useScroll();
   const [activeMegamenu, setActiveMegamenu] = useState<string | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { cart } = useCart();
   const cartCount = cart?.totalQuantity ?? 0;
 
@@ -285,6 +288,7 @@ export const Navbar = () => {
             size="icon"
             className="text-foreground hover:text-primary transition-colors h-auto w-auto p-0 hover:bg-transparent"
             aria-label="Search"
+            onClick={() => setIsSearchOpen(true)}
           >
             <MagnifyingGlass size={24} />
           </Button>
@@ -313,72 +317,88 @@ export const Navbar = () => {
       </Container>
 
       {/* Megamenu - positioned relative to nav, spans full width */}
-      {activeMegamenu && MEGAMENUS[activeMegamenu] && (
-        <>
-          {/* Backdrop overlay */}
-          <div
-            className="fixed inset-0 bg-transparent z-40"
-            onClick={() => setActiveMegamenu(null)}
-          />
+      <AnimatePresence>
+        {activeMegamenu && MEGAMENUS[activeMegamenu] && (
+          <>
+            {/* Backdrop overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-transparent z-40"
+              onClick={() => setActiveMegamenu(null)}
+            />
 
-          {/* Megamenu panel */}
-          <div className="absolute left-0 right-0 top-full z-50 bg-white shadow-sm border-b border-gray-100">
-            <Container>
-              <div className="flex items-start gap-12 py-10">
-                {/* Left side - links in 3 columns */}
-                <div className="flex gap-16 flex-1">
-                  {MEGAMENUS[activeMegamenu].columns.map((column, colIndex) => (
-                    <div key={colIndex} className="flex flex-col gap-6">
-                      <h3 className="text-sm font-bold text-black tracking-wider">{column.title}</h3>
-                      <div className="flex flex-col gap-4">
-                        {column.links.map((link, linkIndex) => (
-                          <Link
-                            key={linkIndex}
-                            href={link.href}
-                            className="text-sm font-normal text-gray-500 hover:text-black transition-colors whitespace-nowrap"
-                            onClick={() => setActiveMegamenu(null)}
-                          >
-                            {link.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Right side - images */}
-                {MEGAMENUS[activeMegamenu].images.length > 0 && (
-                  <div className="flex gap-4 shrink-0">
-                    {MEGAMENUS[activeMegamenu].images.map((category, index) => (
-                      <Link
-                        key={index}
-                        href={category.href}
-                        className="group/category flex flex-col"
-                        onClick={() => setActiveMegamenu(null)}
-                      >
-                        {/* Image container */}
-                        <div className="relative w-50 h-64 bg-gray-50 overflow-hidden">
-                          <Image
-                            src={category.image}
-                            alt={category.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover/category:scale-110"
-                          />
-                          {/* Label overlay at bottom */}
-                          <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-sm py-2 px-3 shadow-sm transform transition-transform group-hover/category:-translate-y-1">
-                            <span className="text-sm font-semibold text-gray-900">{category.title}</span>
-                          </div>
+            {/* Megamenu panel - Simple top-to-bottom animation */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="absolute left-0 right-0 top-full z-50 bg-white shadow-sm border-b border-gray-100"
+            >
+              <Container>
+                <div className="flex items-start gap-12 py-10">
+                  {/* Left side - links in 3 columns */}
+                  <div className="flex gap-16 flex-1">
+                    {MEGAMENUS[activeMegamenu].columns.map((column, colIndex) => (
+                      <div key={colIndex} className="flex flex-col gap-6">
+                        <h3 className="text-sm font-bold text-black tracking-wider">{column.title}</h3>
+                        <div className="flex flex-col gap-4">
+                          {column.links.map((link, linkIndex) => (
+                            <Link
+                              key={linkIndex}
+                              href={link.href}
+                              className="text-sm font-normal text-gray-500 hover:text-black transition-colors whitespace-nowrap"
+                              onClick={() => setActiveMegamenu(null)}
+                            >
+                              {link.name}
+                            </Link>
+                          ))}
                         </div>
-                      </Link>
+                      </div>
                     ))}
                   </div>
-                )}
-              </div>
-            </Container>
-          </div>
-        </>
-      )}
 
+                  {/* Right side - images */}
+                  {MEGAMENUS[activeMegamenu].images.length > 0 && (
+                    <div className="flex gap-4 shrink-0">
+                      {MEGAMENUS[activeMegamenu].images.map((category, index) => (
+                        <Link
+                          key={index}
+                          href={category.href}
+                          className="group/category flex flex-col"
+                          onClick={() => setActiveMegamenu(null)}
+                        >
+                          {/* Image container */}
+                          <div className="relative w-50 h-64 bg-gray-50 overflow-hidden">
+                            <Image
+                              src={category.image}
+                              alt={category.title}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover/category:scale-110"
+                            />
+                            {/* Label overlay at bottom */}
+                            <div className="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-sm py-2 px-3 shadow-sm transform transition-transform group-hover/category:-translate-y-1">
+                              <span className="text-sm font-semibold text-gray-900">{category.title}</span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Container>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Search Popup */}
+      <SearchPopup
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+      />
     </nav>
   );
 };

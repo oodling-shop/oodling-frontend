@@ -26,14 +26,14 @@ const ProductCard = ({ product }: { product: ShopifyProduct }) => {
 
   return (
     <Link href={`/products/${product.handle}`} className="group flex flex-col gap-3">
-      <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] overflow-hidden flex items-center justify-center p-4 md:p-8">
+      <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] overflow-hidden flex items-center justify-center">
         <div className="relative w-full h-full transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3">
           {image && (
             <Image
               src={image.url}
               alt={image.altText || product.title}
               fill
-              className="object-contain"
+              className="object-cover"
               priority
             />
           )}
@@ -67,6 +67,7 @@ const ProductCard = ({ product }: { product: ShopifyProduct }) => {
 
 export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
   const [activeTab, setActiveTab] = useState<Tab>('Best Sellers');
+  const [limit, setLimit] = useState(8);
 
   const tabProducts: Record<Tab, ShopifyProduct[]> = {
     'Best Sellers': bestSellers,
@@ -85,7 +86,10 @@ export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
               <Button
                 key={tab}
                 variant="ghost"
-                onClick={() => setActiveTab(tab)}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setLimit(8);
+                }}
                 className={cn(
                   "relative pb-2 text-lg md:text-xl transition-colors duration-300 whitespace-nowrap h-auto px-0 hover:bg-transparent rounded-none",
                   activeTab === tab
@@ -104,7 +108,7 @@ export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
 
         {products.length > 0 ? (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-12 mb-12 md:mb-16">
-            {products.map((product) => (
+            {products.slice(0, limit).map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -112,11 +116,16 @@ export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
           <p className="text-center text-neutral-400 py-16">No products found.</p>
         )}
 
-        <div className="flex justify-center">
-          <Button className="bg-[#141718] text-white px-10 py-3.5 rounded-full font-semibold text-base transition-transform duration-300 hover:scale-105 active:scale-95 h-auto">
-            Load More
-          </Button>
-        </div>
+        {products.length > limit && (
+          <div className="flex justify-center">
+            <Button 
+              onClick={() => setLimit(prev => prev + 4)}
+              className="bg-[#141718] text-white px-10 py-3.5 rounded-full font-semibold text-base transition-transform duration-300 hover:scale-105 active:scale-95 h-auto"
+            >
+              Load More
+            </Button>
+          </div>
+        )}
       </Container>
     </section>
   );

@@ -57,38 +57,36 @@ export function NotificationBanner() {
   const isSuccess = state.type === "success";
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50">
-      <BottomBanner
-        icon={
-          isSuccess ? (
-            <CheckCircle weight="fill" className="w-5 h-5 md:w-6 md:h-6 text-[#22C55E]" />
-          ) : (
-            <XCircle weight="fill" className="w-5 h-5 md:w-6 md:h-6 text-[#EF4444]" />
-          )
-        }
-        action={
-          isSuccess ? (
-            <button
-              onClick={() => {
-                state.onAction?.();
-                setState((prev) => ({ ...prev, isVisible: false }));
-              }}
-              className="text-[13px] md:text-sm font-semibold text-[#1A1A1A] underline underline-offset-4 hover:text-gray-600 shrink-0"
-            >
-              View cart
-            </button>
-          ) : (
-            <button
-              onClick={() => setState((prev) => ({ ...prev, isVisible: false }))}
-              className="text-gray-400 hover:text-gray-600 shrink-0 p-1"
-            >
-              <X className="w-4 h-4 md:w-5 md:h-5" />
-            </button>
-          )
-        }
-      >
-        {state.message}
-      </BottomBanner>
-    </div>
+    <BottomBanner
+      icon={
+        isSuccess ? (
+          <CheckCircle weight="fill" className="w-5 h-5 md:w-6 md:h-6 text-[#22C55E]" />
+        ) : (
+          <XCircle weight="fill" className="w-5 h-5 md:w-6 md:h-6 text-[#EF4444]" />
+        )
+      }
+      action={
+        isSuccess ? (
+          <button
+            onClick={() => {
+              state.onAction?.();
+              setState((prev) => ({ ...prev, isVisible: false }));
+            }}
+            className="text-[13px] md:text-sm font-semibold text-[#1A1A1A] underline underline-offset-4 hover:text-gray-600 shrink-0"
+          >
+            View cart
+          </button>
+        ) : (
+          <button
+            onClick={() => setState((prev) => ({ ...prev, isVisible: false }))}
+            className="text-gray-400 hover:text-gray-600 shrink-0 p-1"
+          >
+            <X className="w-4 h-4 md:w-5 md:h-5" />
+          </button>
+        )
+      }
+    >
+      {state.message}
+    </BottomBanner>
   );
 }

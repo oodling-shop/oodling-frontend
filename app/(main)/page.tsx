@@ -31,9 +31,9 @@ export default async function Home() {
       brownSugar,
       redVelvet,
     ] = await Promise.all([
-      getProducts({ first: 8, sortKey: 'BEST_SELLING' }),
-      getProducts({ first: 8, sortKey: 'CREATED_AT', reverse: true }),
-      getProducts({ first: 8, query: 'tag:sale' }),
+      getProducts({ first: 12, sortKey: 'BEST_SELLING' }),
+      getProducts({ first: 12, sortKey: 'CREATED_AT', reverse: true }),
+      getProducts({ first: 12, query: 'tag:sale' }),
       getCollectionByHandle('kopla'),
       getCollectionByHandle('lola'),
       getCollectionByHandle('folka'),

@@ -8,6 +8,59 @@ import type { ShopifyProduct } from '@/lib/shopify/types';
 export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [dotsCount, setDotsCount] = useState(0);
+
+  const calculateDots = () => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const items = Array.from(scrollContainer.children);
+    if (items.length === 0) return;
+
+    const firstItem = items[0] as HTMLElement;
+    const itemWidth = firstItem.clientWidth + 24; // Card width + gap-6
+    const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    
+    const count = Math.max(1, Math.round(maxScroll / itemWidth) + 1);
+    setDotsCount(count);
+  };
+
+  useEffect(() => {
+    calculateDots();
+    window.addEventListener('resize', calculateDots);
+    return () => window.removeEventListener('resize', calculateDots);
+  }, [products]);
+
+  const handleScroll = () => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const items = Array.from(scrollContainer.children);
+    if (items.length === 0) return;
+
+    const scrollLeft = scrollContainer.scrollLeft;
+    const firstItem = items[0] as HTMLElement;
+    const itemWidth = firstItem.clientWidth + 24; 
+    
+    const newIndex = Math.round(scrollLeft / itemWidth);
+    if (newIndex !== activeIndex && newIndex < dotsCount) {
+      setActiveIndex(newIndex);
+    }
+  };
+
+  const scrollTo = (index: number) => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const items = Array.from(scrollContainer.children);
+    if (items.length === 0) return;
+
+    const firstItem = items[0] as HTMLElement;
+    const itemWidth = firstItem.clientWidth + 24; 
+    
+    scrollContainer.scrollTo({ left: index * itemWidth, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -19,12 +72,9 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
       const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
       const currentScroll = scrollContainer.scrollLeft;
       
-      // Calculate item width (desktop 325px + 24px gap = 349px, but dynamic is better)
       const firstItem = scrollContainer.firstElementChild as HTMLElement;
-      // Default to 350 if not found, though it should be found
       const itemWidth = firstItem ? firstItem.clientWidth + 24 : 350; 
 
-      // If we're near the end, scroll back to start
       if (currentScroll >= maxScroll - 10) {
         scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
@@ -33,7 +83,6 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
     };
 
     const intervalId = setInterval(scroll, 3000);
-
     return () => clearInterval(intervalId);
   }, [isHovered]);
 
@@ -47,12 +96,23 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
           </h2>
           
           {/* Pagination Dots */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full border border-[#141718]">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#141718]" />
-            </div>
-            <div className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
-            <div className="w-1.5 h-1.5 rounded-full bg-neutral-300" />
+          <div className="flex items-center gap-2">
+            {[...Array(dotsCount)].map((_, index) => (
+              <button 
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`transition-all duration-300 flex items-center justify-center cursor-pointer ${
+                  activeIndex === index 
+                    ? "w-6 h-6 rounded-full border border-[#141718]" 
+                    : "w-1.5 h-1.5 rounded-full bg-neutral-300 hover:bg-[#141718]/50"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              >
+                {activeIndex === index && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#141718]" />
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -62,6 +122,7 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
             ref={scrollContainerRef}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onScroll={handleScroll}
             className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth"
           >
             {products.map((product) => (
@@ -69,10 +130,10 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
                 key={product.id}
                 className="flex-none w-[280px] md:w-[325px] snap-start"
               >
-                <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] p-8 flex flex-col items-center justify-center group cursor-pointer transition-all duration-300 hover:shadow-lg">
+                <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] p-5 flex flex-col items-center justify-center group cursor-pointer transition-all duration-300 hover:shadow-lg">
 
-                  {/* Shoe Image */}
-                  <div className="relative w-full h-[60%] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-3">
+                  {/* Product Image */}
+                  <div className="relative w-full h-[75%] transition-transform duration-500 ease-out group-hover:scale-105 group-hover:-rotate-1">
                     {product.images.edges[0]?.node && (
                       <Image
                         src={product.images.edges[0].node.url}
@@ -84,12 +145,12 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
                     )}
                   </div>
 
-                  {/* Product Pill Button */}
-                  <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-fit max-w-[90%]">
-                    <div className="bg-white rounded-full px-8 py-3 shadow-sm transition-all duration-300 group-hover:shadow-md group-hover:px-10">
-                      <span className="text-sm font-semibold text-[#141718] whitespace-nowrap">
+                  {/* Product Title Pill */}
+                  <div className="absolute bottom-8 left-0 right-0 px-4 transform transition-transform duration-300 group-hover:-translate-y-1">
+                    <div className="bg-white rounded-[24px] mx-auto px-6 py-3 shadow-sm transition-all duration-300 group-hover:shadow-md w-fit max-w-full flex items-center justify-center min-h-[48px]">
+                      <p className="text-sm font-semibold text-[#141718] text-center leading-tight">
                         {product.title}
-                      </span>
+                      </p>
                     </div>
                   </div>
                 </div>

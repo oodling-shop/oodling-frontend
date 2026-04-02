@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NotificationBanner } from "@/components/ui/notification";
+import { CookieBanner } from "@/components/ui/cookie-banner";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +30,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-primary-500/30`}
       >
         {children}
+        <NotificationBanner />
+        <CookieBanner />
       </body>
     </html>
   );
