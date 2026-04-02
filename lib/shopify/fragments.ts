@@ -133,3 +133,37 @@ export const COLLECTION_FRAGMENT = `
     }
   }
 `
+
+export const PRODUCT_DETAIL_FRAGMENT = `
+  fragment ProductDetailFields on Product {
+    id
+    handle
+    title
+    description
+    descriptionHtml
+    productType
+    tags
+    priceRange {
+      minVariantPrice { amount currencyCode }
+    }
+    compareAtPriceRange {
+      maxVariantPrice { amount currencyCode }
+    }
+    images(first: 4) {
+      edges {
+        node { url altText }
+      }
+    }
+    variants(first: 10) {
+      edges {
+        node {
+          id
+          title
+          availableForSale
+          price { amount }
+          selectedOptions { name value }
+        }
+      }
+    }
+  }
+`

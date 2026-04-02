@@ -1,6 +1,6 @@
 import { shopifyFetch } from './client'
-import { PRODUCT_FRAGMENT } from './fragments'
-import type { ShopifyProduct } from './types'
+import { PRODUCT_FRAGMENT, PRODUCT_DETAIL_FRAGMENT } from './fragments'
+import type { ShopifyProduct, ShopifyProductDetail } from './types'
 
 type GetProductsOptions = {
   first?: number
@@ -17,8 +17,8 @@ type ProductsResponse = {
   }
 }
 
-type ProductResponse = {
-  product: ShopifyProduct | null
+type ProductDetailResponse = {
+  product: ShopifyProductDetail | null
 }
 
 export async function getProducts({
@@ -64,13 +64,13 @@ export async function getProducts({
   return data.products
 }
 
-export async function getProduct(handle: string) {
-  const data = await shopifyFetch<ProductResponse>({
+export async function getProduct(handle: string): Promise<ShopifyProductDetail | null> {
+  const data = await shopifyFetch<ProductDetailResponse>({
     query: `
-      ${PRODUCT_FRAGMENT}
+      ${PRODUCT_DETAIL_FRAGMENT}
       query GetProduct($handle: String!) {
         product(handle: $handle) {
-          ...ProductFields
+          ...ProductDetailFields
         }
       }
     `,
