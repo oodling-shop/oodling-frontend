@@ -19,6 +19,34 @@ export type ShopifyProduct = {
   }
 }
 
+export type ShopifyProductDetail = {
+  id: string
+  handle: string
+  title: string
+  description: string
+  descriptionHtml: string
+  productType: string
+  tags: string[]
+  priceRange: {
+    minVariantPrice: { amount: string; currencyCode: string }
+  }
+  compareAtPriceRange: {
+    maxVariantPrice: { amount: string; currencyCode: string }
+  }
+  images: { edges: { node: { url: string; altText: string } }[] }
+  variants: {
+    edges: {
+      node: {
+        id: string
+        title: string
+        availableForSale: boolean
+        price: { amount: string }
+        selectedOptions: { name: string; value: string }[]
+      }
+    }[]
+  }
+}
+
 export type ShopifyCartLine = {
   id: string
   quantity: number
