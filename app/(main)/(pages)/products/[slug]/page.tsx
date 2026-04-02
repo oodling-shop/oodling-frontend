@@ -1,7 +1,9 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import { getProduct } from '@/lib/shopify/products';
-import { AddToCartButton } from './_components/add-to-cart-button';
+import { getProduct, getProducts } from '@/lib/shopify/products';
+import { ProductImageGallery } from './_components/product-image-gallery';
+import { ProductInfo } from './_components/product-info';
+import { ProductTabs } from './_components/product-tabs';
+import { RelatedProducts } from './_components/related-products';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -13,43 +15,41 @@ export default async function ProductDetailPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const image = product.images.edges[0]?.node;
-  const price = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: product.priceRange.minVariantPrice.currencyCode,
-  }).format(parseFloat(product.priceRange.minVariantPrice.amount));
+  const numericId = product.id.split('/').pop();
+  const relatedProductsData = await getProducts({
+    first: 8,
+    query: `NOT id:${numericId}`,
+  });
+  const relatedProducts = relatedProductsData.edges.map((e) => e.node);
 
-  const firstAvailableVariant = product.variants.edges.find(
-    (e) => e.node.availableForSale
-  )?.node;
+  const images = product.images.edges.map((e) => e.node);
 
   return (
-    <main className="min-h-screen bg-white py-12">
-      <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="relative aspect-3/4 bg-[#F3F5F7] overflow-hidden rounded-lg">
-          {image && (
-            <Image
-              src={image.url}
-              alt={image.altText || product.title}
-              fill
-              className="object-contain p-6"
-              priority
-            />
-          )}
+    <main className="min-h-screen bg-white">
+      {/* Hero section */}
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Left: Image gallery */}
+          <ProductImageGallery
+            images={images}
+            title={product.title}
+            compareAtAmount={product.compareAtPriceRange.maxVariantPrice.amount}
+            currentAmount={product.priceRange.minVariantPrice.amount}
+          />
+
+          {/* Right: Product info */}
+          <ProductInfo product={product} />
         </div>
-        <div className="flex flex-col gap-6 py-4">
-          <h1 className="text-3xl md:text-4xl font-semibold text-[#141718]">{product.title}</h1>
-          <p className="text-2xl font-bold text-[#141718]">{price}</p>
-          {product.description && (
-            <p className="text-[#6C7275] leading-relaxed">{product.description}</p>
-          )}
-          {firstAvailableVariant && (
-            <AddToCartButton variantId={firstAvailableVariant.id} />
-          )}
-          {!firstAvailableVariant && (
-            <p className="text-red-500 font-medium">Out of stock</p>
-          )}
-        </div>
+      </div>
+
+      {/* Tabs section */}
+      <div className="max-w-6xl mx-auto px-4">
+        <ProductTabs descriptionHtml={product.descriptionHtml} />
+      </div>
+
+      {/* Related products */}
+      <div className="max-w-6xl mx-auto px-4">
+        <RelatedProducts products={relatedProducts} />
       </div>
     </main>
   );
