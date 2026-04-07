@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Heart, HelpCircle, Share2, Calendar, Truck } from 'lucide-react';
+import { Heart, HelpCircle, Share2, Calendar, Truck, ChevronDown } from 'lucide-react';
 import { AddToCartButton } from './add-to-cart-button';
 import type { ShopifyProductDetail } from '@/lib/shopify/types';
 
@@ -42,6 +42,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
   const [selection, setSelection] = useState<Record<string, string>>(initialSelection);
   const [quantity, setQuantity] = useState(1);
+  const [openOption, setOpenOption] = useState<string | null>(null);
 
   // Find the variant matching all current selections
   const activeVariant = useMemo(() => {
@@ -71,29 +72,20 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const shortDesc = product.description.slice(0, 150);
 
   const hasOptions = Object.keys(optionMap).length > 0;
+  const optionKeys = Object.keys(optionMap);
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-2 text-sm text-[#6C7275]">
-        <span>Home</span>
-        <span>›</span>
-        {/* TODO: wire middle segment to collection once collection query is added */}
-        <span>Clothing</span>
-        <span>›</span>
-        <span className="text-[#141718]">{product.productType || product.title}</span>
-      </nav>
-
+    <div className="flex flex-col gap-0 px-4 py-5">
       {/* Title */}
-      <h1 className="text-3xl font-bold text-[#141718] leading-tight">{product.title}</h1>
+      <h1 className="text-2xl font-semibold text-[#141718] leading-tight mb-3">{product.title}</h1>
 
       {/* Short description */}
       {shortDesc && (
-        <p className="text-sm text-[#6C7275] leading-relaxed">{shortDesc}</p>
+        <p className="text-sm text-[#6C7275] leading-relaxed mb-4">{shortDesc}</p>
       )}
 
       {/* Star rating — static placeholder */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mb-4">
         <div className="flex text-[#FF8A00]">
           {[1, 2, 3, 4, 5].map((i) => (
             <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -105,45 +97,72 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Price */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 mb-5">
         <span className="text-2xl font-bold text-[#141718]">{fmt(currentPrice)}</span>
         {showCompareAt && (
           <span className="text-lg text-[#6C7275] line-through">{fmt(compareAtAmount)}</span>
         )}
       </div>
 
-      {/* Variant selectors */}
-      {hasOptions &&
-        Object.entries(optionMap).map(([optionName, values]) => (
-          <div key={optionName} className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#141718]">{optionName}</label>
-            <div className="flex flex-wrap gap-2">
-              {values.map((val) => {
-                const isSelected = selection[optionName] === val;
-                return (
-                  <button
-                    key={val}
-                    type="button"
-                    onClick={() => setSelection((prev) => ({ ...prev, [optionName]: val }))}
-                    className={[
-                      'px-4 py-2 text-sm rounded border transition-colors',
-                      isSelected
-                        ? 'bg-[#141718] text-white border-[#141718]'
-                        : 'bg-white text-[#141718] border-[#E8ECEF] hover:border-[#141718]',
-                    ].join(' ')}
-                  >
-                    {val}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        ))}
+      <hr className="border-[#E8ECEF] mb-5" />
+
+      {/* Variant selectors - Dropdown style */}
+      {hasOptions && (
+        <div className="flex flex-col mb-5">
+          {optionKeys.map((optionName, idx) => {
+            const values = optionMap[optionName];
+            const selectedValue = selection[optionName];
+            const isOpen = openOption === optionName;
+
+            return (
+              <div key={optionName}>
+                <button
+                  type="button"
+                  onClick={() => setOpenOption(isOpen ? null : optionName)}
+                  className="w-full flex items-center justify-between py-3.5 text-left"
+                >
+                  <span className="text-base font-medium text-[#141718]">{optionName}</span>
+                  <ChevronDown
+                    size={20}
+                    className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {isOpen && (
+                  <div className="flex flex-wrap gap-2 pb-4">
+                    {values.map((val) => {
+                      const isSelected = selection[optionName] === val;
+                      return (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => {
+                            setSelection((prev) => ({ ...prev, [optionName]: val }));
+                            setOpenOption(null);
+                          }}
+                          className={[
+                            'px-5 py-2.5 text-sm rounded border transition-colors',
+                            isSelected
+                              ? 'bg-[#141718] text-white border-[#141718]'
+                              : 'bg-white text-[#141718] border-[#E8ECEF] hover:border-[#141718]',
+                          ].join(' ')}
+                        >
+                          {val}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                {idx < optionKeys.length - 1 && <hr className="border-[#E8ECEF]" />}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Size guide + stock indicator */}
       {firstAvailable?.availableForSale && (
-        <div className="flex items-center gap-4 text-sm">
-          <a href="#" className="flex items-center gap-1 text-[#141718] font-medium">
+        <div className="flex items-center gap-6 text-sm mb-5">
+          <a href="#" className="flex items-center gap-1.5 text-[#141718] font-medium uppercase text-xs tracking-wide">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="2" y="7" width="20" height="10" rx="1" />
               <line x1="7" y1="7" x2="7" y2="17" />
@@ -153,7 +172,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
             SIZE GUIDE
           </a>
           {/* TODO: wire to inventory count when admin API is available */}
-          <span className="flex items-center gap-1 text-[#141718]">
+          <span className="flex items-center gap-1.5 text-[#141718] uppercase text-xs tracking-wide">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="20 6 9 17 4 12" />
             </svg>
@@ -163,18 +182,18 @@ export function ProductInfo({ product }: ProductInfoProps) {
       )}
 
       {/* Quantity stepper */}
-      <div className="flex items-center border border-[#E8ECEF] rounded w-fit">
+      <div className="flex items-center bg-[#F3F5F7] w-full justify-between px-5 py-3.5 mb-4">
         <button
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          className="w-11 h-11 flex items-center justify-center text-[#141718] hover:bg-[#F3F5F7] transition-colors"
+          className="w-8 h-8 flex items-center justify-center text-[#141718] text-xl hover:opacity-70 transition-opacity"
           aria-label="Decrease quantity"
         >
           −
         </button>
-        <span className="w-12 text-center text-sm font-medium text-[#141718]">{quantity}</span>
+        <span className="text-base font-medium text-[#141718]">{quantity}</span>
         <button
           onClick={() => setQuantity((q) => Math.min(10, q + 1))}
-          className="w-11 h-11 flex items-center justify-center text-[#141718] hover:bg-[#F3F5F7] transition-colors"
+          className="w-8 h-8 flex items-center justify-center text-[#141718] text-xl hover:opacity-70 transition-opacity"
           aria-label="Increase quantity"
         >
           +
@@ -185,37 +204,37 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <AddToCartButton variantId={variantId} quantity={quantity} productTitle={product.title} />
 
       {/* Action links */}
-      <div className="flex items-center gap-6 text-sm text-[#141718]">
+      <div className="flex items-center justify-between text-sm text-[#141718] py-4">
         <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-          <Heart size={16} /> Wishlist
+          <Heart size={18} /> Wishlist
         </button>
         <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-          <HelpCircle size={16} /> Ask question
+          <HelpCircle size={18} /> Ask question
         </button>
         <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-          <Share2 size={16} /> Share
+          <Share2 size={18} /> Share
         </button>
       </div>
 
-      <hr className="border-[#E8ECEF]" />
+      <hr className="border-[#E8ECEF] mb-5" />
 
       {/* Delivery + Shipping */}
-      <div className="flex flex-col gap-3 text-sm">
+      <div className="flex flex-col gap-3 text-sm mb-5">
         {/* TODO: wire to real delivery estimate */}
         <div className="flex items-center gap-3 text-[#141718]">
-          <Calendar size={16} className="shrink-0" />
+          <Calendar size={18} className="shrink-0" />
           <span><strong>Delivery:</strong> 10 – 12 Oct, 2023</span>
         </div>
         <div className="flex items-center gap-3 text-[#141718]">
-          <Truck size={16} className="shrink-0" />
+          <Truck size={18} className="shrink-0" />
           <span><strong>Shipping:</strong> Free for orders above $100</span>
         </div>
       </div>
 
-      <hr className="border-[#E8ECEF]" />
+      <hr className="border-[#E8ECEF] mb-5" />
 
       {/* Meta info */}
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm">
+      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm mb-5">
         <dt className="text-[#6C7275] uppercase tracking-wide text-xs">SKU</dt>
         <dd className="text-[#141718]">{sku}</dd>
         <dt className="text-[#6C7275] uppercase tracking-wide text-xs">CATEGORY</dt>

@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 import { NotificationBanner } from "@/components/ui/notification";
 import { CookieBanner } from "@/components/ui/cookie-banner";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Nayzak | Premium Digital Frontend",
+  title: "Oodling | Premium Digital Platform",
   description: "A premium Next.js project structure for professional web development.",
 };
 
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-primary-500/30`}
+        className={`${spaceGrotesk.variable} ${inter.variable} antialiased selection:bg-primary-500/30`}
       >
         {children}
         <NotificationBanner />

@@ -54,15 +54,15 @@ export default async function Home() {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen font-sans">
       <Hero />
       <Categories categories={categoryItems} />
       <Collections collections={collectionItems} />
       <NewArrivals products={newArrivals} />
       <FeaturedProduct />
       <ProductGrid bestSellers={bestSellers} newArrivals={newArrivals} sale={saleProducts} />
-      <Newsletter />
-      <Features />
+      <div className="font-secondary"><Newsletter /></div>
+      <div className="font-secondary"><Features /></div>
     </main>
   );
 }

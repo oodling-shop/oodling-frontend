@@ -30,7 +30,7 @@ export function AddToCartButton({ variantId, quantity = 1, productTitle }: AddTo
     <button
       onClick={handleAddToCart}
       disabled={isPending || isUnavailable}
-      className="h-14 w-full bg-[#141718] text-white font-semibold rounded-lg hover:bg-[#141718]/90 transition-all active:scale-[0.98] disabled:opacity-60"
+      className="h-14 w-full bg-[#141718] text-white font-semibold hover:bg-[#141718]/90 transition-all active:scale-[0.98] disabled:opacity-60"
     >
       {isPending ? 'Adding...' : isUnavailable ? 'Unavailable' : 'Add to Cart'}
     </button>

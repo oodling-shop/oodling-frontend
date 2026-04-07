@@ -230,11 +230,8 @@ export const Navbar = () => {
       onMouseLeave={handleMouseLeave}
     >
       <Container className="flex items-center justify-between gap-4">
-        {/* Left: Hamburger Menu (Mobile) */}
-        <MobileMenu />
-
-        {/* Logo - Centered on mobile, left-aligned on desktop */}
-        <Link href="/" className="flex-shrink-0 md:order-none order-2">
+        {/* Logo - Left on mobile, left-aligned on desktop */}
+        <Link href="/" className="shrink-0">
           <Image
             src="/images/logo.png"
             alt="Nayzak Logo"
@@ -280,13 +277,13 @@ export const Navbar = () => {
           ))}
         </div>
 
-        {/* Right Icons - Order 3 on mobile to appear last */}
-        <div className="flex items-center gap-4 md:gap-6 order-3">
+        {/* Right Icons */}
+        <div className="flex items-center gap-4 md:gap-6">
           <Button
             type="button"
             variant="ghost"
             size="icon"
-            className="text-foreground hover:text-primary transition-colors h-auto w-auto p-0 hover:bg-transparent"
+            className="hidden md:flex text-foreground hover:text-primary transition-colors h-auto w-auto p-0 hover:bg-transparent"
             aria-label="Search"
             onClick={() => setIsSearchOpen(true)}
           >
@@ -313,6 +310,9 @@ export const Navbar = () => {
           >
             <User size={24} />
           </Link>
+
+          {/* Hamburger - Mobile only, rightmost */}
+          <MobileMenu />
         </div>
       </Container>
 

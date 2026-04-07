@@ -10,7 +10,7 @@ export const Newsletter = () => {
   return (
     <section className="py-20 md:py-32">
       <Container>
-        <div className="rounded-[32px] md:rounded-[40px] overflow-hidden grid grid-cols-1 lg:grid-cols-2 w-full shadow-sm">
+        <div className="rounded-xl md:rounded-xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 w-full shadow-sm">
           
           {/* Right Side (Desktop) / Top Side (Mobile): Image and Glow */}
           <div className="order-1 lg:order-2 relative flex items-center justify-center p-8 md:p-12 lg:p-0 overflow-hidden min-h-[350px] bg-[#FFEFEB]">
@@ -30,7 +30,7 @@ export const Newsletter = () => {
                   src="/images/shoes/airkan_ii.png"
                   alt="Nike Basketball Shoe"
                   fill
-                  className="object-contain drop-shadow-[0_25px_25px_rgba(0,0,0,0.15)]"
+                  className="object-contain drop-shadow-[0_25px_25px_rgba(0,0,0,0.15)] mix-blend-multiply"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   priority
                 />
