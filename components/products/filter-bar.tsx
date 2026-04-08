@@ -1,10 +1,28 @@
 'use client';
 
-import React from 'react';
-import { SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { useRef, useState, useEffect } from 'react';
+import { SlidersHorizontal, ChevronDown, Check } from 'lucide-react';
 import { cn } from '@/helpers/cn';
 import { FilterSidebar } from './filter-sidebar';
 import { Button } from '@/components/ui/button';
+
+export type SortKey = 'TITLE' | 'PRICE' | 'CREATED_AT' | 'BEST_SELLING';
+
+export interface SortOption {
+  label: string;
+  sortKey: SortKey;
+  reverse: boolean;
+}
+
+export const SORT_OPTIONS: SortOption[] = [
+  { label: 'Newest',              sortKey: 'CREATED_AT',  reverse: false },
+  { label: 'Oldest',              sortKey: 'CREATED_AT',  reverse: true  },
+  { label: 'Price: Low to High',  sortKey: 'PRICE',       reverse: false },
+  { label: 'Price: High to Low',  sortKey: 'PRICE',       reverse: true  },
+  { label: 'Name: A–Z',           sortKey: 'TITLE',       reverse: false },
+  { label: 'Name: Z–A',           sortKey: 'TITLE',       reverse: true  },
+  { label: 'Best Selling',        sortKey: 'BEST_SELLING', reverse: false },
+];
 
 interface FilterBarProps {
   productCount: number;
@@ -12,21 +30,38 @@ interface FilterBarProps {
   isSidebarOpen?: boolean;
   currentView: number;
   onViewChange: (view: number) => void;
+  currentSort?: SortOption;
+  onSortChange?: (option: SortOption) => void;
 }
 
-export const FilterBar = ({ 
-  productCount, 
-  onToggleSidebar, 
+export const FilterBar = ({
+  productCount,
+  onToggleSidebar,
   isSidebarOpen = false,
   currentView,
-  onViewChange
+  onViewChange,
+  currentSort = SORT_OPTIONS[0],
+  onSortChange,
 }: FilterBarProps) => {
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4 border-b border-neutral-100 mb-4">
       {/* Filter Sidebar - Mobile Drawer */}
-      <FilterSidebar 
-        open={isSidebarOpen} 
-        onOpenChange={(open) => !open && onToggleSidebar?.()} 
+      <FilterSidebar
+        open={isSidebarOpen}
+        onOpenChange={(open) => !open && onToggleSidebar?.()}
       />
 
       {/* Product Count */}
@@ -38,7 +73,7 @@ export const FilterBar = ({
       <div className="flex items-center justify-between md:justify-end gap-6 md:gap-8 order-1 md:order-2">
         {/* Filter & Sort */}
         <div className="flex items-center gap-6">
-          <Button 
+          <Button
             variant="ghost"
             onClick={onToggleSidebar}
             className="flex items-center gap-2 text-sm font-semibold hover:text-neutral-600 transition-colors h-auto p-0 hover:bg-transparent"
@@ -46,10 +81,45 @@ export const FilterBar = ({
             Filter
             <SlidersHorizontal className="size-4" />
           </Button>
-          <Button variant="ghost" className="flex items-center gap-1.5 text-sm font-semibold hover:text-neutral-600 transition-colors h-auto p-0 hover:bg-transparent">
-            Sort by
-            <ChevronDown className="size-4" />
-          </Button>
+
+          {/* Sort Dropdown */}
+          <div ref={sortRef} className="relative">
+            <Button
+              variant="ghost"
+              onClick={() => setSortOpen((o) => !o)}
+              className="flex items-center gap-1.5 text-sm font-semibold hover:text-neutral-600 transition-colors h-auto p-0 hover:bg-transparent"
+            >
+              Sort by
+              <ChevronDown className={cn("size-4 transition-transform duration-200", sortOpen && "rotate-180")} />
+            </Button>
+            {sortOpen && (
+              <div className="absolute right-0 top-full mt-2 z-50 min-w-[180px] bg-white border border-neutral-100 shadow-md py-1">
+                {SORT_OPTIONS.map((option) => {
+                  const isActive =
+                    currentSort.sortKey === option.sortKey &&
+                    currentSort.reverse === option.reverse;
+                  return (
+                    <button
+                      key={`${option.sortKey}:${option.reverse}`}
+                      onClick={() => {
+                        onSortChange?.(option);
+                        setSortOpen(false);
+                      }}
+                      className={cn(
+                        "w-full flex items-center justify-between px-4 py-2 text-sm text-left transition-colors",
+                        isActive
+                          ? "font-semibold text-[#141718] bg-[#F3F5F7]"
+                          : "text-neutral-600 hover:bg-neutral-50"
+                      )}
+                    >
+                      {option.label}
+                      {isActive && <Check className="size-3.5 shrink-0" />}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* View Switchers */}
