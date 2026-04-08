@@ -11,11 +11,13 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/helpers/index"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { CATEGORIES } from "@/constants"
+import type { ShopifyCollection } from "@/lib/shopify/types"
 
 interface FilterSidebarProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  productTypes?: string[]
+  collections?: ShopifyCollection[]
 }
 const COLORS = [
   { name: "Green", value: "#2DD4BF" },
@@ -33,8 +35,8 @@ const STYLES = [
   "Vintage",
 ]
 
-export const FilterSidebarContent = () => {
-  const [activeCategory, setActiveCategory] = useState("Clothing")
+export const FilterSidebarContent = ({ productTypes = [], collections = [] }: { productTypes?: string[]; collections?: ShopifyCollection[] }) => {
+  const [activeCategory, setActiveCategory] = useState(productTypes[0] ?? "")
   const [activeStyle, setActiveStyle] = useState("Streetwear")
   const [activeColor, setActiveColor] = useState("Green")
   const [activeSize, setActiveSize] = useState("S")
@@ -53,7 +55,7 @@ export const FilterSidebarContent = () => {
             Categories
           </h3>
           <ul className="space-y-4">
-            {CATEGORIES.map((category) => (
+            {productTypes.map((category) => (
               <li key={category}>
                 <Button
                   variant="ghost"
@@ -177,13 +179,13 @@ export const FilterSidebarContent = () => {
 }
 
 
-export const FilterSidebar = ({ open, onOpenChange, inline = false }: FilterSidebarProps & { inline?: boolean }) => {
+export const FilterSidebar = ({ open, onOpenChange, inline = false, productTypes, collections }: FilterSidebarProps & { inline?: boolean }) => {
   const isDesktop = useMediaQuery("(min-width: 1024px)")
 
   if (inline) {
     return (
       <aside className="hidden lg:block w-[300px] flex-shrink-0 border-r border-neutral-100 min-h-screen">
-        <FilterSidebarContent />
+        <FilterSidebarContent productTypes={productTypes} collections={collections} />
       </aside>
     )
   }
@@ -191,7 +193,7 @@ export const FilterSidebar = ({ open, onOpenChange, inline = false }: FilterSide
   return (
     <Sheet open={!isDesktop && open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[320px] sm:w-[350px] p-0 overflow-y-auto lg:hidden">
-        <FilterSidebarContent />
+        <FilterSidebarContent productTypes={productTypes} collections={collections} />
       </SheetContent>
     </Sheet>
   )

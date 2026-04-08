@@ -64,6 +64,29 @@ export async function getProducts({
   return data.products
 }
 
+type ProductTypesResponse = {
+  productTypes: {
+    edges: { node: string }[]
+  }
+}
+
+export async function getProductTypes(first = 50): Promise<string[]> {
+  const data = await shopifyFetch<ProductTypesResponse>({
+    query: `
+      query GetProductTypes($first: Int!) {
+        productTypes(first: $first) {
+          edges {
+            node
+          }
+        }
+      }
+    `,
+    variables: { first },
+    next: { revalidate: 3600 },
+  })
+  return data.productTypes.edges.map((e) => e.node).filter(Boolean)
+}
+
 export async function getProduct(handle: string): Promise<ShopifyProductDetail | null> {
   const data = await shopifyFetch<ProductDetailResponse>({
     query: `

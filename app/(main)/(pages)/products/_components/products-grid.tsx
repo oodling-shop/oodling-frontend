@@ -6,14 +6,16 @@ import { FilterBar } from '@/components/products/filter-bar';
 import { ActiveFilters } from '@/components/products/active-filters';
 import { ProductCard } from '@/components/products/product-card';
 import { cn } from '@/helpers/cn';
-import type { ShopifyProduct } from '@/lib/shopify/types';
+import type { ShopifyProduct, ShopifyCollection } from '@/lib/shopify/types';
 
 interface ProductsGridProps {
   products: ShopifyProduct[];
   totalCount: number;
+  productTypes: string[];
+  collections: ShopifyCollection[];
 }
 
-export function ProductsGrid({ products, totalCount }: ProductsGridProps) {
+export function ProductsGrid({ products, totalCount, productTypes, collections }: ProductsGridProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [view, setView] = useState(4);
 
@@ -24,6 +26,8 @@ export function ProductsGrid({ products, totalCount }: ProductsGridProps) {
           open={isSidebarOpen}
           onOpenChange={setIsSidebarOpen}
           inline
+          productTypes={productTypes}
+          collections={collections}
         />
       )}
       <div className="flex-1 w-full overflow-hidden">
