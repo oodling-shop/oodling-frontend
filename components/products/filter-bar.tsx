@@ -22,7 +22,7 @@ export const FilterBar = ({
   onViewChange
 }: FilterBarProps) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between py-6 gap-4 border-b border-neutral-100 mb-8">
+    <div className="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4 border-b border-neutral-100 mb-4">
       {/* Filter Sidebar - Mobile Drawer */}
       <FilterSidebar 
         open={isSidebarOpen} 
@@ -53,7 +53,7 @@ export const FilterBar = ({
         </div>
 
         {/* View Switchers */}
-        <div className="hidden lg:flex items-center border border-neutral-100 rounded-md overflow-hidden bg-white shadow-sm">
+        <div className="hidden lg:flex items-center border border-[#EAEAEA] overflow-hidden bg-white">
           {[5, 4, 3, 2, 1].map((cols, i) => (
             <Button 
               key={cols}

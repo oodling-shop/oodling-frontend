@@ -154,6 +154,10 @@ export const PRODUCT_DETAIL_FRAGMENT = `
         node { url altText }
       }
     }
+    options {
+      name
+      values
+    }
     variants(first: 10) {
       edges {
         node {

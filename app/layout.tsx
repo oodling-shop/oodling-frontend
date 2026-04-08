@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceGrotesk.variable} ${inter.variable} antialiased selection:bg-primary-500/30`}
+        className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased selection:bg-primary-500/30`}
       >
         {children}
         <NotificationBanner />

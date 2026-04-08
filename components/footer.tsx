@@ -12,10 +12,10 @@ const footerSections = [
   {
     title: 'Shop',
     links: [
-      { label: 'My account', href: '#' },
+      { label: 'My account', href: '/my-account' },
       { label: 'Login', href: '#' },
-      { label: 'Wishlist', href: '#' },
-      { label: 'Cart', href: '#' },
+      { label: 'Wishlist', href: '/wishlist' },
+      { label: 'Cart', href: '/cart' },
     ],
   },
   {
@@ -30,10 +30,10 @@ const footerSections = [
   {
     title: 'Company',
     links: [
-      { label: 'About us', href: '#' },
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Terms & Conditions', href: '#' },
-      { label: 'Contact Us', href: '#' },
+      { label: 'About us', href: '/about-us' },
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms & Conditions', href: '/terms-and-conditions' },
+      { label: 'Contact Us', href: '/contact-us' },
     ],
   },
 ];

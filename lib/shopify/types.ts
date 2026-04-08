@@ -34,6 +34,7 @@ export type ShopifyProductDetail = {
     maxVariantPrice: { amount: string; currencyCode: string }
   }
   images: { edges: { node: { url: string; altText: string } }[] }
+  options: { name: string; values: string[] }[]
   variants: {
     edges: {
       node: {

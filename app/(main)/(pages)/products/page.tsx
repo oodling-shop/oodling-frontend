@@ -8,7 +8,7 @@ export default async function ProductsPage() {
   const products = productsData.edges.map((e) => e.node);
 
   return (
-    <main className="min-h-screen bg-white pb-20 pt-10 font-sans">
+    <main className="min-h-screen bg-white font-sans">
       <ProductsGrid products={products} totalCount={products.length} />
     </main>
   );

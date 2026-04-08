@@ -46,7 +46,7 @@ export const FilterSidebarContent = () => {
         <h2 className="text-2xl font-bold">Filter</h2>
       </div>
 
-      <div className="px-8 py-4 space-y-10 pb-20">
+      <div className="px-8 py-4 space-y-10">
         {/* Categories */}
         <section>
           <h3 className="text-xs font-bold uppercase tracking-wider text-neutral-900 mb-6">

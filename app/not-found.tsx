@@ -78,7 +78,7 @@ export default function NotFound() {
             <Link href="/">Go back home</Link>
           </Button>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </main>
     </CartProvider>
   );

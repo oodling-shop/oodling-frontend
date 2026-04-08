@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 
 export const ActiveFilters = () => {
   return (
-    <div className="flex flex-wrap items-center gap-3 mb-8">
+    <div className="flex flex-wrap items-center gap-3 mb-4">
       <div className="flex items-center gap-1 px-3 py-1.5 bg-neutral-100 rounded-md text-sm font-medium">
         Plants
         <Button variant="ghost" className="hover:text-neutral-500 transition-colors h-auto w-auto p-0 hover:bg-transparent">
