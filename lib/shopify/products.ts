@@ -2,6 +2,21 @@ import { shopifyFetch } from './client'
 import { PRODUCT_FRAGMENT, PRODUCT_DETAIL_FRAGMENT } from './fragments'
 import type { ShopifyProduct, ShopifyProductDetail } from './types'
 
+// Shared by any page that accepts sortKey/reverse search params
+export type ProductSortKey = 'TITLE' | 'PRICE' | 'CREATED_AT' | 'BEST_SELLING'
+
+const VALID_SORT_KEYS: ProductSortKey[] = ['TITLE', 'PRICE', 'CREATED_AT', 'BEST_SELLING']
+
+export function parseSortParams(params: {
+  sortKey?: string
+  reverse?: string
+}): { sortKey: ProductSortKey; reverse: boolean } {
+  const sortKey = VALID_SORT_KEYS.includes(params.sortKey as ProductSortKey)
+    ? (params.sortKey as ProductSortKey)
+    : 'CREATED_AT'
+  return { sortKey, reverse: params.reverse === 'true' }
+}
+
 type GetProductsOptions = {
   first?: number
   after?: string

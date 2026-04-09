@@ -34,6 +34,7 @@ interface FilterBarProps {
   onSortChange?: (option: SortOption) => void;
   productTypes?: string[];
   collections?: import('@/lib/shopify/types').ShopifyCollection[];
+  showFilter?: boolean;
 }
 
 export const FilterBar = ({
@@ -46,6 +47,7 @@ export const FilterBar = ({
   onSortChange,
   productTypes,
   collections,
+  showFilter = true,
 }: FilterBarProps) => {
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -62,13 +64,15 @@ export const FilterBar = ({
 
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between py-4 gap-4 border-b border-neutral-100 mb-4">
-      {/* Filter Sidebar - Mobile Drawer */}
-      <FilterSidebar
-        open={isSidebarOpen}
-        onOpenChange={(open) => !open && onToggleSidebar?.()}
-        productTypes={productTypes}
-        collections={collections}
-      />
+      {/* Filter Sidebar - Mobile Drawer (only when filter is enabled) */}
+      {showFilter && (
+        <FilterSidebar
+          open={isSidebarOpen}
+          onOpenChange={(open) => !open && onToggleSidebar?.()}
+          productTypes={productTypes}
+          collections={collections}
+        />
+      )}
 
       {/* Product Count */}
       <span className="text-sm font-medium text-neutral-500 order-2 md:order-1">
@@ -79,6 +83,7 @@ export const FilterBar = ({
       <div className="flex items-center justify-between md:justify-end gap-6 md:gap-8 order-1 md:order-2">
         {/* Filter & Sort */}
         <div className="flex items-center gap-6">
+          {showFilter && (
           <Button
             variant="ghost"
             onClick={onToggleSidebar}
@@ -87,6 +92,7 @@ export const FilterBar = ({
             Filter
             <SlidersHorizontal className="size-4" />
           </Button>
+          )}
 
           {/* Sort Dropdown */}
           <div ref={sortRef} className="relative">

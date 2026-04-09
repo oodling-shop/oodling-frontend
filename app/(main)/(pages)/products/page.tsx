@@ -1,22 +1,23 @@
-import { getProducts, getProductTypes } from '@/lib/shopify/products';
+import { getProducts, getProductTypes, parseSortParams } from '@/lib/shopify/products';
 import { getAllCollections } from '@/lib/shopify/collections';
-import { ProductsGrid } from './_components/products-grid';
-import type { SortKey } from '@/components/products/filter-bar';
+import { ProductsGrid } from '@/components/products/products-grid';
 
 export const dynamic = 'force-dynamic';
-
-const VALID_SORT_KEYS: SortKey[] = ['TITLE', 'PRICE', 'CREATED_AT', 'BEST_SELLING'];
 
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sortKey?: string; reverse?: string; productType?: string; minPrice?: string; maxPrice?: string }>;
+  searchParams: Promise<{
+    sortKey?: string;
+    reverse?: string;
+    productType?: string;
+    minPrice?: string;
+    maxPrice?: string;
+  }>;
 }) {
-  const { sortKey: sortKeyParam, reverse: reverseParam, productType, minPrice, maxPrice } = await searchParams;
-  const sortKey = VALID_SORT_KEYS.includes(sortKeyParam as SortKey)
-    ? (sortKeyParam as SortKey)
-    : 'CREATED_AT';
-  const reverse = reverseParam === 'true';
+  const raw = await searchParams;
+  const { sortKey, reverse } = parseSortParams(raw);
+  const { productType, minPrice, maxPrice } = raw;
 
   const queryParts: string[] = [];
   if (productType) queryParts.push(`product_type:"${productType}"`);

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -88,6 +89,16 @@ export const MobileMenu = () => {
   const { cart } = useCart();
   const { isLoggedIn } = useAuth();
   const cartCount = cart?.totalQuantity ?? 0;
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+
+  const handleSearch = () => {
+    const q = searchInputRef.current?.value.trim();
+    if (q) {
+      router.push(`/search?q=${encodeURIComponent(q)}`);
+      setIsOpen(false);
+    }
+  };
 
   const toggleExpanded = (label: string) => {
     setExpandedItem(expandedItem === label ? null : label);
@@ -144,15 +155,19 @@ export const MobileMenu = () => {
             {/* Search Bar */}
             <div className="relative mt-2">
               <Input
+                ref={searchInputRef}
                 type="text"
                 placeholder="Search"
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 className="w-full h-12 pl-11 pr-4 border border-gray-200 rounded-lg text-[15px] font-normal text-gray-900 placeholder:text-gray-400 focus-visible:ring-1 focus-visible:ring-gray-300 transition-all shadow-none"
               />
-              <MagnifyingGlass
-                size={20}
-                weight="regular"
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-900"
-              />
+              <button
+                onClick={handleSearch}
+                aria-label="Submit search"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-900 hover:text-black transition-colors"
+              >
+                <MagnifyingGlass size={20} weight="regular" />
+              </button>
             </div>
 
             {/* Navigation Items */}
