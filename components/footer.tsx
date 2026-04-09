@@ -7,17 +7,20 @@ import Image from 'next/image';
 import { Facebook, Instagram, Twitter, Mail, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/helpers/cn';
+import { useAuth } from '@/providers/auth-provider';
 
-const footerSections = [
-  {
-    title: 'Shop',
-    links: [
-      { label: 'My account', href: '/my-account' },
-      { label: 'Login', href: '#' },
-      { label: 'Wishlist', href: '/wishlist' },
-      { label: 'Cart', href: '/cart' },
-    ],
-  },
+const SHOP_LINKS_LOGGED_IN = [
+  { label: 'My account', href: '/my-account' },
+  { label: 'Wishlist', href: '/my-account/wishlist' },
+  { label: 'Cart', href: '/cart' },
+];
+
+const SHOP_LINKS_LOGGED_OUT = [
+  { label: 'Sign in', href: '/sign-in' },
+  { label: 'Sign up', href: '/sign-up' },
+];
+
+const OTHER_SECTIONS = [
   {
     title: 'Information',
     links: [
@@ -102,6 +105,16 @@ const AccordionItem = ({
 };
 
 export const Footer = () => {
+  const { isLoggedIn } = useAuth();
+
+  const footerSections = [
+    {
+      title: 'Shop',
+      links: isLoggedIn ? SHOP_LINKS_LOGGED_IN : SHOP_LINKS_LOGGED_OUT,
+    },
+    ...OTHER_SECTIONS,
+  ];
+
   return (
     <footer className="bg-background text-foreground py-12 lg:py-16 border-t border-border mt-auto">
       <Container>
