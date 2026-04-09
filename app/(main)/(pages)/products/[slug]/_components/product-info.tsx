@@ -1,11 +1,37 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, HelpCircle, Share2, Calendar, Truck, ChevronDown } from 'lucide-react';
 import { AddToCartButton } from './add-to-cart-button';
+import { AskQuestionForm } from './ask-question-form';
 import { useAuth } from '@/providers/auth-provider';
 import type { ShopifyProductDetail } from '@/lib/shopify/types';
+
+const WISHLIST_KEY = 'oodling_wishlist';
+
+function getWishlist(): string[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(WISHLIST_KEY) ?? '[]');
+  } catch {
+    return [];
+  }
+}
+
+function toggleWishlistItem(productId: string): boolean {
+  const list = getWishlist();
+  const idx = list.indexOf(productId);
+  if (idx === -1) {
+    list.push(productId);
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+    return true;
+  } else {
+    list.splice(idx, 1);
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
+    return false;
+  }
+}
 
 interface ProductInfoProps {
   product: ShopifyProductDetail;
@@ -47,6 +73,39 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const [selection, setSelection] = useState<Record<string, string>>(initialSelection);
   const [quantity, setQuantity] = useState(1);
   const [openOption, setOpenOption] = useState<string | null>(null);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [showAskForm, setShowAskForm] = useState(false);
+  const [questionSubmitted, setQuestionSubmitted] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  // Sync wishlist state from localStorage on mount
+  useEffect(() => {
+    setWishlisted(getWishlist().includes(product.id));
+  }, [product.id]);
+
+  function handleWishlist() {
+    if (!isLoggedIn) {
+      router.push('/sign-in');
+      return;
+    }
+    const added = toggleWishlistItem(product.id);
+    setWishlisted(added);
+  }
+
+  async function handleShare() {
+    const url = `${window.location.origin}/products/${product.handle}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: product.title, url });
+      } catch {
+        // user cancelled
+      }
+    } else {
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    }
+  }
 
   // Find the variant matching all current selections
   const activeVariant = useMemo(() => {
@@ -211,17 +270,37 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="flex items-center justify-between text-sm text-[#141718] py-4">
         <button
           className="flex items-center gap-2 hover:opacity-70 transition-opacity"
-          onClick={() => { if (!isLoggedIn) router.push('/sign-in'); }}
+          onClick={handleWishlist}
         >
-          <Heart size={18} /> Wishlist
+          <Heart size={18} fill={wishlisted ? 'currentColor' : 'none'} /> Wishlist
         </button>
-        <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+        <button
+          className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+          onClick={() => { setShowAskForm((v) => !v); setQuestionSubmitted(false); }}
+        >
           <HelpCircle size={18} /> Ask question
         </button>
-        <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
-          <Share2 size={18} /> Share
+        <button
+          className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+          onClick={handleShare}
+        >
+          <Share2 size={18} /> {shareCopied ? 'Copied!' : 'Share'}
         </button>
       </div>
+
+      {/* Ask a question form */}
+      {showAskForm && !questionSubmitted && (
+        <AskQuestionForm
+          productId={product.id}
+          onClose={() => setShowAskForm(false)}
+          onSuccess={() => { setQuestionSubmitted(true); setShowAskForm(false); }}
+        />
+      )}
+      {questionSubmitted && (
+        <p className="text-sm text-green-600 border-t border-[#E8ECEF] pt-4 mt-2">
+          Thanks! Your question has been submitted.
+        </p>
+      )}
 
       <hr className="border-[#E8ECEF] mb-5" />
 

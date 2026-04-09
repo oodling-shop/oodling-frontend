@@ -43,7 +43,7 @@ export function RelatedProductCard({
             src={imageUrl}
             alt={imageAlt || title}
             fill
-            className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, 25vw"
           />
         )}
