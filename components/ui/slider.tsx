@@ -27,7 +27,7 @@ function Slider({
           className="bg-neutral-900 absolute h-full"
         />
       </SliderPrimitive.Track>
-      {props.defaultValue?.map((_, index) => (
+      {(props.value ?? props.defaultValue)?.map((_, index) => (
         <SliderPrimitive.Thumb
           key={index}
           data-slot="slider-thumb"

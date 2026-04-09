@@ -57,6 +57,8 @@ function ProductsGridInner({ products, totalCount, productTypes, collections }: 
             onViewChange={setView}
             currentSort={currentSort}
             onSortChange={handleSortChange}
+            productTypes={productTypes}
+            collections={collections}
           />
           <ActiveFilters />
           <div className={cn(

@@ -32,6 +32,8 @@ interface FilterBarProps {
   onViewChange: (view: number) => void;
   currentSort?: SortOption;
   onSortChange?: (option: SortOption) => void;
+  productTypes?: string[];
+  collections?: import('@/lib/shopify/types').ShopifyCollection[];
 }
 
 export const FilterBar = ({
@@ -42,6 +44,8 @@ export const FilterBar = ({
   onViewChange,
   currentSort = SORT_OPTIONS[0],
   onSortChange,
+  productTypes,
+  collections,
 }: FilterBarProps) => {
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef<HTMLDivElement>(null);
@@ -62,6 +66,8 @@ export const FilterBar = ({
       <FilterSidebar
         open={isSidebarOpen}
         onOpenChange={(open) => !open && onToggleSidebar?.()}
+        productTypes={productTypes}
+        collections={collections}
       />
 
       {/* Product Count */}
