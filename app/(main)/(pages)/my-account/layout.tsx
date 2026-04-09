@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { AccountSidebar } from "@/components/my-account/sidebar";
 import { AccountHeader } from "@/components/my-account/account-header";
-import { renewCustomerToken } from '@/lib/shopify/customer';
+import { renewCustomerToken, getCustomer } from '@/lib/shopify/customer';
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -43,12 +43,17 @@ export default async function MyAccountLayout({
     }
   }
 
+  const customer = await getCustomer(token);
+
   return (
     <div className="container mx-auto px-4 py-20 min-h-[60vh]">
       <AccountHeader />
       <div className="flex flex-col md:flex-row gap-12 md:gap-24">
         <aside className="w-full md:w-[260px] flex-shrink-0">
-          <AccountSidebar />
+          <AccountSidebar
+            firstName={customer?.firstName ?? ''}
+            lastName={customer?.lastName ?? ''}
+          />
         </aside>
         <main className="flex-1">
           {children}

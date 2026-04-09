@@ -190,8 +190,8 @@ export async function getCustomer(token: string): Promise<ShopifyCustomer | null
   const data = await shopifyFetch<R>({
     query: `
       ${CUSTOMER_ADDRESS_FRAGMENT}
-      query GetCustomer {
-        customer {
+      query GetCustomer($customerAccessToken: String!) {
+        customer(customerAccessToken: $customerAccessToken) {
           id
           firstName
           lastName
@@ -210,6 +210,7 @@ export async function getCustomer(token: string): Promise<ShopifyCustomer | null
         }
       }
     `,
+    variables: { customerAccessToken: token },
     token,
     cache: 'no-store',
   });
@@ -260,8 +261,8 @@ export async function getOrders(token: string): Promise<ShopifyOrder[]> {
   const data = await shopifyFetch<R>({
     query: `
       ${ORDER_FRAGMENT}
-      query GetOrders {
-        customer {
+      query GetOrders($customerAccessToken: String!) {
+        customer(customerAccessToken: $customerAccessToken) {
           orders(first: 20, sortKey: PROCESSED_AT, reverse: true) {
             edges {
               node {
@@ -272,6 +273,7 @@ export async function getOrders(token: string): Promise<ShopifyOrder[]> {
         }
       }
     `,
+    variables: { customerAccessToken: token },
     token,
     cache: 'no-store',
   });
@@ -289,8 +291,8 @@ export async function getAddresses(token: string): Promise<ShopifyAddress[]> {
   const data = await shopifyFetch<R>({
     query: `
       ${CUSTOMER_ADDRESS_FRAGMENT}
-      query GetAddresses {
-        customer {
+      query GetAddresses($customerAccessToken: String!) {
+        customer(customerAccessToken: $customerAccessToken) {
           addresses(first: 10) {
             edges {
               node {
@@ -301,6 +303,7 @@ export async function getAddresses(token: string): Promise<ShopifyAddress[]> {
         }
       }
     `,
+    variables: { customerAccessToken: token },
     token,
     cache: 'no-store',
   });
