@@ -65,6 +65,7 @@ function SheetContent({
         )}
         {...props}
       >
+        <SheetTitle className="sr-only">Sheet</SheetTitle>
         {children}
       </DialogPrimitive.Content>
     </SheetPortal>

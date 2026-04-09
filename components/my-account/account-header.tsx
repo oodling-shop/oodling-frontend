@@ -15,7 +15,7 @@ export function AccountHeader() {
   const title = titles[pathname] || "My account";
 
   return (
-    <h1 className="text-4xl md:text-5xl font-medium text-center mb-16">
+    <h1 className="hidden md:block text-4xl md:text-5xl font-medium text-center mb-16">
       {title}
     </h1>
   );

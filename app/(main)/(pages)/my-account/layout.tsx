@@ -46,16 +46,16 @@ export default async function MyAccountLayout({
   const customer = await getCustomer(token);
 
   return (
-    <div className="container mx-auto px-4 py-20 min-h-[60vh]">
+    <div className="container mx-auto px-4 pt-6 pb-16 md:py-20 min-h-[60vh]">
       <AccountHeader />
-      <div className="flex flex-col md:flex-row gap-12 md:gap-24">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-24">
         <aside className="w-full md:w-[260px] flex-shrink-0">
           <AccountSidebar
             firstName={customer?.firstName ?? ''}
             lastName={customer?.lastName ?? ''}
           />
         </aside>
-        <main className="flex-1">
+        <main className="flex-1 pt-2 md:pt-0">
           {children}
         </main>
       </div>
