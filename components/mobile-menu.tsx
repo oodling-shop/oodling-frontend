@@ -28,12 +28,58 @@ import { cn } from '@/helpers';
 import { useCart } from '@/providers/cart-provider';
 import { useAuth } from '@/providers/auth-provider';
 
-// Navigation items
-const navItems = [
-  { label: 'Home', hasDropdown: true },
-  { label: 'Shop', hasDropdown: true },
-  { label: 'Product', hasDropdown: true },
-  { label: 'Pages', hasDropdown: true },
+// Navigation items with sub-links (mirrors desktop megamenu)
+const navItems: {
+  label: string;
+  hasDropdown: boolean;
+  links?: { name: string; href: string }[];
+}[] = [
+  {
+    label: 'Home',
+    hasDropdown: true,
+    links: [
+      { name: 'New Arrivals', href: '/products?sort=new-arrivals' },
+      { name: 'Best Sellers', href: '/products?sort=best-sellers' },
+      { name: 'Trending Now', href: '/products?tag=trending' },
+      { name: 'Special Offers', href: '/products?tag=sale' },
+      { name: 'About Nayzak', href: '/about-us' },
+      { name: 'Help Center', href: '/faq' },
+    ],
+  },
+  {
+    label: 'Shop',
+    hasDropdown: true,
+    links: [
+      { name: 'All Clothing', href: '/products?category=all-clothing' },
+      { name: 'Tops', href: '/products?category=tops' },
+      { name: 'Bottoms', href: '/products?category=bottoms' },
+      { name: 'Bags & Totes', href: '/products?category=bags' },
+      { name: 'All Shoes', href: '/products?category=shoes' },
+      { name: 'Jewelry', href: '/products?category=jewelry' },
+    ],
+  },
+  {
+    label: 'Product',
+    hasDropdown: true,
+    links: [
+      { name: 'Simple Product', href: '/products/simple-product' },
+      { name: 'Variable Product', href: '/products/variable-product' },
+      { name: 'Digital Product', href: '/products/digital-product' },
+      { name: 'Affiliate Product', href: '/products/affiliate-product' },
+      { name: 'Grouped Product', href: '/products/grouped-product' },
+    ],
+  },
+  {
+    label: 'Pages',
+    hasDropdown: true,
+    links: [
+      { name: 'Our Story', href: '/about-us' },
+      { name: 'Help & FAQ', href: '/faq' },
+      { name: 'Shipping Info', href: '/faq' },
+      { name: 'Track Order', href: '/my-account' },
+      { name: 'Contact Us', href: '/contact-us' },
+    ],
+  },
 ];
 
 export const MobileMenu = () => {
@@ -132,6 +178,20 @@ export const MobileMenu = () => {
                       />
                     )}
                   </Button>
+                  {item.hasDropdown && expandedItem === item.label && item.links && (
+                    <div className="pb-3 space-y-1">
+                      {item.links.map((link) => (
+                        <Link
+                          key={link.href + link.name}
+                          href={link.href}
+                          onClick={() => setIsOpen(false)}
+                          className="block py-2 pl-3 text-sm font-normal text-gray-500 hover:text-gray-900 transition-colors"
+                        >
+                          {link.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </nav>
