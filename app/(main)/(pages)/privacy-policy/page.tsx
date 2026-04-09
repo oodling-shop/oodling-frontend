@@ -1,4 +1,5 @@
 import { Container } from "@/components/container";
+import { BRAND_EMAILS, BRAND_NAME } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -169,8 +170,8 @@ export default function PrivacyPolicyPage() {
                   </p>
                   <p>
                     Despite our precautions, no method of transmission over the internet or electronic storage is 100% secure. If you suspect unauthorised access to your account, please contact us immediately at{" "}
-                    <a href="mailto:privacy@oodling.com" className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
-                      privacy@oodling.com
+                    <a href={`mailto:${BRAND_EMAILS.privacy}`} className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
+                      {BRAND_EMAILS.privacy}
                     </a>.
                   </p>
                   <p>
@@ -198,12 +199,12 @@ export default function PrivacyPolicyPage() {
                     If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please reach out to us:
                   </p>
                   <div className="bg-gray-50 border border-gray-100 p-6 mt-4 not-prose">
-                    <p className="text-sm font-semibold text-gray-900 mb-3">Oodling Privacy Team</p>
+                    <p className="text-sm font-semibold text-gray-900 mb-3">{BRAND_NAME} Privacy Team</p>
                     <div className="flex flex-col gap-1.5 text-sm text-gray-600">
                       <p>
                         Email:{" "}
-                        <a href="mailto:privacy@oodling.com" className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
-                          privacy@oodling.com
+                        <a href={`mailto:${BRAND_EMAILS.privacy}`} className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
+                          {BRAND_EMAILS.privacy}
                         </a>
                       </p>
                       <p>

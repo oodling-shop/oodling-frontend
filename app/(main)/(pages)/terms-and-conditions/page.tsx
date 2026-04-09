@@ -1,4 +1,5 @@
 import { Container } from "@/components/container";
+import { BRAND_EMAILS, BRAND_NAME, BRAND_WEBSITE } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -91,7 +92,7 @@ export default function TermsAndConditionsPage() {
 
                 <TermsSection id="acceptance" title="Acceptance of Terms">
                   <p>
-                    By accessing or using the Oodling website (oodling.com), placing an order, or creating an account, you confirm that you have read, understood, and agree to be bound by these Terms &amp; Conditions and our Privacy Policy.
+                    By accessing or using the {BRAND_NAME} website ({BRAND_WEBSITE}), placing an order, or creating an account, you confirm that you have read, understood, and agree to be bound by these Terms &amp; Conditions and our Privacy Policy.
                   </p>
                   <p>
                     If you do not agree to these terms, please do not use our site. We reserve the right to update these terms at any time. Continued use of the site after changes constitutes your acceptance of the revised terms.
@@ -190,8 +191,8 @@ export default function TermsAndConditionsPage() {
                   </p>
                   <p>
                     If you believe any content on our site infringes your intellectual property rights, please contact us at{" "}
-                    <a href="mailto:legal@oodling.com" className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
-                      legal@oodling.com
+                    <a href={`mailto:${BRAND_EMAILS.legal}`} className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
+                      {BRAND_EMAILS.legal}
                     </a>{" "}
                     with the details of your claim.
                   </p>
@@ -226,12 +227,12 @@ export default function TermsAndConditionsPage() {
                     If you have any questions about these Terms &amp; Conditions, please contact us:
                   </p>
                   <div className="bg-gray-50 border border-gray-100 p-6 mt-4 not-prose">
-                    <p className="text-sm font-semibold text-gray-900 mb-3">Oodling Legal Team</p>
+                    <p className="text-sm font-semibold text-gray-900 mb-3">{BRAND_NAME} Legal Team</p>
                     <div className="flex flex-col gap-1.5 text-sm text-gray-600">
                       <p>
                         Email:{" "}
-                        <a href="mailto:legal@oodling.com" className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
-                          legal@oodling.com
+                        <a href={`mailto:${BRAND_EMAILS.legal}`} className="text-gray-900 underline underline-offset-2 hover:opacity-60 transition-opacity">
+                          {BRAND_EMAILS.legal}
                         </a>
                       </p>
                       <p>
