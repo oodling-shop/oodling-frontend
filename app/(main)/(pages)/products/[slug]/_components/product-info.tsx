@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { Heart, HelpCircle, Share2, Calendar, Truck, ChevronDown } from 'lucide-react';
 import { AddToCartButton } from './add-to-cart-button';
+import { useAuth } from '@/providers/auth-provider';
 import type { ShopifyProductDetail } from '@/lib/shopify/types';
 
 interface ProductInfoProps {
@@ -40,6 +42,8 @@ export function ProductInfo({ product }: ProductInfoProps) {
     return sel;
   }, [firstAvailable]);
 
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
   const [selection, setSelection] = useState<Record<string, string>>(initialSelection);
   const [quantity, setQuantity] = useState(1);
   const [openOption, setOpenOption] = useState<string | null>(null);
@@ -205,7 +209,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Action links */}
       <div className="flex items-center justify-between text-sm text-[#141718] py-4">
-        <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+        <button
+          className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+          onClick={() => { if (!isLoggedIn) router.push('/sign-in'); }}
+        >
           <Heart size={18} /> Wishlist
         </button>
         <button className="flex items-center gap-2 hover:opacity-70 transition-opacity">

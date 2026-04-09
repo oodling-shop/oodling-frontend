@@ -1,7 +1,9 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/providers/cart-provider';
+import { useAuth } from '@/providers/auth-provider';
 import { showSuccessNotification } from '@/components/ui/notification';
 
 interface AddToCartButtonProps {
@@ -12,11 +14,17 @@ interface AddToCartButtonProps {
 
 export function AddToCartButton({ variantId, quantity = 1, productTitle }: AddToCartButtonProps) {
   const { addItem } = useCart();
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const isUnavailable = variantId === null;
 
   const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      router.push('/sign-in');
+      return;
+    }
     if (!variantId) return;
     startTransition(async () => {
       await addItem(variantId, quantity);

@@ -25,6 +25,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/helpers';
+import { useCart } from '@/providers/cart-provider';
+import { useAuth } from '@/providers/auth-provider';
 
 // Navigation items
 const navItems = [
@@ -37,6 +39,9 @@ const navItems = [
 export const MobileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const { cart } = useCart();
+  const { isLoggedIn } = useAuth();
+  const cartCount = cart?.totalQuantity ?? 0;
 
   const toggleExpanded = (label: string) => {
     setExpandedItem(expandedItem === label ? null : label);
@@ -58,7 +63,7 @@ export const MobileMenu = () => {
 
       <SheetContent
         side="left"
-        className="w-[90%] sm:max-w-[383px] p-0 flex flex-col bg-white border-none shadow-premium h-full outline-none [&>button]:hidden"
+        className="w-[90%] sm:max-w-95.75 p-0 flex flex-col bg-white border-none shadow-premium h-full outline-none [&>button]:hidden"
       >
         <SheetTitle className="sr-only">Directory Menu</SheetTitle>
         <SheetDescription className="sr-only">
@@ -131,37 +136,36 @@ export const MobileMenu = () => {
               ))}
             </nav>
 
-            <div className="space-y-0">
-              {/* Cart Section */}
-              <Link
-                href="/cart"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center justify-between py-4"
-              >
-                <span className="text-base font-normal text-gray-400">Cart</span>
-                <div className="flex items-center gap-3">
-                  <ShoppingBag size={24} weight="regular" className="text-gray-900" />
-                  <span className="flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-950 text-white text-[11px] font-bold">
-                    2
-                  </span>
-                </div>
-              </Link>
+            {isLoggedIn && (
+              <div className="space-y-0">
+                {/* Cart Section */}
+                <Link
+                  href="/cart"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-between py-4"
+                >
+                  <span className="text-base font-normal text-gray-400">Cart</span>
+                  <div className="flex items-center gap-3">
+                    <ShoppingBag size={24} weight="regular" className="text-gray-900" />
+                    {cartCount > 0 && (
+                      <span className="flex items-center justify-center min-w-6 h-6 px-1.5 rounded-full bg-gray-950 text-white text-[11px] font-bold">
+                        {cartCount}
+                      </span>
+                    )}
+                  </div>
+                </Link>
 
-              {/* Wishlist Section */}
-              <Link
-                href="/wishlist"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center justify-between py-4"
-              >
-                <span className="text-base font-normal text-gray-400">Wishlist</span>
-                <div className="flex items-center gap-3">
+                {/* Wishlist Section */}
+                <Link
+                  href="/wishlist"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-between py-4"
+                >
+                  <span className="text-base font-normal text-gray-400">Wishlist</span>
                   <Heart size={24} weight="regular" className="text-gray-900" />
-                  <span className="flex items-center justify-center min-w-[24px] h-6 px-1.5 rounded-full bg-gray-950 text-white text-[11px] font-bold">
-                    6
-                  </span>
-                </div>
-              </Link>
-            </div>
+                </Link>
+              </div>
+            )}
 
             <div className="border-t border-gray-100 pt-3 space-y-1">
               {/* Currency Selector */}
@@ -183,11 +187,28 @@ export const MobileMenu = () => {
               </div>
             </div>
 
-            {/* Sign In Button */}
+            {/* Auth Button */}
             <div className="pt-2">
-              <Button className="w-full h-12 bg-gray-950 text-white text-base font-semibold rounded-lg hover:bg-gray-800 transition-colors active:scale-[0.98]">
-                Sign in
-              </Button>
+              {isLoggedIn ? (
+                <Link href="/my-account" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full h-12 bg-gray-950 text-white text-base font-semibold rounded-lg hover:bg-gray-800 transition-colors active:scale-[0.98]">
+                    My Account
+                  </Button>
+                </Link>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <Link href="/sign-in" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full h-12 bg-gray-950 text-white text-base font-semibold rounded-lg hover:bg-gray-800 transition-colors active:scale-[0.98]">
+                      Sign in
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up" onClick={() => setIsOpen(false)}>
+                    <Button variant="outline" className="w-full h-12 text-base font-semibold rounded-lg transition-colors active:scale-[0.98]">
+                      Sign up
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Social Media Icons */}

@@ -7,10 +7,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useScroll } from '@/hooks/use-scroll';
 import { cn } from '@/helpers';
 import { CaretDown, MagnifyingGlass, User, ShoppingBag } from '@phosphor-icons/react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MobileMenu } from './mobile-menu';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/providers/cart-provider';
+import { useAuth } from '@/providers/auth-provider';
 import { SearchPopup } from './search-popup';
 
 // Megamenu data - organized by columns exactly as shown in Figma
@@ -189,19 +190,30 @@ export const Navbar = () => {
   const [activeMegamenu, setActiveMegamenu] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { cart } = useCart();
+  const { isLoggedIn } = useAuth();
   const cartCount = cart?.totalQuantity ?? 0;
+  const navRef = useRef<HTMLElement>(null);
 
-  // Close megamenu on Escape key press
+  // Close megamenu on Escape key press or click outside nav
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setActiveMegamenu(null);
       }
     };
+    const handleClickOutside = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setActiveMegamenu(null);
+      }
+    };
 
     if (activeMegamenu) {
       document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
     }
   }, [activeMegamenu]);
 
@@ -221,11 +233,16 @@ export const Navbar = () => {
 
   return (
     <nav
+      ref={navRef}
       className={cn(
-        'fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300',
-        scrolled
-          ? cn('bg-background/80 backdrop-blur-md border-b border-border pt-4', activeMegamenu ? 'pb-0' : 'pb-4')
-          : cn('bg-transparent pt-6', activeMegamenu ? 'pb-0' : 'pb-6')
+        'fixed top-0 left-0 right-0 z-50 w-full transition-[background-color,backdrop-filter,border-color] duration-300',
+        scrolled ? 'pt-4' : 'pt-6',
+        activeMegamenu ? 'pb-0' : scrolled ? 'pb-4' : 'pb-6',
+        activeMegamenu
+          ? 'bg-white border-b border-gray-100'
+          : scrolled
+            ? 'bg-background/80 backdrop-blur-md border-b border-border'
+            : 'bg-transparent'
       )}
       onMouseLeave={handleMouseLeave}
     >
@@ -290,26 +307,45 @@ export const Navbar = () => {
             <MagnifyingGlass size={24} />
           </Button>
 
-          <Link
-            href="/cart"
-            className="relative text-foreground hover:text-primary transition-colors"
-            aria-label="Cart"
-          >
-            <ShoppingBag size={24} />
-            {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-[11px] font-bold text-background ring-2 ring-background">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          {isLoggedIn && (
+            <Link
+              href="/cart"
+              className="relative text-foreground hover:text-primary transition-colors"
+              aria-label="Cart"
+            >
+              <ShoppingBag size={24} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-[11px] font-bold text-background ring-2 ring-background">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          )}
 
-          <Link
-            href="/my-account"
-            className="hidden md:block text-foreground hover:text-primary transition-colors"
-            aria-label="Account"
-          >
-            <User size={24} />
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              href="/my-account"
+              className="hidden md:block text-foreground hover:text-primary transition-colors"
+              aria-label="Account"
+            >
+              <User size={24} />
+            </Link>
+          ) : (
+            <div className="hidden md:flex items-center gap-3">
+              <Link
+                href="/sign-in"
+                className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/sign-up"
+                className="text-sm font-semibold bg-[#141718] text-white px-4 py-2 hover:bg-[#141718]/90 transition-colors"
+              >
+                Sign up
+              </Link>
+            </div>
+          )}
 
           {/* Hamburger - Mobile only, rightmost */}
           <MobileMenu />
@@ -319,18 +355,7 @@ export const Navbar = () => {
       {/* Megamenu - positioned relative to nav, spans full width */}
       <AnimatePresence>
         {activeMegamenu && MEGAMENUS[activeMegamenu] && (
-          <>
-            {/* Backdrop overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-transparent z-40"
-              onClick={() => setActiveMegamenu(null)}
-            />
-
-            {/* Megamenu panel - Simple top-to-bottom animation */}
-            <motion.div
+          <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -389,8 +414,7 @@ export const Navbar = () => {
                   )}
                 </div>
               </Container>
-            </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
 

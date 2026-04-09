@@ -1,21 +1,28 @@
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { CartProvider } from "@/providers/cart-provider";
+import { AuthProvider } from "@/providers/auth-provider";
+import { getTokenFromCookie } from "@/lib/shopify/customer";
 
-export default function MainLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const token = await getTokenFromCookie();
+  const isLoggedIn = !!token;
+
   return (
-    <CartProvider>
-      <Navbar />
-      <div className="pt-16 min-h-screen flex flex-col">
-        <div className="flex-grow">
-          {children}
+    <AuthProvider isLoggedIn={isLoggedIn}>
+      <CartProvider>
+        <Navbar />
+        <div className="pt-20 min-h-screen flex flex-col">
+          <div className="grow">
+            {children}
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </CartProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
