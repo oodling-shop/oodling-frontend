@@ -130,20 +130,18 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
                 key={product.id}
                 className="flex-none w-[280px] md:w-[325px] snap-start"
               >
-                <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] p-5 flex flex-col items-center justify-center group cursor-pointer transition-all duration-300 hover:shadow-lg">
+                <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg">
 
                   {/* Product Image */}
-                  <div className="relative w-full h-[75%] transition-transform duration-500 ease-out group-hover:scale-105 group-hover:-rotate-1">
-                    {product.images.edges[0]?.node && (
-                      <Image
-                        src={product.images.edges[0].node.url}
-                        alt={product.images.edges[0].node.altText || product.title}
-                        fill
-                        className="object-contain"
-                        priority
-                      />
-                    )}
-                  </div>
+                  {product.images.edges[0]?.node && (
+                    <Image
+                      src={product.images.edges[0].node.url}
+                      alt={product.images.edges[0].node.altText || product.title}
+                      fill
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                      priority
+                    />
+                  )}
 
                   {/* Product Title Pill */}
                   <div className="absolute bottom-8 left-0 right-0 px-4 transform transition-transform duration-300 group-hover:-translate-y-1">
