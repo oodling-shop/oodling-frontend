@@ -9,8 +9,10 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Asterisk, Eye, EyeSlash } from '@phosphor-icons/react';
 import { login } from '@/lib/shopify/customer';
+import { useTranslations } from 'next-intl';
 
 export default function SignInPage() {
+  const t = useTranslations('auth.signIn');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
@@ -39,7 +41,6 @@ export default function SignInPage() {
 
   return (
     <div className="flex min-h-screen flex-col md:flex-row bg-white">
-      {/* Left Side: Image Content */}
       <div className="relative hidden w-1/2 overflow-hidden bg-[#F3F3F3] md:block">
         <div className="absolute left-10 top-10 z-10 flex items-center gap-2">
           <Link href="/" className="transition-transform hover:scale-105 active:scale-95">
@@ -64,7 +65,6 @@ export default function SignInPage() {
         </motion.div>
       </div>
 
-      {/* Right Side: Sign In Form */}
       <div className="flex w-full flex-col justify-center px-6 py-12 md:w-1/2 md:px-16 lg:px-24 xl:px-40">
         <motion.div
           initial={{ y: 20, opacity: 0 }}
@@ -75,17 +75,17 @@ export default function SignInPage() {
           <div className="mb-12 block md:hidden">
             <Link href="/" className="inline-flex items-center gap-2">
               <Asterisk size={28} weight="bold" className="text-[#141718]" />
-              <span className="text-xl font-bold tracking-tight text-[#141718]">NAYZAK</span>
+              <span className="text-xl font-bold tracking-tight text-[#141718]">{t('brandName')}</span>
             </Link>
           </div>
 
           <h1 className="mb-3 text-[40px] font-medium leading-[44px] tracking-tight text-[#141718]">
-            Sign in
+            {t('title')}
           </h1>
           <p className="mb-10 text-base text-[#6C7275]">
-            Don&apos;t have an account yet?{' '}
+            {t('noAccount')}{' '}
             <Link href="/sign-up" className="font-semibold text-[#141718] hover:underline transition-colors leading-[26px]">
-              Sign up
+              {t('signUpLink')}
             </Link>
           </p>
 
@@ -98,7 +98,7 @@ export default function SignInPage() {
               <Input
                 name="email"
                 type="email"
-                placeholder="Your email address"
+                placeholder={t('emailPlaceholder')}
                 required
                 className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718] border-none shadow-none h-auto px-0 rounded-none focus-visible:ring-0"
               />
@@ -108,7 +108,7 @@ export default function SignInPage() {
               <Input
                 name="password"
                 type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
+                placeholder={t('passwordPlaceholder')}
                 required
                 className="w-full bg-transparent py-4 text-base font-normal outline-none transition-all placeholder:text-[#6C7275] focus:border-[#141718] border-none shadow-none h-auto px-0 rounded-none focus-visible:ring-0"
               />
@@ -133,20 +133,14 @@ export default function SignInPage() {
                     onChange={() => setRememberMe(!rememberMe)}
                   />
                   <div className="h-5 w-5 rounded-sm border border-[#6C7275] transition-all peer-checked:bg-[#141718] peer-checked:border-[#141718] group-hover:border-[#141718]" />
-                  <svg
-                    className="absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth="3.5"
-                  >
+                  <svg className="absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <span className="text-sm font-normal text-[#6C7275]">Remember me</span>
+                <span className="text-sm font-normal text-[#6C7275]">{t('rememberMe')}</span>
               </label>
               <Link href="/forgot-password" className="text-sm font-semibold text-[#141718] hover:underline transition-colors">
-                Forgot password?
+                {t('forgotPassword')}
               </Link>
             </div>
 
@@ -155,7 +149,7 @@ export default function SignInPage() {
               disabled={isLoading}
               className="h-[52px] cursor-pointer w-full bg-[#141718] text-base font-semibold text-white hover:bg-[#141718]/90 rounded-md transition-all active:scale-[0.98] disabled:opacity-60"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? t('submitting') : t('submit')}
             </Button>
           </form>
         </motion.div>

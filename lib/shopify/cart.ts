@@ -13,9 +13,14 @@ type CartLinesAddResponse = { cartLinesAdd: { cart: ShopifyCart } };
 type CartLinesUpdateResponse = { cartLinesUpdate: { cart: ShopifyCart } };
 type CartLinesRemoveResponse = { cartLinesRemove: { cart: ShopifyCart } };
 
+async function getLanguage(): Promise<string> {
+  const cookieStore = await cookies();
+  return cookieStore.get('shopify_locale')?.value ?? 'EN';
+}
+
 const CART_QUERY = `
   ${CART_FRAGMENT}
-  query GetCart($id: ID!) {
+  query GetCart($id: ID!, $language: LanguageCode) @inContext(language: $language) {
     cart(id: $id) {
       ...CartFields
     }
@@ -24,7 +29,7 @@ const CART_QUERY = `
 
 const CART_CREATE_MUTATION = `
   ${CART_FRAGMENT}
-  mutation CartCreate {
+  mutation CartCreate($language: LanguageCode) @inContext(language: $language) {
     cartCreate {
       cart {
         ...CartFields
@@ -35,7 +40,7 @@ const CART_CREATE_MUTATION = `
 
 const CART_LINES_ADD_MUTATION = `
   ${CART_FRAGMENT}
-  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+  mutation CartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!, $language: LanguageCode) @inContext(language: $language) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {
         ...CartFields
@@ -46,7 +51,7 @@ const CART_LINES_ADD_MUTATION = `
 
 const CART_LINES_UPDATE_MUTATION = `
   ${CART_FRAGMENT}
-  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+  mutation CartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!, $language: LanguageCode) @inContext(language: $language) {
     cartLinesUpdate(cartId: $cartId, lines: $lines) {
       cart {
         ...CartFields
@@ -57,7 +62,7 @@ const CART_LINES_UPDATE_MUTATION = `
 
 const CART_LINES_REMOVE_MUTATION = `
   ${CART_FRAGMENT}
-  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+  mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!, $language: LanguageCode) @inContext(language: $language) {
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
       cart {
         ...CartFields
@@ -77,7 +82,7 @@ async function setCartId(cartId: string) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 10, // 10 days
+    maxAge: 60 * 60 * 24 * 10,
     path: '/',
   });
 }
@@ -88,8 +93,10 @@ async function deleteCartId() {
 }
 
 export async function createCart(): Promise<ShopifyCart> {
+  const language = await getLanguage();
   const data = await shopifyFetch<CartCreateResponse>({
     query: CART_CREATE_MUTATION,
+    variables: { language },
     cache: 'no-store',
   });
   const cart = data.cartCreate.cart;
@@ -98,12 +105,12 @@ export async function createCart(): Promise<ShopifyCart> {
 }
 
 export async function getCart(): Promise<ShopifyCart | null> {
-  const cartId = await getCartId();
+  const [cartId, language] = await Promise.all([getCartId(), getLanguage()]);
   if (!cartId) return null;
 
   const data = await shopifyFetch<CartResponse>({
     query: CART_QUERY,
-    variables: { id: cartId },
+    variables: { id: cartId, language },
     cache: 'no-store',
   });
 
@@ -119,6 +126,7 @@ export async function addToCart(
   variantId: string,
   quantity: number
 ): Promise<ShopifyCart> {
+  const language = await getLanguage();
   let cartId = await getCartId();
   if (!cartId) {
     const newCart = await createCart();
@@ -130,6 +138,7 @@ export async function addToCart(
     variables: {
       cartId,
       lines: [{ merchandiseId: variantId, quantity }],
+      language,
     },
     cache: 'no-store',
   });
@@ -140,7 +149,7 @@ export async function updateCartItem(
   lineId: string,
   quantity: number
 ): Promise<ShopifyCart> {
-  const cartId = await getCartId();
+  const [cartId, language] = await Promise.all([getCartId(), getLanguage()]);
   if (!cartId) throw new Error('No cart found');
 
   const data = await shopifyFetch<CartLinesUpdateResponse>({
@@ -148,6 +157,7 @@ export async function updateCartItem(
     variables: {
       cartId,
       lines: [{ id: lineId, quantity }],
+      language,
     },
     cache: 'no-store',
   });
@@ -155,12 +165,12 @@ export async function updateCartItem(
 }
 
 export async function removeCartItem(lineId: string): Promise<ShopifyCart> {
-  const cartId = await getCartId();
+  const [cartId, language] = await Promise.all([getCartId(), getLanguage()]);
   if (!cartId) throw new Error('No cart found');
 
   const data = await shopifyFetch<CartLinesRemoveResponse>({
     query: CART_LINES_REMOVE_MUTATION,
-    variables: { cartId, lineIds: [lineId] },
+    variables: { cartId, lineIds: [lineId], language },
     cache: 'no-store',
   });
   return data.cartLinesRemove.cart;

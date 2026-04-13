@@ -1,0 +1,249 @@
+{
+  "navbar": {
+    "logoAlt": "شعار أودلينج",
+    "search": "بحث",
+    "cart": "السلة",
+    "account": "الحساب",
+    "menu": "القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "myAccount": "حسابي",
+    "nav": {
+      "home": "الرئيسية",
+      "shop": "المتجر",
+      "product": "المنتج",
+      "pages": "الصفحات"
+    },
+    "megamenu": {
+      "collections": "المجموعات",
+      "newArrivals": "وصل حديثاً",
+      "bestSellers": "الأكثر مبيعاً",
+      "trendingNow": "الرائج الآن",
+      "specialOffers": "عروض خاصة",
+      "limitedEdition": "إصدار محدود",
+      "discover": "اكتشف",
+      "aboutNayzak": "عن نايزاك",
+      "ourSustainability": "استدامتنا",
+      "theJournal": "المجلة",
+      "storeLocator": "موقع المتجر",
+      "sizeGuide": "دليل المقاسات",
+      "support": "الدعم",
+      "shippingInfo": "معلومات الشحن",
+      "returnsExchanges": "الإرجاع والاستبدال",
+      "helpCenter": "مركز المساعدة",
+      "trackOrder": "تتبع الطلب",
+      "careers": "الوظائف",
+      "apparel": "الملابس",
+      "allClothing": "جميع الملابس",
+      "tops": "القمصان",
+      "bottoms": "السراويل",
+      "dresses": "الفساتين",
+      "outerwear": "الملابس الخارجية",
+      "accessories": "الإكسسوارات",
+      "bagsTotes": "الحقائب",
+      "beltsGoods": "الأحزمة والإكسسوارات",
+      "hatsHeadwear": "القبعات",
+      "jewelry": "المجوهرات",
+      "scarves": "الأوشحة",
+      "shoes": "الأحذية",
+      "allShoes": "جميع الأحذية",
+      "sneakers": "الأحذية الرياضية",
+      "boots": "الأحذية الطويلة",
+      "loafers": "الأحذية الكلاسيكية",
+      "sandals": "الصنادل",
+      "productTypes": "أنواع المنتجات",
+      "simpleProduct": "منتج بسيط",
+      "variableProduct": "منتج متغير",
+      "digitalProduct": "منتج رقمي",
+      "affiliateProduct": "منتج تابع",
+      "groupedProduct": "منتج مجموعة",
+      "popularItems": "المنتجات الشائعة",
+      "signatureBag": "حقيبة مميزة",
+      "canvasTote": "حقيبة قماشية",
+      "leatherWallet": "محفظة جلدية",
+      "modernWatch": "ساعة عصرية",
+      "silkScarf": "وشاح حريري",
+      "essentialCollection": "المجموعة الأساسية",
+      "modernMinimalist": "بساطة عصرية",
+      "activeLiving": "الحياة النشطة",
+      "premiumCraft": "الحرفة المميزة",
+      "sustainable": "مستدام",
+      "aboutNayzakSection": "عن نايزاك",
+      "ourStory": "قصتنا",
+      "sustainability": "الاستدامة",
+      "journal": "المجلة",
+      "press": "الصحافة",
+      "customerCare": "خدمة العملاء",
+      "helpFaq": "المساعدة والأسئلة الشائعة",
+      "contact": "تواصل معنا",
+      "wholesale": "الجملة",
+      "generalInquiries": "استفسارات عامة",
+      "collaborations": "التعاون",
+      "lookbook": "كتاب الأزياء",
+      "pants": "البنطلونات",
+      "bags": "الحقائب",
+      "contactUs": "اتصل بنا"
+    },
+    "mobile": {
+      "currency": "العملة",
+      "language": "اللغة",
+      "wishlist": "قائمة الأمنيات",
+      "searchPlaceholder": "بحث",
+      "submitSearch": "إرسال البحث",
+      "directoryMenu": "قائمة التنقل",
+      "accessNavigation": "الوصول إلى التنقل والبحث وإعدادات الحساب."
+    }
+  },
+  "footer": {
+    "logoAlt": "شعار أودلينج",
+    "tagline": "نقدم لكم أفضل تجربة تسوق عالمية مع منتجات مختارة بعناية.",
+    "sections": {
+      "shop": "المتجر",
+      "information": "معلومات",
+      "company": "الشركة"
+    },
+    "shop": {
+      "myAccount": "حسابي",
+      "wishlist": "قائمة الأمنيات",
+      "cart": "السلة",
+      "signIn": "تسجيل الدخول",
+      "signUp": "إنشاء حساب"
+    },
+    "information": {
+      "shippingPolicy": "سياسة الشحن",
+      "returnsRefunds": "الإرجاع والاسترداد",
+      "cookiesPolicy": "سياسة ملفات تعريف الارتباط",
+      "frequentlyAsked": "الأسئلة الشائعة"
+    },
+    "company": {
+      "aboutUs": "عن الشركة",
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsConditions": "الشروط والأحكام",
+      "contactUs": "اتصل بنا"
+    },
+    "copyright": "© 2026 أودلينج",
+    "usd": "دولار أمريكي"
+  },
+  "hero": {
+    "slide1": {
+      "description": "حافظ على أناقتك اليومية مع أكثر من 20 طراز للاختيار من بينها.",
+      "cta": "استعرض المجموعة"
+    },
+    "slide2": {
+      "description": "استمتع بالراحة القصوى والأداء المتميز مع أحدث سلسلة AirKan.",
+      "cta": "تسوق الآن"
+    },
+    "slide3": {
+      "description": "تجاوز حدودك مع AeroDive Pro. مصمم للسرعة والرشاقة.",
+      "cta": "اعرف أكثر"
+    },
+    "goToSlide": "الانتقال إلى الشريحة {n}"
+  },
+  "features": {
+    "freeShipping": {
+      "title": "شحن مجاني",
+      "description": "للطلبات فوق 200 دولار"
+    },
+    "moneyBack": {
+      "title": "استرداد المال",
+      "description": "ضمان 30 يوماً"
+    },
+    "premiumSupport": {
+      "title": "دعم متميز",
+      "description": "دعم هاتفي وبريد إلكتروني"
+    },
+    "securePayments": {
+      "title": "مدفوعات آمنة",
+      "description": "محمية بواسطة Stripe"
+    }
+  },
+  "newsletter": {
+    "heading": "اشترك في نشرتنا الإخبارية.",
+    "subheading": "استمتع بخصومات كبيرة.",
+    "emailPlaceholder": "بريدك الإلكتروني",
+    "signup": "اشترك",
+    "agreeMarketing": "أوافق على استلام رسائل تسويقية."
+  },
+  "productGrid": {
+    "tabs": {
+      "bestSellers": "الأكثر مبيعاً",
+      "newArrivals": "وصل حديثاً",
+      "sale": "تخفيضات"
+    },
+    "noProducts": "لم يتم العثور على منتجات.",
+    "loadMore": "تحميل المزيد"
+  },
+  "newArrivals": {
+    "title": "وصل حديثاً",
+    "goToSlide": "الانتقال إلى الشريحة {n}"
+  },
+  "cart": {
+    "title": "السلة",
+    "loading": "جارٍ تحميل السلة...",
+    "columns": {
+      "product": "المنتج",
+      "quantity": "الكمية",
+      "price": "السعر",
+      "subtotal": "المجموع الجزئي"
+    },
+    "empty": {
+      "title": "سلتك فارغة",
+      "description": "يبدو أنك لم تضف أي شيء بعد.",
+      "cta": "ابدأ التسوق"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "تسجيل الدخول",
+      "noAccount": "ليس لديك حساب؟",
+      "signUpLink": "إنشاء حساب",
+      "emailPlaceholder": "عنوان بريدك الإلكتروني",
+      "passwordPlaceholder": "كلمة المرور",
+      "rememberMe": "تذكرني",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "submit": "تسجيل الدخول",
+      "submitting": "جارٍ تسجيل الدخول...",
+      "brandName": "NAYZAK"
+    },
+    "signUp": {
+      "title": "إنشاء حساب",
+      "hasAccount": "هل لديك حساب؟",
+      "signInLink": "تسجيل الدخول",
+      "firstNamePlaceholder": "الاسم الأول",
+      "lastNamePlaceholder": "الاسم الأخير",
+      "emailPlaceholder": "عنوان البريد الإلكتروني",
+      "passwordPlaceholder": "كلمة المرور",
+      "agreeText": "أوافق على",
+      "privacyPolicy": "سياسة الخصوصية",
+      "and": "و",
+      "termsOfUse": "شروط الاستخدام",
+      "submit": "إنشاء حساب",
+      "submitting": "جارٍ إنشاء الحساب...",
+      "brandName": "NAYZAK"
+    }
+  },
+  "account": {
+    "hello": "مرحباً <bold>{name}</bold>",
+    "guest": "زائر",
+    "notYou": "لست {email}؟",
+    "logout": "تسجيل الخروج",
+    "loggingOut": "جارٍ تسجيل الخروج…",
+    "dashboardDescription": "من لوحة تحكم حسابك يمكنك عرض طلباتك الأخيرة وإدارة عناوين الشحن والفواتير وتعديل كلمة المرور وتفاصيل حسابك."
+  },
+  "wishlist": {
+    "empty": "قائمة أمنياتك فارغة.",
+    "browse": "تصفح المنتجات",
+    "savedItems": "{count} عنصر محفوظ"
+  },
+  "search": {
+    "title": "نتائج البحث عن: \"{q}\"",
+    "breadcrumbHome": "الرئيسية",
+    "breadcrumbResults": "نتائج البحث عن \"{q}\""
+  },
+  "notFound": {
+    "title": "404 - الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير متاحة. حاول البحث مرة أخرى أو استخدم زر الرجوع أدناه.",
+    "backHome": "العودة للرئيسية"
+  }
+}

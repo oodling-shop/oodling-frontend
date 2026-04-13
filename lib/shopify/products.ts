@@ -2,7 +2,6 @@ import { shopifyFetch } from './client'
 import { PRODUCT_FRAGMENT, PRODUCT_DETAIL_FRAGMENT } from './fragments'
 import type { ShopifyProduct, ShopifyProductDetail } from './types'
 
-// Shared by any page that accepts sortKey/reverse search params
 export type ProductSortKey = 'TITLE' | 'PRICE' | 'CREATED_AT' | 'BEST_SELLING'
 
 const VALID_SORT_KEYS: ProductSortKey[] = ['TITLE', 'PRICE', 'CREATED_AT', 'BEST_SELLING']
@@ -36,13 +35,16 @@ type ProductDetailResponse = {
   product: ShopifyProductDetail | null
 }
 
-export async function getProducts({
-  first = 20,
-  after,
-  sortKey = 'CREATED_AT',
-  reverse = false,
-  query,
-}: GetProductsOptions = {}) {
+export async function getProducts(
+  {
+    first = 20,
+    after,
+    sortKey = 'CREATED_AT',
+    reverse = false,
+    query,
+  }: GetProductsOptions = {},
+  language = 'EN'
+) {
   const data = await shopifyFetch<ProductsResponse>({
     query: `
       ${PRODUCT_FRAGMENT}
@@ -52,7 +54,8 @@ export async function getProducts({
         $sortKey: ProductSortKeys
         $reverse: Boolean
         $query: String
-      ) {
+        $language: LanguageCode
+      ) @inContext(language: $language) {
         products(
           first: $first
           after: $after
@@ -73,7 +76,7 @@ export async function getProducts({
         }
       }
     `,
-    variables: { first, after, sortKey, reverse, query },
+    variables: { first, after, sortKey, reverse, query, language },
     cache: 'no-store',
   })
   return data.products
@@ -102,17 +105,20 @@ export async function getProductTypes(first = 50): Promise<string[]> {
   return data.productTypes.edges.map((e) => e.node).filter(Boolean)
 }
 
-export async function getProduct(handle: string): Promise<ShopifyProductDetail | null> {
+export async function getProduct(
+  handle: string,
+  language = 'EN'
+): Promise<ShopifyProductDetail | null> {
   const data = await shopifyFetch<ProductDetailResponse>({
     query: `
       ${PRODUCT_DETAIL_FRAGMENT}
-      query GetProduct($handle: String!) {
+      query GetProduct($handle: String!, $language: LanguageCode) @inContext(language: $language) {
         product(handle: $handle) {
           ...ProductDetailFields
         }
       }
     `,
-    variables: { handle },
+    variables: { handle, language },
     cache: 'no-store',
   })
   return data.product

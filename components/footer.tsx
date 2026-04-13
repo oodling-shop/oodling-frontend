@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Container } from './container';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -8,38 +8,9 @@ import { Facebook, Instagram, Twitter, Mail, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/helpers/cn';
 import { useAuth } from '@/providers/auth-provider';
-
-const SHOP_LINKS_LOGGED_IN = [
-  { label: 'My account', href: '/my-account' },
-  { label: 'Wishlist', href: '/my-account/wishlist' },
-  { label: 'Cart', href: '/cart' },
-];
-
-const SHOP_LINKS_LOGGED_OUT = [
-  { label: 'Sign in', href: '/sign-in' },
-  { label: 'Sign up', href: '/sign-up' },
-];
-
-const OTHER_SECTIONS = [
-  {
-    title: 'Information',
-    links: [
-      { label: 'Shipping Policy', href: '#' },
-      { label: 'Returns & Refunds', href: '#' },
-      { label: 'Cookies Policy', href: '#' },
-      { label: 'Frequently asked', href: '/faq' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About us', href: '/about-us' },
-      { label: 'Privacy Policy', href: '/privacy-policy' },
-      { label: 'Terms & Conditions', href: '/terms-and-conditions' },
-      { label: 'Contact Us', href: '/contact-us' },
-    ],
-  },
-];
+import { useLocale } from '@/providers/locale-provider';
+import { getLocaleFlag } from '@/lib/shopify/locale';
+import { useTranslations } from 'next-intl';
 
 const SocialIcon = ({ Icon, href }: { Icon: any; href: string }) => (
   <Link
@@ -104,15 +75,99 @@ const AccordionItem = ({
   );
 };
 
+const LocaleDropdown = () => {
+  const { locale, setLocale, locales } = useLocale();
+  const [isOpen, setIsOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const current = locales.find((l) => l.isoCode === locale) ?? locales[0];
+  if (!current) return null;
+
+  return (
+    <div ref={ref} className="relative">
+      <Button
+        variant="ghost"
+        onClick={() => setIsOpen((v) => !v)}
+        className="flex items-center gap-2 hover:text-foreground transition-colors group h-auto p-0 hover:bg-transparent"
+      >
+        <span className="text-base">{getLocaleFlag(current.isoCode)}</span>
+        <span>{current.endonymName}</span>
+        <ChevronDown
+          size={14}
+          className={cn('transition-transform duration-200', isOpen && 'rotate-180')}
+        />
+      </Button>
+
+      {isOpen && locales.length > 1 && (
+        <div className="absolute bottom-full mb-2 left-0 min-w-35 bg-background border border-border rounded-md shadow-md overflow-hidden z-10">
+          {locales.map((l) => (
+            <button
+              key={l.isoCode}
+              onClick={() => {
+                setLocale(l.isoCode);
+                setIsOpen(false);
+              }}
+              className={cn(
+                'flex items-center gap-2 w-full px-3 py-2 text-sm text-left hover:bg-muted transition-colors',
+                l.isoCode === locale ? 'text-foreground font-medium' : 'text-muted-foreground'
+              )}
+            >
+              <span>{getLocaleFlag(l.isoCode)}</span>
+              <span>{l.endonymName}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const Footer = () => {
   const { isLoggedIn } = useAuth();
+  const t = useTranslations('footer');
 
   const footerSections = [
     {
-      title: 'Shop',
-      links: isLoggedIn ? SHOP_LINKS_LOGGED_IN : SHOP_LINKS_LOGGED_OUT,
+      title: t('sections.shop'),
+      links: isLoggedIn
+        ? [
+            { label: t('shop.myAccount'), href: '/my-account' },
+            { label: t('shop.wishlist'), href: '/my-account/wishlist' },
+            { label: t('shop.cart'), href: '/cart' },
+          ]
+        : [
+            { label: t('shop.signIn'), href: '/sign-in' },
+            { label: t('shop.signUp'), href: '/sign-up' },
+          ],
     },
-    ...OTHER_SECTIONS,
+    {
+      title: t('sections.information'),
+      links: [
+        { label: t('information.shippingPolicy'), href: '#' },
+        { label: t('information.returnsRefunds'), href: '#' },
+        { label: t('information.cookiesPolicy'), href: '#' },
+        { label: t('information.frequentlyAsked'), href: '/faq' },
+      ],
+    },
+    {
+      title: t('sections.company'),
+      links: [
+        { label: t('company.aboutUs'), href: '/about-us' },
+        { label: t('company.privacyPolicy'), href: '/privacy-policy' },
+        { label: t('company.termsConditions'), href: '/terms-and-conditions' },
+        { label: t('company.contactUs'), href: '/contact-us' },
+      ],
+    },
   ];
 
   return (
@@ -124,14 +179,14 @@ export const Footer = () => {
             <Link href="/" className="inline-block">
               <Image
                 src="/images/logo.png"
-                alt="Nayzak Logo"
+                alt={t('logoAlt')}
                 width={140}
                 height={40}
                 className="h-8 w-auto object-contain"
               />
             </Link>
             <p className="text-muted-foreground leading-relaxed text-sm md:text-base">
-              Phosf luorescently engage worldwide method process shopping.
+              {t('tagline')}
             </p>
             <div className="flex gap-3 mt-2">
               <SocialIcon Icon={Facebook} href="#" />
@@ -141,20 +196,15 @@ export const Footer = () => {
             </div>
           </div>
 
-          {/* Desktop Links Grid (Hidden on Mobile) */}
+          {/* Desktop Links Grid */}
           <div className="hidden md:grid grid-cols-3 gap-8 md:gap-12 lg:gap-16 flex-1 lg:max-w-3xl">
             {footerSections.map((section) => (
               <div key={section.title} className="flex flex-col gap-4">
-                <h3 className="font-semibold text-foreground">
-                  {section.title}
-                </h3>
+                <h3 className="font-semibold text-foreground">{section.title}</h3>
                 <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
                   {section.links.map((link) => (
                     <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="hover:text-foreground transition-colors inline-block"
-                      >
+                      <Link href={link.href} className="hover:text-foreground transition-colors inline-block">
                         {link.label}
                       </Link>
                     </li>
@@ -164,34 +214,22 @@ export const Footer = () => {
             ))}
           </div>
 
-          {/* Mobile Links Accordion (Hidden on Desktop) */}
+          {/* Mobile Links Accordion */}
           <div className="block md:hidden w-full border-t border-border mt-4">
             {footerSections.map((section) => (
-              <AccordionItem
-                key={section.title}
-                title={section.title}
-                links={section.links}
-              />
+              <AccordionItem key={section.title} title={section.title} links={section.links} />
             ))}
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-muted-foreground">
-          <p className="text-center md:text-left">
-            © 2088 Nayzak Design
-          </p>
-          
+          <p className="text-center md:text-left">{t('copyright')}</p>
+
           <div className="flex items-center gap-6">
+            <LocaleDropdown />
             <Button variant="ghost" className="flex items-center gap-2 hover:text-foreground transition-colors group h-auto p-0 hover:bg-transparent">
-              <span className="text-base group-hover:scale-110 transition-transform">
-                🇺🇸
-              </span>
-              <span>English</span>
-              <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
-            </Button>
-            <Button variant="ghost" className="flex items-center gap-2 hover:text-foreground transition-colors group h-auto p-0 hover:bg-transparent">
-              <span>USD</span>
+              <span>{t('usd')}</span>
               <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
             </Button>
           </div>

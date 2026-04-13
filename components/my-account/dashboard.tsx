@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import type { ShopifyCustomer } from '@/lib/shopify/types';
 import { logout } from "@/lib/shopify/customer";
+import { useTranslations } from 'next-intl';
 
 interface DashboardContentProps {
   customer: ShopifyCustomer | null;
@@ -10,6 +11,7 @@ interface DashboardContentProps {
 
 function LogoutLink() {
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations('account');
 
   return (
     <button
@@ -17,20 +19,27 @@ function LogoutLink() {
       disabled={isPending}
       className="text-[#141718] font-semibold hover:underline decoration-2 disabled:opacity-50"
     >
-      {isPending ? "Logging out…" : "Log out"}
+      {isPending ? t('loggingOut') : t('logout')}
     </button>
   );
 }
 
 export function DashboardContent({ customer }: DashboardContentProps) {
+  const t = useTranslations('account');
+  const name = customer?.firstName ?? t('guest');
+
   return (
     <div className="space-y-6 max-w-2xl">
       <p className="text-[#6C7275] text-lg leading-relaxed">
-        Hello <span className="font-semibold text-black">{customer?.firstName ?? 'Guest'}</span> (not {customer?.email ?? ''}? <LogoutLink />)
+        {t.rich('hello', {
+          name,
+          bold: (chunks) => <span className="font-semibold text-black">{chunks}</span>,
+        })}
+        {' '}({t('notYou', { email: customer?.email ?? '' })} <LogoutLink />)
       </p>
 
       <p className="text-[#6C7275] text-lg leading-relaxed">
-        From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details.
+        {t('dashboardDescription')}
       </p>
     </div>
   );

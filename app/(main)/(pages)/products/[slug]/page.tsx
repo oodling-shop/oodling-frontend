@@ -4,14 +4,16 @@ import { ProductImageGallery } from './_components/product-image-gallery';
 import { ProductInfo } from './_components/product-info';
 import { ProductTabs } from './_components/product-tabs';
 import { RelatedProducts } from './_components/related-products';
+import { getLocale } from 'next-intl/server';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 export default async function ProductDetailPage({ params }: Props) {
-  const { slug } = await params;
-  const product = await getProduct(slug);
+  const [{ slug }, locale] = await Promise.all([params, getLocale()]);
+  const language = locale.toUpperCase();
+  const product = await getProduct(slug, language);
 
   if (!product) notFound();
 
@@ -19,7 +21,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const relatedProductsData = await getProducts({
     first: 8,
     query: `NOT id:${numericId}`,
-  });
+  }, language);
   const relatedProducts = relatedProductsData.edges.map((e) => e.node);
 
   const images = product.images.edges.map((e) => e.node);

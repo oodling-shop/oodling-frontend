@@ -7,9 +7,11 @@ import { CartItem } from '@/components/cart/cart-item';
 import { CartSummary } from '@/components/cart/cart-summary';
 import { CouponSection } from '@/components/cart/coupon-section';
 import { useCart } from '@/providers/cart-provider';
+import { useTranslations } from 'next-intl';
 
 export const CartContent = () => {
   const { cart, isLoading, updateItem, removeItem } = useCart();
+  const t = useTranslations('cart');
 
   const lines = cart?.lines.edges.map((e) => e.node) ?? [];
   const subtotalAmount = cart?.cost.totalAmount.amount ?? '0';
@@ -35,7 +37,7 @@ export const CartContent = () => {
       <Container>
         <div className="flex flex-col items-center mb-12 md:mb-20 space-y-10">
           <h1 className="text-5xl md:text-7xl font-medium tracking-tight text-slate-900 animate-in slide-in-from-top-4 duration-700">
-            Cart
+            {t('title')}
           </h1>
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 w-full flex justify-center">
             <CartGoal
@@ -48,14 +50,14 @@ export const CartContent = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           <div className="lg:col-span-8 animate-in fade-in slide-in-from-left-4 duration-700 delay-300">
             {isLoading && lines.length === 0 ? (
-              <div className="py-20 text-center text-slate-400">Loading cart...</div>
+              <div className="py-20 text-center text-slate-400">{t('loading')}</div>
             ) : lines.length > 0 ? (
               <>
                 <div className="hidden md:grid grid-cols-12 pb-6 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-400">
-                  <div className="col-span-6">Product</div>
-                  <div className="col-span-2 text-center">Quantity</div>
-                  <div className="col-span-2 text-right">Price</div>
-                  <div className="col-span-2 text-right">Subtotal</div>
+                  <div className="col-span-6">{t('columns.product')}</div>
+                  <div className="col-span-2 text-center">{t('columns.quantity')}</div>
+                  <div className="col-span-2 text-right">{t('columns.price')}</div>
+                  <div className="col-span-2 text-right">{t('columns.subtotal')}</div>
                 </div>
                 <div className="flex flex-col">
                   {lines.map((line) => (
@@ -75,14 +77,14 @@ export const CartContent = () => {
                   <p className="text-4xl text-slate-300">🛒</p>
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-2xl font-medium text-slate-900">Your cart is empty</h3>
-                  <p className="text-slate-500">Looks like you haven&#39;t added anything yet.</p>
+                  <h3 className="text-2xl font-medium text-slate-900">{t('empty.title')}</h3>
+                  <p className="text-slate-500">{t('empty.description')}</p>
                 </div>
                 <a
                   href="/products"
                   className="mt-4 px-8 py-3 bg-slate-950 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
                 >
-                  Start Shopping
+                  {t('empty.cta')}
                 </a>
               </div>
             )}

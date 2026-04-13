@@ -8,10 +8,7 @@ import { cn } from '@/helpers/cn';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { ShopifyProduct } from '@/lib/shopify/types';
-
-const TABS = ['Best Sellers', 'New Arrivals', 'Sale'] as const;
-
-type Tab = typeof TABS[number];
+import { useTranslations } from 'next-intl';
 
 type Props = {
   bestSellers: ShopifyProduct[]
@@ -66,16 +63,21 @@ const ProductCard = ({ product }: { product: ShopifyProduct }) => {
 };
 
 export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
-  const [activeTab, setActiveTab] = useState<Tab>('Best Sellers');
+  const t = useTranslations('productGrid');
+
+  type TabKey = 'bestSellers' | 'newArrivals' | 'sale';
+  const TABS: TabKey[] = ['bestSellers', 'newArrivals', 'sale'];
+
+  const [activeTab, setActiveTab] = useState<TabKey>('bestSellers');
   const [limit, setLimit] = useState(8);
 
-  const tabProducts: Record<Tab, ShopifyProduct[]> = {
-    'Best Sellers': bestSellers,
-    'New Arrivals': newArrivals,
-    'Sale': sale,
-  }
+  const tabProducts: Record<TabKey, ShopifyProduct[]> = {
+    bestSellers,
+    newArrivals,
+    sale,
+  };
 
-  const products = tabProducts[activeTab]
+  const products = tabProducts[activeTab];
 
   return (
     <section className="py-12 md:py-24 bg-white">
@@ -97,7 +99,7 @@ export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
                     : "text-neutral-400 hover:text-neutral-600"
                 )}
               >
-                {tab}
+                {t(`tabs.${tab}`)}
                 {activeTab === tab && (
                   <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#141718]" />
                 )}
@@ -113,16 +115,16 @@ export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-neutral-400 py-16">No products found.</p>
+          <p className="text-center text-neutral-400 py-16">{t('noProducts')}</p>
         )}
 
         {products.length > limit && (
           <div className="flex justify-center">
-            <Button 
+            <Button
               onClick={() => setLimit(prev => prev + 4)}
               className="bg-[#141718] text-white px-10 py-3.5 rounded-full font-semibold text-base transition-transform duration-300 hover:scale-105 active:scale-95 h-auto"
             >
-              Load More
+              {t('loadMore')}
             </Button>
           </div>
         )}

@@ -1,0 +1,249 @@
+{
+  "navbar": {
+    "logoAlt": "Oodling Logo",
+    "search": "Search",
+    "cart": "Cart",
+    "account": "Account",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "myAccount": "My Account",
+    "nav": {
+      "home": "Home",
+      "shop": "Shop",
+      "product": "Product",
+      "pages": "Pages"
+    },
+    "megamenu": {
+      "collections": "COLLECTIONS",
+      "newArrivals": "New Arrivals",
+      "bestSellers": "Best Sellers",
+      "trendingNow": "Trending Now",
+      "specialOffers": "Special Offers",
+      "limitedEdition": "Limited Edition",
+      "discover": "DISCOVER",
+      "aboutNayzak": "About Nayzak",
+      "ourSustainability": "Our Sustainability",
+      "theJournal": "The Journal",
+      "storeLocator": "Store Locator",
+      "sizeGuide": "Size Guide",
+      "support": "SUPPORT",
+      "shippingInfo": "Shipping Info",
+      "returnsExchanges": "Returns & Exchanges",
+      "helpCenter": "Help Center",
+      "trackOrder": "Track Order",
+      "careers": "Careers",
+      "apparel": "APPAREL",
+      "allClothing": "All Clothing",
+      "tops": "Tops",
+      "bottoms": "Bottoms",
+      "dresses": "Dresses",
+      "outerwear": "Outerwear",
+      "accessories": "ACCESSORIES",
+      "bagsTotes": "Bags & Totes",
+      "beltsGoods": "Belts & Small Goods",
+      "hatsHeadwear": "Hats & Headwear",
+      "jewelry": "Jewelry",
+      "scarves": "Scarves",
+      "shoes": "SHOES",
+      "allShoes": "All Shoes",
+      "sneakers": "Sneakers",
+      "boots": "Boots",
+      "loafers": "Loafers",
+      "sandals": "Sandals",
+      "productTypes": "PRODUCT TYPES",
+      "simpleProduct": "Simple Product",
+      "variableProduct": "Variable Product",
+      "digitalProduct": "Digital Product",
+      "affiliateProduct": "Affiliate Product",
+      "groupedProduct": "Grouped Product",
+      "popularItems": "POPULAR ITEMS",
+      "signatureBag": "Signature Bag",
+      "canvasTote": "Canvas Tote",
+      "leatherWallet": "Leather Wallet",
+      "modernWatch": "Modern Watch",
+      "silkScarf": "Silk Scarf",
+      "essentialCollection": "Essential Collection",
+      "modernMinimalist": "Modern Minimalist",
+      "activeLiving": "Active Living",
+      "premiumCraft": "Premium Craft",
+      "sustainable": "Sustainable",
+      "aboutNayzakSection": "ABOUT NAYZAK",
+      "ourStory": "Our Story",
+      "sustainability": "Sustainability",
+      "journal": "Journal",
+      "press": "Press",
+      "customerCare": "CUSTOMER CARE",
+      "helpFaq": "Help & FAQ",
+      "contact": "CONTACT",
+      "wholesale": "Wholesale",
+      "generalInquiries": "General Inquiries",
+      "collaborations": "Collaborations",
+      "lookbook": "Lookbook",
+      "pants": "Pants",
+      "bags": "Bags",
+      "contactUs": "Contact Us"
+    },
+    "mobile": {
+      "currency": "Currency",
+      "language": "Language",
+      "wishlist": "Wishlist",
+      "searchPlaceholder": "Search",
+      "submitSearch": "Submit search",
+      "directoryMenu": "Directory Menu",
+      "accessNavigation": "Access site navigation, search, and account settings."
+    }
+  },
+  "footer": {
+    "logoAlt": "Oodling Logo",
+    "tagline": "Phosf luorescently engage worldwide method process shopping.",
+    "sections": {
+      "shop": "Shop",
+      "information": "Information",
+      "company": "Company"
+    },
+    "shop": {
+      "myAccount": "My account",
+      "wishlist": "Wishlist",
+      "cart": "Cart",
+      "signIn": "Sign in",
+      "signUp": "Sign up"
+    },
+    "information": {
+      "shippingPolicy": "Shipping Policy",
+      "returnsRefunds": "Returns & Refunds",
+      "cookiesPolicy": "Cookies Policy",
+      "frequentlyAsked": "Frequently asked"
+    },
+    "company": {
+      "aboutUs": "About us",
+      "privacyPolicy": "Privacy Policy",
+      "termsConditions": "Terms & Conditions",
+      "contactUs": "Contact Us"
+    },
+    "copyright": "© 2026 Oodling",
+    "usd": "USD"
+  },
+  "hero": {
+    "slide1": {
+      "description": "Keep your everyday style chic and on-trend with our selection 20+ styles to choose from.",
+      "cta": "See Collection"
+    },
+    "slide2": {
+      "description": "Experience ultimate comfort and performance with our latest AirKan series.",
+      "cta": "Shop Now"
+    },
+    "slide3": {
+      "description": "Push your limits with the new AeroDive Pro. Designed for speed and agility.",
+      "cta": "Learn More"
+    },
+    "goToSlide": "Go to slide {n}"
+  },
+  "features": {
+    "freeShipping": {
+      "title": "Free Shipping",
+      "description": "Orders above $200"
+    },
+    "moneyBack": {
+      "title": "Money-back",
+      "description": "30 day Guarantee"
+    },
+    "premiumSupport": {
+      "title": "Premium Support",
+      "description": "Phone and email support"
+    },
+    "securePayments": {
+      "title": "Secure Payments",
+      "description": "Secured by Stripe"
+    }
+  },
+  "newsletter": {
+    "heading": "Join our newsletter.",
+    "subheading": "Enjoy big discounts.",
+    "emailPlaceholder": "Your email",
+    "signup": "Signup",
+    "agreeMarketing": "I agree to receive marketing emails."
+  },
+  "productGrid": {
+    "tabs": {
+      "bestSellers": "Best Sellers",
+      "newArrivals": "New Arrivals",
+      "sale": "Sale"
+    },
+    "noProducts": "No products found.",
+    "loadMore": "Load More"
+  },
+  "newArrivals": {
+    "title": "New Arrivals",
+    "goToSlide": "Go to slide {n}"
+  },
+  "cart": {
+    "title": "Cart",
+    "loading": "Loading cart...",
+    "columns": {
+      "product": "Product",
+      "quantity": "Quantity",
+      "price": "Price",
+      "subtotal": "Subtotal"
+    },
+    "empty": {
+      "title": "Your cart is empty",
+      "description": "Looks like you haven't added anything yet.",
+      "cta": "Start Shopping"
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "noAccount": "Don't have an account yet?",
+      "signUpLink": "Sign up",
+      "emailPlaceholder": "Your email address",
+      "passwordPlaceholder": "Password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "brandName": "NAYZAK"
+    },
+    "signUp": {
+      "title": "Sign up",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "firstNamePlaceholder": "First name",
+      "lastNamePlaceholder": "Last name",
+      "emailPlaceholder": "Email address",
+      "passwordPlaceholder": "Password",
+      "agreeText": "I agree with",
+      "privacyPolicy": "Privacy Policy",
+      "and": "and",
+      "termsOfUse": "Terms of Use",
+      "submit": "Sign up",
+      "submitting": "Creating account...",
+      "brandName": "NAYZAK"
+    }
+  },
+  "account": {
+    "hello": "Hello <bold>{name}</bold>",
+    "guest": "Guest",
+    "notYou": "not {email}?",
+    "logout": "Log out",
+    "loggingOut": "Logging out…",
+    "dashboardDescription": "From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details."
+  },
+  "wishlist": {
+    "empty": "Your wishlist is empty.",
+    "browse": "Browse products",
+    "savedItems": "{count} saved item(s)"
+  },
+  "search": {
+    "title": "Search results for: \"{q}\"",
+    "breadcrumbHome": "Home",
+    "breadcrumbResults": "\"{q}\" Search results"
+  },
+  "notFound": {
+    "title": "404 - Page not found",
+    "description": "The page you're looking for isn't available. Try to search again or use the go back button below.",
+    "backHome": "Go back home"
+  }
+}

@@ -1,8 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function WishlistPage() {
+  const t = useTranslations('wishlist');
   const [wishlistHandles, setWishlistHandles] = useState<string[]>([]);
 
   useEffect(() => {
@@ -17,18 +19,17 @@ export default function WishlistPage() {
   if (wishlistHandles.length === 0) {
     return (
       <div className="py-12 text-center text-[#6C7275]">
-        <p className="text-lg">Your wishlist is empty.</p>
+        <p className="text-lg">{t('empty')}</p>
         <a href="/products" className="mt-4 inline-block text-[#141718] font-semibold hover:underline">
-          Browse products
+          {t('browse')}
         </a>
       </div>
     );
   }
 
-  // For now render handles — full product data fetch can be wired in a follow-up
   return (
     <div className="w-full">
-      <p className="text-[#6C7275] mb-6">{wishlistHandles.length} saved item(s)</p>
+      <p className="text-[#6C7275] mb-6">{t('savedItems', { count: wishlistHandles.length })}</p>
       <div className="flex flex-col gap-4">
         {wishlistHandles.map((handle) => (
           <a
