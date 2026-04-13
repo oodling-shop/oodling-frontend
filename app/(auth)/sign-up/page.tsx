@@ -166,7 +166,7 @@ export default function SignUpPage() {
                   </svg>
                 </div>
                 <span className="text-sm font-normal text-[#6C7275]">
-                  I agree with <Link href="/privacy" className="font-semibold text-[#141718] hover:underline">Privacy Policy</Link> and <Link href="/terms" className="font-semibold text-[#141718] hover:underline">Terms of Use</Link>
+                  I agree with <Link href="/privacy-policy" className="font-semibold text-[#141718] hover:underline">Privacy Policy</Link> and <Link href="/terms-and-conditions" className="font-semibold text-[#141718] hover:underline">Terms of Use</Link>
                 </span>
               </label>
             </div>
@@ -174,7 +174,7 @@ export default function SignUpPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="h-[52px] w-full bg-[#141718] text-base font-semibold text-white hover:bg-[#141718]/90 rounded-md transition-all active:scale-[0.98] disabled:opacity-60"
+              className="h-[52px] cursor-pointer w-full bg-[#141718] text-base font-semibold text-white hover:bg-[#141718]/90 rounded-md transition-all active:scale-[0.98] disabled:opacity-60"
               size="lg"
             >
               {isLoading ? 'Creating account...' : 'Sign up'}
