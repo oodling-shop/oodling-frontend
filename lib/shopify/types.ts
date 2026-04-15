@@ -19,6 +19,28 @@ export type ShopifyProduct = {
   }
 }
 
+export type ShopifyProductWithMetafields = {
+  id: string
+  handle: string
+  title: string
+  description: string
+  metafields: ({ key: string; value: string; namespace: string } | null)[] | null
+  priceRange: {
+    minVariantPrice: { amount: string; currencyCode: string }
+  }
+  images: { edges: { node: { url: string; altText: string } }[] }
+  variants: {
+    edges: {
+      node: {
+        id: string
+        title: string
+        availableForSale: boolean
+        price: { amount: string }
+      }
+    }[]
+  }
+}
+
 export type ShopifyProductDetail = {
   id: string
   handle: string

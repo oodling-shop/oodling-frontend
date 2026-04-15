@@ -134,6 +134,46 @@ export const COLLECTION_FRAGMENT = `
   }
 `
 
+export const PRODUCT_WITH_METAFIELDS_FRAGMENT = `
+  fragment ProductWithMetafieldsFields on Product {
+    id
+    handle
+    title
+    description
+    metafields(identifiers: [{ namespace: "custom", key: "short_description" }]) {
+      key
+      value
+      namespace
+    }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    images(first: 5) {
+      edges {
+        node {
+          url
+          altText
+        }
+      }
+    }
+    variants(first: 10) {
+      edges {
+        node {
+          id
+          title
+          availableForSale
+          price {
+            amount
+          }
+        }
+      }
+    }
+  }
+`
+
 export const PRODUCT_DETAIL_FRAGMENT = `
   fragment ProductDetailFields on Product {
     id

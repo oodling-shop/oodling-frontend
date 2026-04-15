@@ -1,6 +1,6 @@
 import { shopifyFetch } from './client'
-import { PRODUCT_FRAGMENT, PRODUCT_DETAIL_FRAGMENT } from './fragments'
-import type { ShopifyProduct, ShopifyProductDetail } from './types'
+import { PRODUCT_FRAGMENT, PRODUCT_WITH_METAFIELDS_FRAGMENT, PRODUCT_DETAIL_FRAGMENT } from './fragments'
+import type { ShopifyProduct, ShopifyProductWithMetafields, ShopifyProductDetail } from './types'
 
 export type ProductSortKey = 'TITLE' | 'PRICE' | 'CREATED_AT' | 'BEST_SELLING'
 
@@ -122,4 +122,45 @@ export async function getProduct(
     cache: 'no-store',
   })
   return data.product
+}
+
+type HeroProductsResponse = {
+  products: {
+    edges: { node: ShopifyProductWithMetafields; cursor: string }[]
+    pageInfo: { hasNextPage: boolean; endCursor: string }
+  }
+}
+
+export async function getHeroProducts(
+  first = 3,
+  language = 'EN'
+) {
+  const data = await shopifyFetch<HeroProductsResponse>({
+    query: `
+      ${PRODUCT_WITH_METAFIELDS_FRAGMENT}
+      query GetHeroProducts(
+        $first: Int!
+        $language: LanguageCode
+      ) @inContext(language: $language) {
+        products(
+          first: $first
+          sortKey: BEST_SELLING
+        ) {
+          edges {
+            cursor
+            node {
+              ...ProductWithMetafieldsFields
+            }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+        }
+      }
+    `,
+    variables: { first, language },
+    cache: 'no-store',
+  })
+  return data.products
 }

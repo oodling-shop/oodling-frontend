@@ -1,21 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { Star } from 'lucide-react';
+import { z } from 'zod';
 
-interface WriteReviewFormProps {
-  onClose: () => void;   // called on Cancel — parent sets showForm = false
-  onSuccess: () => void; // called on successful submission — parent sets submitted = true, showForm = false
-  productId?: string;
-}
+const reviewSchema = z.object({
+  rating: z.number().min(1, 'Please select a rating').max(5),
+  title: z.string().min(1, 'Title is required'),
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().min(1, 'Email is required').email('Enter a valid email address'),
+  body: z.string().min(1, 'Review is required'),
+});
 
-interface FormErrors {
-  rating?: string;
-  title?: string;
-  name?: string;
-  email?: string;
-  body?: string;
-}
+type ReviewFormData = z.infer<typeof reviewSchema>;
+type FormErrors = Partial<Record<keyof ReviewFormData, string>>;
 
 function StarRatingInput({
   rating,
@@ -67,6 +65,12 @@ function StarRatingInput({
   );
 }
 
+interface WriteReviewFormProps {
+  onClose: () => void;
+  onSuccess: () => void;
+  productId?: string;
+}
+
 export function WriteReviewForm({ onClose, onSuccess, productId }: WriteReviewFormProps) {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
@@ -75,23 +79,20 @@ export function WriteReviewForm({ onClose, onSuccess, productId }: WriteReviewFo
   const [body, setBody] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [apiError, setApiError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   function validate(): FormErrors {
-    const e: FormErrors = {};
-    if (rating === 0) e.rating = 'Please select a rating';
-    if (!title.trim()) e.title = 'Title is required';
-    if (!name.trim()) e.name = 'Name is required';
-    if (!email.trim()) {
-      e.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      e.email = 'Enter a valid email address';
-    }
-    if (!body.trim()) e.body = 'Review is required';
-    return e;
+    const result = reviewSchema.safeParse({ rating, title, name, email, body });
+    if (result.success) return {};
+    const errs: FormErrors = {};
+    result.error.issues.forEach((issue) => {
+      const field = issue.path[0] as keyof ReviewFormData;
+      if (field && !errs[field]) errs[field] = issue.message;
+    });
+    return errs;
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setApiError('');
     const errs = validate();
@@ -99,20 +100,19 @@ export function WriteReviewForm({ onClose, onSuccess, productId }: WriteReviewFo
       setErrors(errs);
       return;
     }
-    setSubmitting(true);
-    try {
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, rating, title, name, email, body }),
-      });
-      if (!res.ok) throw new Error('Submission failed. Please try again.');
-      onSuccess();
-    } catch (err: unknown) {
-      setApiError(err instanceof Error ? err.message : 'Something went wrong.');
-    } finally {
-      setSubmitting(false);
-    }
+    startTransition(async () => {
+      try {
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, rating, title, name, email, body }),
+        });
+        if (!res.ok) throw new Error('Submission failed. Please try again.');
+        onSuccess();
+      } catch (err: unknown) {
+        setApiError(err instanceof Error ? err.message : 'Something went wrong.');
+      }
+    });
   }
 
   function clearError(field: keyof FormErrors) {
@@ -186,10 +186,10 @@ export function WriteReviewForm({ onClose, onSuccess, productId }: WriteReviewFo
       <div className="flex items-center gap-3 pt-2">
         <button
           type="submit"
-          disabled={submitting}
+          disabled={isPending}
           className="bg-[#141718] text-white px-8 py-3 text-sm font-medium hover:bg-[#343839] transition-colors disabled:opacity-50"
         >
-          {submitting ? 'Submitting…' : 'Submit review'}
+          {isPending ? 'Submitting…' : 'Submit review'}
         </button>
         <button
           type="button"
