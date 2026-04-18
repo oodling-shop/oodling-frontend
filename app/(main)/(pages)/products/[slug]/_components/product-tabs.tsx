@@ -1,13 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChevronDown, ChevronUp, Star, CheckCircle } from 'lucide-react';
 import { WriteReviewForm } from './write-review-form';
 import { AskQuestionForm } from './ask-question-form';
 
+interface Review {
+  id: string;
+  name: string;
+  rating: number;
+  title: string;
+  body: string;
+  createdAt: string;
+}
+
 interface ProductTabsProps {
   descriptionHtml: string;
   options?: { name: string; values: string[] }[];
+  productId: string;
 }
 
 /**
@@ -36,59 +46,8 @@ function expandOptions(opts: { name: string; values: string[] }[]): { name: stri
   return result;
 }
 
-const TABS = ['Description', 'Additional Info', 'Reviews (23)', 'Questions'] as const;
+const TABS = ['Description', 'Additional Info', 'Reviews', 'Questions'] as const;
 type Tab = (typeof TABS)[number];
-
-const REVIEWS = [
-  {
-    id: 1,
-    name: 'Jaxson Aminoff',
-    date: 'Jan 12, 2088',
-    rating: 5,
-    text: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupt et quas molestias excepturi sint non provident, sunt in culpa qui officia animi, id est laborum et dolorum fuga.',
-    avatar: 'https://i.pravatar.cc/150?img=47',
-  },
-  {
-    id: 2,
-    name: 'James Schleifer',
-    date: 'Jan 12, 2088',
-    rating: 5,
-    text: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupt et quas molestias excepturi sint non provident, sunt in culpa qui officia animi, id est laborum et dolorum fuga.',
-    avatar: 'https://i.pravatar.cc/150?img=12',
-  },
-  {
-    id: 3,
-    name: 'Miracle Geidt',
-    date: 'Jan 12, 2088',
-    rating: 5,
-    text: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupt et quas molestias excepturi sint non provident, sunt in culpa qui officia animi, id est laborum et dolorum fuga.',
-    avatar: 'https://i.pravatar.cc/150?img=8',
-  },
-  {
-    id: 4,
-    name: 'Terry Kenter',
-    date: 'Jan 12, 2088',
-    rating: 5,
-    text: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupt et quas molestias excepturi sint non provident, sunt in culpa qui officia animi, id est laborum et dolorum fuga.',
-    avatar: 'https://i.pravatar.cc/150?img=57',
-  },
-  {
-    id: 5,
-    name: 'Ruben Torff',
-    date: 'Jan 12, 2088',
-    rating: 5,
-    text: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupt et quas molestias excepturi sint non provident, sunt in culpa qui officia animi, id est laborum et dolorum fuga.',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-  },
-  {
-    id: 6,
-    name: 'Alena Aminoff',
-    date: 'Jan 12, 2088',
-    rating: 5,
-    text: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupt et quas molestias excepturi sint non provident, sunt in culpa qui officia animi, id est laborum et dolorum fuga.',
-    avatar: 'https://i.pravatar.cc/150?img=44',
-  },
-];
 
 function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
   return (
@@ -233,10 +192,30 @@ function QuestionsContent() {
   );
 }
 
-function ReviewsContent() {
-  const hasReviews = REVIEWS.length > 0;
+function ReviewsContent({ productId }: { productId: string }) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const fetchReviews = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/reviews?productId=${encodeURIComponent(productId)}`);
+      const data = await res.json();
+      if (data.success) setReviews(data.data as Review[]);
+    } finally {
+      setLoading(false);
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
+
+  const hasReviews = reviews.length > 0;
+  const avgRating = hasReviews
+    ? Math.round(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length)
+    : 0;
 
   return (
     <div>
@@ -251,8 +230,8 @@ function ReviewsContent() {
               {/* Overall rating row — has reviews */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <StarRating rating={4} size={20} />
-                  <span className="text-sm text-[#6C7275]">24 total Reviews</span>
+                  <StarRating rating={avgRating} size={20} />
+                  <span className="text-sm text-[#6C7275]">{reviews.length} total {reviews.length === 1 ? 'Review' : 'Reviews'}</span>
                 </div>
                 {/* Desktop button */}
                 <button
@@ -282,7 +261,7 @@ function ReviewsContent() {
                   Write review
                 </button>
               </div>
-              <p className="text-sm text-[#6C7275] mb-6">There are no reviews yet.</p>
+              {!loading && <p className="text-sm text-[#6C7275] mb-6">There are no reviews yet.</p>}
               {/* Mobile button */}
               <button
                 onClick={() => setShowForm(true)}
@@ -298,8 +277,9 @@ function ReviewsContent() {
       {/* Inline form */}
       {showForm && (
         <WriteReviewForm
+          productId={productId}
           onClose={() => setShowForm(false)}
-          onSuccess={() => { setShowForm(false); setSubmitted(true); }}
+          onSuccess={() => { setShowForm(false); setSubmitted(true); fetchReviews(); }}
         />
       )}
 
@@ -315,34 +295,30 @@ function ReviewsContent() {
         <>
           {/* Review list */}
           <div className="divide-y divide-[#E8ECEF]">
-            {REVIEWS.map((review) => (
+            {reviews.map((review) => (
               <div key={review.id} className="py-6">
                 {/* Reviewer info */}
                 <div className="flex items-center gap-3 mb-3">
-                  <img
-                    src={review.avatar}
-                    alt={review.name}
-                    className="w-12 h-12 rounded-full object-cover shrink-0"
-                  />
+                  <div className="w-12 h-12 rounded-full bg-[#E8ECEF] flex items-center justify-center shrink-0">
+                    <span className="text-lg font-semibold text-[#6C7275]">
+                      {review.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-[#141718]">{review.name}</span>
-                      <span className="text-sm text-[#6C7275]">{review.date}</span>
+                      <span className="text-sm text-[#6C7275]">
+                        {new Date(review.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
                     </div>
                     <StarRating rating={review.rating} size={14} />
                   </div>
                 </div>
-                {/* Review text */}
-                <p className="text-sm text-[#6C7275] leading-relaxed">{review.text}</p>
+                {/* Review title + body */}
+                {review.title && <p className="text-sm font-semibold text-[#141718] mb-1">{review.title}</p>}
+                <p className="text-sm text-[#6C7275] leading-relaxed">{review.body}</p>
               </div>
             ))}
-          </div>
-
-          {/* Load more */}
-          <div className="flex justify-center mt-6">
-            <button className="bg-[#141718] text-white text-sm font-medium px-8 py-3 hover:bg-[#343839] transition-colors">
-              Load more
-            </button>
           </div>
         </>
       )}
@@ -350,7 +326,7 @@ function ReviewsContent() {
   );
 }
 
-export function ProductTabs({ descriptionHtml, options = [] }: ProductTabsProps) {
+export function ProductTabs({ descriptionHtml, options = [], productId }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('Description');
   const [openAccordion, setOpenAccordion] = useState<Tab | null>(null);
 
@@ -390,8 +366,8 @@ export function ProductTabs({ descriptionHtml, options = [] }: ProductTabsProps)
         );
       }
     }
-    if (tab === 'Reviews (23)') {
-      return <ReviewsContent />;
+    if (tab === 'Reviews') {
+      return <ReviewsContent productId={productId} />;
     }
     if (tab === 'Questions') {
       return <QuestionsContent />;

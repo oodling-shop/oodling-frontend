@@ -46,7 +46,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
       {/* Tabs section */}
       <div className="max-w-6xl mx-auto px-4">
-        <ProductTabs descriptionHtml={product.descriptionHtml} options={product.options} />
+        <ProductTabs descriptionHtml={product.descriptionHtml} options={product.options} productId={product.id} />
       </div>
 
       {/* Related products */}

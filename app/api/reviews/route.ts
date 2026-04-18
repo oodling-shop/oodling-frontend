@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { shopifyAdminFetch } from '@/lib/shopify/admin-client';
 
 const reviewSchema = z.object({
   productId: z.string().min(1, 'Product ID is required'),
@@ -10,9 +11,76 @@ const reviewSchema = z.object({
   body: z.string().min(1, 'Review body is required'),
 });
 
-// TODO: Replace with persistent storage (Shopify Metafields via Admin API,
-// or external DB like Supabase/Neon). In-memory storage is lost on server restart.
-const reviewsStore = new Map<string, Array<Record<string, unknown>>>();
+interface Review {
+  id: string;
+  productId: string;
+  rating: number;
+  title: string;
+  name: string;
+  email: string;
+  body: string;
+  createdAt: string;
+}
+
+const GET_REVIEWS_QUERY = `
+  query GetProductReviews($productId: ID!) {
+    product(id: $productId) {
+      metafield(namespace: "custom", key: "reviews") {
+        id
+        value
+      }
+    }
+  }
+`;
+
+const SET_REVIEWS_MUTATION = `
+  mutation SetProductReviews($metafields: [MetafieldsSetInput!]!) {
+    metafieldsSet(metafields: $metafields) {
+      metafields {
+        id
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+async function getReviews(productId: string): Promise<Review[]> {
+  const data = await shopifyAdminFetch<{
+    product: { metafield: { id: string; value: string } | null } | null;
+  }>({
+    query: GET_REVIEWS_QUERY,
+    variables: { productId },
+  });
+
+  const raw = data?.product?.metafield?.value;
+  if (!raw) return [];
+
+  try {
+    return JSON.parse(raw) as Review[];
+  } catch {
+    return [];
+  }
+}
+
+async function saveReviews(productId: string, reviews: Review[]): Promise<void> {
+  await shopifyAdminFetch({
+    query: SET_REVIEWS_MUTATION,
+    variables: {
+      metafields: [
+        {
+          ownerId: productId,
+          namespace: 'custom',
+          key: 'reviews',
+          type: 'json',
+          value: JSON.stringify(reviews),
+        },
+      ],
+    },
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,7 +97,9 @@ export async function POST(request: NextRequest) {
 
     const { productId, rating, title, name, email, body: reviewBody } = result.data;
 
-    const review = {
+    const existing = await getReviews(productId);
+
+    const review: Review = {
       id: crypto.randomUUID(),
       productId,
       rating,
@@ -38,15 +108,12 @@ export async function POST(request: NextRequest) {
       email,
       body: reviewBody,
       createdAt: new Date().toISOString(),
-      approved: false, // requires moderation before showing publicly
     };
 
-    // Store in-memory (lost on restart — replace with persistent storage)
-    const existing = reviewsStore.get(productId) ?? [];
-    reviewsStore.set(productId, [...existing, review]);
+    await saveReviews(productId, [...existing, review]);
 
     return NextResponse.json(
-      { success: true, message: 'Review submitted successfully, pending moderation' },
+      { success: true, message: 'Review submitted successfully' },
       { status: 201 }
     );
   } catch (error) {
@@ -70,7 +137,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const reviews = reviewsStore.get(productId)?.filter((r) => (r as { approved: boolean }).approved) ?? [];
+    const reviews = await getReviews(productId);
 
     return NextResponse.json(
       { success: true, data: reviews },
