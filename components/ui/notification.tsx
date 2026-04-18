@@ -13,13 +13,18 @@ interface NotificationState {
   type: NotificationType;
   isVisible: boolean;
   onAction?: () => void;
+  actionLabel?: string;
 }
 
 let notificationListener: (state: NotificationState) => void;
 
-export const showSuccessNotification = (message: string, onAction?: () => void) => {
+export const showSuccessNotification = (
+  message: string,
+  onAction?: () => void,
+  actionLabel?: string
+) => {
   if (notificationListener) {
-    notificationListener({ message, type: "success", isVisible: true, onAction });
+    notificationListener({ message, type: "success", isVisible: true, onAction, actionLabel });
   }
 };
 
@@ -74,7 +79,7 @@ export function NotificationBanner() {
             }}
             className="text-[13px] md:text-sm font-semibold text-[#1A1A1A] underline underline-offset-4 hover:text-gray-600 shrink-0"
           >
-            View cart
+            {state.actionLabel ?? 'View cart'}
           </button>
         ) : (
           <button

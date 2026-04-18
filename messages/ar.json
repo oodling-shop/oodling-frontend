@@ -233,8 +233,11 @@
   },
   "wishlist": {
     "loading": "جارٍ تحميل قائمة الأمنيات...",
-    "connect": "قم بربط حساب عميل Shopify لاستخدام قائمة الأمنيات.",
-    "connectAction": "المتابعة إلى تسجيل دخول Shopify",
+    "wishlistLabel": "قائمة الأمنيات",
+    "viewWishlist": "عرض قائمة الأمنيات",
+    "addedMessage": "تمت إضافة {product} إلى قائمة الأمنيات.",
+    "removedMessage": "تمت إزالة {product} من قائمة الأمنيات.",
+    "errorMessage": "تعذر تحديث قائمة الأمنيات. يرجى المحاولة مرة أخرى.",
     "empty": "قائمة أمنياتك فارغة.",
     "browse": "تصفح المنتجات",
     "savedItems": "{count} عنصر محفوظ",

@@ -6,7 +6,9 @@ import { Heart, HelpCircle, Share2, Calendar, Truck, ChevronDown } from 'lucide-
 import { AddToCartButton } from './add-to-cart-button';
 import { AskQuestionForm } from './ask-question-form';
 import { useAuth } from '@/providers/auth-provider';
+import { showErrorNotification, showSuccessNotification } from '@/components/ui/notification';
 import type { ShopifyProductDetail } from '@/lib/shopify/types';
+import { useTranslations } from 'next-intl';
 
 const GUEST_WISHLIST_KEY = 'oodling_wishlist';
 
@@ -31,6 +33,7 @@ interface ProductInfoProps {
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
+  const t = useTranslations('wishlist');
   const variants = useMemo(
     () => product.variants.edges.map((e) => e.node),
     [product.variants.edges]
@@ -110,7 +113,15 @@ export function ProductInfo({ product }: ProductInfoProps) {
         ? current.filter((id) => id !== product.id)
         : [...current, product.id];
       setGuestWishlist(next);
-      setWishlisted(next.includes(product.id));
+      const isWishlisted = next.includes(product.id);
+      setWishlisted(isWishlisted);
+      showSuccessNotification(
+        isWishlisted
+          ? t('addedMessage', { product: product.title })
+          : t('removedMessage', { product: product.title }),
+        () => router.push('/my-account/wishlist'),
+        t('viewWishlist')
+      );
       return;
     }
 
@@ -137,12 +148,24 @@ export function ProductInfo({ product }: ProductInfoProps) {
         console.error('Wishlist update failed:', payload?.error ?? `HTTP ${res.status}`);
         if (res.status === 401) {
           router.push('/sign-in');
+        } else {
+          showErrorNotification(t('errorMessage'));
         }
         return;
       }
 
       const data = (await res.json()) as { wishlisted?: boolean };
-      setWishlisted(Boolean(data.wishlisted));
+      const isWishlisted = Boolean(data.wishlisted);
+      setWishlisted(isWishlisted);
+      showSuccessNotification(
+        isWishlisted
+          ? t('addedMessage', { product: product.title })
+          : t('removedMessage', { product: product.title }),
+        () => router.push('/my-account/wishlist'),
+        t('viewWishlist')
+      );
+    } catch {
+      showErrorNotification(t('errorMessage'));
     } finally {
       setWishlistPending(false);
     }

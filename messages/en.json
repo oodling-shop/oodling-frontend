@@ -233,8 +233,11 @@
   },
   "wishlist": {
     "loading": "Loading wishlist...",
-    "connect": "Connect your Shopify customer account to use your wishlist.",
-    "connectAction": "Continue to Shopify sign in",
+    "wishlistLabel": "Wishlist",
+    "viewWishlist": "View wishlist",
+    "addedMessage": "{product} was added to your wishlist.",
+    "removedMessage": "{product} was removed from your wishlist.",
+    "errorMessage": "We couldn't update your wishlist. Please try again.",
     "empty": "Your wishlist is empty.",
     "browse": "Browse products",
     "savedItems": "{count} saved item(s)",

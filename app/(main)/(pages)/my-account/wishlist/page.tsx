@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { ProductCard } from '@/components/products/product-card';
+import { showErrorNotification, showSuccessNotification } from '@/components/ui/notification';
 import type { ShopifyProduct } from '@/lib/shopify/types';
 
 export default function WishlistPage() {
@@ -38,10 +39,10 @@ export default function WishlistPage() {
     };
   }, []);
 
-  async function removeProduct(productId: string) {
+  async function removeProduct(product: ShopifyProduct) {
     if (pendingProductId) return;
 
-    setPendingProductId(productId);
+    setPendingProductId(product.id);
     try {
       const res = await fetch('/api/wishlist', {
         method: 'POST',
@@ -49,14 +50,20 @@ export default function WishlistPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          productId,
+          productId: product.id,
           action: 'remove',
         }),
       });
 
-      if (!res.ok) return;
+      if (!res.ok) {
+        showErrorNotification(t('errorMessage'));
+        return;
+      }
 
-      setProducts((current) => current.filter((product) => product.id !== productId));
+      setProducts((current) => current.filter((item) => item.id !== product.id));
+      showSuccessNotification(t('removedMessage', { product: product.title }));
+    } catch {
+      showErrorNotification(t('errorMessage'));
     } finally {
       setPendingProductId(null);
     }
@@ -86,7 +93,7 @@ export default function WishlistPage() {
             <ProductCard product={product} />
             <button
               type="button"
-              onClick={() => removeProduct(product.id)}
+              onClick={() => removeProduct(product)}
               disabled={pendingProductId === product.id}
               className="self-start text-sm font-semibold text-[#141718] hover:underline disabled:opacity-50"
             >
