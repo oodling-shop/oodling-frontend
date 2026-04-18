@@ -14,6 +14,21 @@ interface Review {
   createdAt: string;
 }
 
+interface Answer {
+  id: string;
+  body: string;
+  by: string;
+  createdAt: string;
+}
+
+interface Question {
+  id: string;
+  question: string;
+  name: string;
+  createdAt: string;
+  answers: Answer[];
+}
+
 interface ProductTabsProps {
   descriptionHtml: string;
   options?: { name: string; values: string[] }[];
@@ -64,44 +79,98 @@ function StarRating({ rating, size = 16 }: { rating: number; size?: number }) {
   );
 }
 
-const QUESTIONS = [
-  {
-    id: 1,
-    question: 'What type of material is it and what are the wash care instructions (machine washable)?',
-    answer: 'Machine wash, cold water. Dry flat. Light weight cotton polyester blend. Looks good and is well made',
-    by: 'Natalie Foster',
-    date: 'March 2023',
-    moreCount: 4,
-  },
-  {
-    id: 2,
-    question: 'What type of material is it and what are the wash care instructions (machine washable)?',
-    answer: 'Machine wash, cold water. Dry flat. Light weight cotton polyester blend. Looks good and is well made',
-    by: 'Natalie Foster',
-    date: 'March 2023',
-    moreCount: 4,
-  },
-  {
-    id: 3,
-    question: 'What type of material is it and what are the wash care instructions (machine washable)?',
-    answer: 'Machine wash, cold water. Dry flat. Light weight cotton polyester blend. Looks good and is well made',
-    by: 'Natalie Foster',
-    date: 'March 2023',
-    moreCount: 4,
-  },
-  {
-    id: 4,
-    question: 'What type of material is it and what are the wash care instructions (machine washable)?',
-    answer: 'Machine wash, cold water. Dry flat. Light weight cotton polyester blend. Looks good and is well made',
-    by: 'Natalie Foster',
-    date: 'March 2023',
-    moreCount: 4,
-  },
-];
+function QuestionItem({ q }: { q: Question }) {
+  const [expanded, setExpanded] = useState(false);
+  const firstAnswer = q.answers[0];
+  const extraAnswers = q.answers.slice(1);
+  const hasAnswers = q.answers.length > 0;
 
-function QuestionsContent() {
+  const formatDate = (iso: string) =>
+    new Date(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  const answerBlock = (answer: Answer) => (
+    <div key={answer.id} className="mb-2">
+      <p className="text-sm text-[#141718] mb-1">{answer.body}</p>
+      <p className="text-xs text-[#6C7275]">By {answer.by} on {formatDate(answer.createdAt)}</p>
+    </div>
+  );
+
+  return (
+    <div className="py-6">
+      {/* Desktop: two-column label + content */}
+      <div className="hidden lg:grid grid-cols-[100px_1fr] gap-y-3">
+        <span className="text-sm text-[#6C7275] pt-0.5">Question</span>
+        <div>
+          <p className="text-sm font-bold text-[#141718] mb-1">{q.question}</p>
+          <p className="text-xs text-[#6C7275]">By {q.name} on {formatDate(q.createdAt)}</p>
+        </div>
+        <span className="text-sm text-[#6C7275] pt-0.5">Answer</span>
+        <div>
+          {hasAnswers ? (
+            <>
+              {answerBlock(firstAnswer)}
+              {expanded && extraAnswers.map((a) => answerBlock(a))}
+              {extraAnswers.length > 0 && (
+                <button
+                  onClick={() => setExpanded((v) => !v)}
+                  className="text-sm text-[#141718] underline underline-offset-2 hover:text-[#6C7275] transition-colors mt-1"
+                >
+                  {expanded ? 'Hide answers' : `See more answers (${extraAnswers.length})`}
+                </button>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-[#6C7275] italic">No answers yet.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile: stacked */}
+      <div className="lg:hidden space-y-1">
+        <span className="text-sm text-[#6C7275]">Question</span>
+        <p className="text-sm font-bold text-[#141718] mb-1">{q.question}</p>
+        <p className="text-xs text-[#6C7275] mb-3">By {q.name} on {formatDate(q.createdAt)}</p>
+        <span className="text-sm text-[#6C7275]">Answer</span>
+        {hasAnswers ? (
+          <>
+            {answerBlock(firstAnswer)}
+            {expanded && extraAnswers.map((a) => answerBlock(a))}
+            {extraAnswers.length > 0 && (
+              <button
+                onClick={() => setExpanded((v) => !v)}
+                className="text-sm text-[#141718] underline underline-offset-2 hover:text-[#6C7275] transition-colors"
+              >
+                {expanded ? 'Hide answers' : `See more answers (${extraAnswers.length})`}
+              </button>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-[#6C7275] italic">No answers yet.</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function QuestionsContent({ productId }: { productId: string }) {
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const fetchQuestions = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/questions?productId=${encodeURIComponent(productId)}`);
+      const data = await res.json();
+      if (data.success) setQuestions(data.data as Question[]);
+    } finally {
+      setLoading(false);
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    fetchQuestions();
+  }, [fetchQuestions]);
 
   return (
     <div>
@@ -113,7 +182,11 @@ function QuestionsContent() {
         <>
           {/* Count + button row */}
           <div className="flex items-center justify-between mb-6">
-            <span className="text-sm text-[#6C7275]">12 total questions</span>
+            {!loading && (
+              <span className="text-sm text-[#6C7275]">
+                {questions.length} {questions.length === 1 ? 'question' : 'questions'}
+              </span>
+            )}
             {/* Desktop button */}
             <button
               onClick={() => setShowForm(true)}
@@ -136,8 +209,9 @@ function QuestionsContent() {
       {/* Inline form */}
       {showForm && (
         <AskQuestionForm
+          productId={productId}
           onClose={() => setShowForm(false)}
-          onSuccess={() => { setShowForm(false); setSubmitted(true); }}
+          onSuccess={() => { setShowForm(false); setSubmitted(true); fetchQuestions(); }}
         />
       )}
 
@@ -149,45 +223,20 @@ function QuestionsContent() {
         </div>
       )}
 
+      {/* Empty state */}
+      {!loading && questions.length === 0 && !showForm && (
+        <p className="text-sm text-[#6C7275] mb-6">No questions yet. Be the first to ask!</p>
+      )}
+
       {/* Question list */}
-      <div className="divide-y divide-[#E8ECEF]">
-        {QUESTIONS.map((q) => (
-          <div key={q.id} className="py-6">
-            {/* Desktop: two-column label + content */}
-            <div className="hidden lg:grid grid-cols-[100px_1fr] gap-y-3">
-              <span className="text-sm text-[#6C7275] pt-0.5">Question</span>
-              <p className="text-sm font-bold text-[#141718]">{q.question}</p>
-              <span className="text-sm text-[#6C7275] pt-0.5">Answer</span>
-              <div>
-                <p className="text-sm text-[#141718] mb-1">{q.answer}</p>
-                <p className="text-xs text-[#6C7275] mb-2">By {q.by} on {q.date}</p>
-                <button className="text-sm text-[#141718] underline underline-offset-2 hover:text-[#6C7275] transition-colors">
-                  See more answers ({q.moreCount})
-                </button>
-              </div>
-            </div>
+      {questions.length > 0 && (
+        <div className="divide-y divide-[#E8ECEF]">
+          {questions.map((q) => (
+            <QuestionItem key={q.id} q={q} />
+          ))}
+        </div>
+      )}
 
-            {/* Mobile: stacked */}
-            <div className="lg:hidden space-y-1">
-              <span className="text-sm text-[#6C7275]">Question</span>
-              <p className="text-sm font-bold text-[#141718] mb-3">{q.question}</p>
-              <span className="text-sm text-[#6C7275]">Answer</span>
-              <p className="text-sm text-[#141718] mb-1">{q.answer}</p>
-              <p className="text-xs text-[#6C7275] mb-2">By {q.by} on {q.date}</p>
-              <button className="text-sm text-[#141718] underline underline-offset-2 hover:text-[#6C7275] transition-colors">
-                See more answers ({q.moreCount})
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Load more */}
-      <div className="flex justify-center mt-2">
-        <button className="bg-[#141718] text-white text-sm font-medium px-8 py-3 hover:bg-[#343839] transition-colors">
-          Load more
-        </button>
-      </div>
     </div>
   );
 }
@@ -370,7 +419,7 @@ export function ProductTabs({ descriptionHtml, options = [], productId }: Produc
       return <ReviewsContent productId={productId} />;
     }
     if (tab === 'Questions') {
-      return <QuestionsContent />;
+      return <QuestionsContent productId={productId} />;
     }
     return <p className="text-[#6C7275]">Coming soon.</p>;
   };
