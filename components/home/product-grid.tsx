@@ -8,6 +8,7 @@ import { cn } from '@/helpers/cn';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { ShopifyProduct } from '@/lib/shopify/types';
+import { getRatingSummary } from '@/helpers/rating';
 import { useTranslations } from 'next-intl';
 
 type Props = {
@@ -20,6 +21,7 @@ const ProductCard = ({ product }: { product: ShopifyProduct }) => {
   const image = product.images.edges[0]?.node
   const price = parseFloat(product.priceRange.minVariantPrice.amount)
   const currency = product.priceRange.minVariantPrice.currencyCode
+  const rating = getRatingSummary(product)
 
   return (
     <Link href={`/products/${product.handle}`} className="group flex flex-col gap-3">
@@ -37,17 +39,20 @@ const ProductCard = ({ product }: { product: ShopifyProduct }) => {
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-0.5 mb-1">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={16}
-              className={cn(
-                "transition-colors duration-300",
-                i < 5 ? "fill-[#141718] text-[#141718]" : "text-neutral-300"
-              )}
-            />
-          ))}
+        <div className="flex items-center gap-1.5 mb-1">
+          <div className="flex items-center gap-0.5">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Star
+                key={i}
+                size={14}
+                className={cn(
+                  "transition-colors duration-300",
+                  i <= Math.round(rating?.avg ?? 0) ? "fill-[#141718] text-[#141718]" : "fill-neutral-200 text-neutral-200"
+                )}
+              />
+            ))}
+          </div>
+          {rating && <span className="text-xs text-[#6C7275]">({rating.count})</span>}
         </div>
         <h3 className="text-base font-semibold text-[#141718] leading-tight">
           {product.title}
@@ -101,7 +106,7 @@ export const ProductGrid = ({ bestSellers, newArrivals, sale }: Props) => {
               >
                 {t(`tabs.${tab}`)}
                 {activeTab === tab && (
-                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#141718]" />
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#141718]" />
                 )}
               </Button>
             ))}

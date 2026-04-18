@@ -3,6 +3,7 @@ export type ShopifyProduct = {
   handle: string
   title: string
   description: string
+  metafields: ({ key: string; value: string; namespace: string } | null)[] | null
   priceRange: {
     minVariantPrice: { amount: string; currencyCode: string }
   }
@@ -49,6 +50,7 @@ export type ShopifyProductDetail = {
   descriptionHtml: string
   productType: string
   tags: string[]
+  metafields: ({ key: string; value: string; namespace: string } | null)[] | null
   priceRange: {
     minVariantPrice: { amount: string; currencyCode: string }
   }

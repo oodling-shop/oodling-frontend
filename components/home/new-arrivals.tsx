@@ -2,8 +2,11 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Star } from 'lucide-react';
 import { Container } from '../container';
 import type { ShopifyProduct } from '@/lib/shopify/types';
+import { getRatingSummary } from '@/helpers/rating';
 import { useTranslations } from 'next-intl';
 
 export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
@@ -124,31 +127,46 @@ export const NewArrivals = ({ products }: { products: ShopifyProduct[] }) => {
             onScroll={handleScroll}
             className="flex gap-6 overflow-x-auto pb-12 snap-x snap-mandatory no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth"
           >
-            {products.map((product) => (
-              <div
-                key={product.id}
-                className="flex-none w-[280px] md:w-[325px] snap-start"
-              >
-                <div className="relative aspect-[4/5] bg-[#F3F5F7] rounded-[12px] overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-lg">
-                  {product.images.edges[0]?.node && (
-                    <Image
-                      src={product.images.edges[0].node.url}
-                      alt={product.images.edges[0].node.altText || product.title}
-                      fill
-                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                      priority
-                    />
-                  )}
-                  <div className="absolute bottom-8 left-0 right-0 px-4 transform transition-transform duration-300 group-hover:-translate-y-1">
-                    <div className="bg-white rounded-[24px] mx-auto px-6 py-3 shadow-sm transition-all duration-300 group-hover:shadow-md w-fit max-w-full flex items-center justify-center min-h-[48px]">
-                      <p className="text-sm font-semibold text-[#141718] text-center leading-tight">
-                        {product.title}
-                      </p>
+            {products.map((product) => {
+              const rating = getRatingSummary(product);
+              return (
+                <Link
+                  key={product.id}
+                  href={`/products/${product.handle}`}
+                  className="flex-none w-70 md:w-81.25 snap-start group"
+                >
+                  <div className="relative aspect-4/5 bg-[#F3F5F7] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg">
+                    {product.images.edges[0]?.node && (
+                      <Image
+                        src={product.images.edges[0].node.url}
+                        alt={product.images.edges[0].node.altText || product.title}
+                        fill
+                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        priority
+                      />
+                    )}
+                    <div className="absolute bottom-8 left-0 right-0 px-4 transform transition-transform duration-300 group-hover:-translate-y-1">
+                      <div className="bg-white rounded-3xl mx-auto px-6 py-3 shadow-sm transition-all duration-300 group-hover:shadow-md w-fit max-w-full flex flex-col items-center justify-center min-h-12 gap-1">
+                        <p className="text-sm font-semibold text-[#141718] text-center leading-tight">
+                          {product.title}
+                        </p>
+                        <div className="flex items-center gap-1">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <Star
+                              key={i}
+                              width={11}
+                              height={11}
+                              className={i <= Math.round(rating?.avg ?? 0) ? 'fill-[#E8722A] text-[#E8722A]' : 'fill-[#E8ECEF] text-[#E8ECEF]'}
+                            />
+                          ))}
+                          {rating && <span className="text-[10px] text-[#6C7275] ml-0.5">({rating.count})</span>}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </Container>

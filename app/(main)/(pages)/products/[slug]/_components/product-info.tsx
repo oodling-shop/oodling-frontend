@@ -226,17 +226,36 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <p className="text-sm text-[#6C7275] leading-relaxed mb-4">{shortDesc}</p>
       )}
 
-      {/* Star rating — static placeholder */}
-      <div className="flex items-center gap-2 mb-4">
-        <div className="flex text-[#FF8A00]">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-          ))}
-        </div>
-        <span className="text-sm text-[#6C7275]">23 Reviews</span>
-      </div>
+      {/* Star rating — dynamic from custom.reviews metafield */}
+      {(() => {
+        let rounded = 0;
+        let count = 0;
+        try {
+          const metafield = product.metafields?.find(
+            (m) => m && m.namespace === 'custom' && m.key === 'reviews'
+          );
+          if (metafield?.value) {
+            const reviews = JSON.parse(metafield.value) as { rating: number }[];
+            count = reviews.length;
+            if (count > 0) {
+              const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / count;
+              rounded = Math.round(avg);
+            }
+          }
+        } catch { /* leave rounded=0, count=0 */ }
+        return (
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <svg key={i} width="16" height="16" viewBox="0 0 24 24" fill={i <= rounded ? '#FF8A00' : '#E8ECEF'}>
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              ))}
+            </div>
+            {count > 0 && <span className="text-sm text-[#6C7275]">{count} {count === 1 ? 'Review' : 'Reviews'}</span>}
+          </div>
+        );
+      })()}
 
       {/* Price */}
       <div className="flex items-center gap-3 mb-5">

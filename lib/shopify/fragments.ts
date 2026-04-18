@@ -4,6 +4,11 @@ export const PRODUCT_FRAGMENT = `
     handle
     title
     description
+    metafields(identifiers: [{ namespace: "custom", key: "reviews" }]) {
+      key
+      value
+      namespace
+    }
     priceRange {
       minVariantPrice {
         amount
@@ -183,6 +188,11 @@ export const PRODUCT_DETAIL_FRAGMENT = `
     descriptionHtml
     productType
     tags
+    metafields(identifiers: [{ namespace: "custom", key: "reviews" }]) {
+      key
+      value
+      namespace
+    }
     priceRange {
       minVariantPrice { amount currencyCode }
     }
