@@ -8,29 +8,22 @@ import { AskQuestionForm } from './ask-question-form';
 import { useAuth } from '@/providers/auth-provider';
 import type { ShopifyProductDetail } from '@/lib/shopify/types';
 
-const WISHLIST_KEY = 'oodling_wishlist';
+const GUEST_WISHLIST_KEY = 'oodling_wishlist';
 
-function getWishlist(): string[] {
+function getGuestWishlist(): string[] {
   if (typeof window === 'undefined') return [];
+
   try {
-    return JSON.parse(localStorage.getItem(WISHLIST_KEY) ?? '[]');
+    const stored = localStorage.getItem(GUEST_WISHLIST_KEY);
+    return stored ? (JSON.parse(stored) as string[]) : [];
   } catch {
     return [];
   }
 }
 
-function toggleWishlistItem(productId: string): boolean {
-  const list = getWishlist();
-  const idx = list.indexOf(productId);
-  if (idx === -1) {
-    list.push(productId);
-    localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
-    return true;
-  } else {
-    list.splice(idx, 1);
-    localStorage.setItem(WISHLIST_KEY, JSON.stringify(list));
-    return false;
-  }
+function setGuestWishlist(items: string[]) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(GUEST_WISHLIST_KEY, JSON.stringify(items));
 }
 
 interface ProductInfoProps {
@@ -74,22 +67,85 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
   const [openOption, setOpenOption] = useState<string | null>(null);
   const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistPending, setWishlistPending] = useState(false);
   const [showAskForm, setShowAskForm] = useState(false);
   const [questionSubmitted, setQuestionSubmitted] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
 
-  // Sync wishlist state from localStorage on mount
   useEffect(() => {
-    setWishlisted(getWishlist().includes(product.id));
-  }, [product.id]);
-
-  function handleWishlist() {
     if (!isLoggedIn) {
-      router.push('/sign-in');
+      setWishlisted(getGuestWishlist().includes(product.id));
       return;
     }
-    const added = toggleWishlistItem(product.id);
-    setWishlisted(added);
+
+    let cancelled = false;
+
+    async function loadWishlistState() {
+      try {
+        const res = await fetch('/api/wishlist', { cache: 'no-store' });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { productIds?: string[] };
+        if (!cancelled) {
+          setWishlisted(data.productIds?.includes(product.id) ?? false);
+        }
+      } catch {
+        if (!cancelled) {
+          setWishlisted(false);
+        }
+      }
+    }
+
+    void loadWishlistState();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoggedIn, product.id]);
+
+  async function handleWishlist() {
+    if (!isLoggedIn) {
+      const current = getGuestWishlist();
+      const next = current.includes(product.id)
+        ? current.filter((id) => id !== product.id)
+        : [...current, product.id];
+      setGuestWishlist(next);
+      setWishlisted(next.includes(product.id));
+      return;
+    }
+
+    if (wishlistPending) return;
+
+    setWishlistPending(true);
+    try {
+      const res = await fetch('/api/wishlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-wishlist-return-to': `/products/${product.handle}`,
+        },
+        body: JSON.stringify({
+          productId: product.id,
+          action: 'toggle',
+        }),
+      });
+
+      if (!res.ok) {
+        const payload = (await res.json().catch(() => null)) as
+          | { error?: string }
+          | null;
+        console.error('Wishlist update failed:', payload?.error ?? `HTTP ${res.status}`);
+        if (res.status === 401) {
+          router.push('/sign-in');
+        }
+        return;
+      }
+
+      const data = (await res.json()) as { wishlisted?: boolean };
+      setWishlisted(Boolean(data.wishlisted));
+    } finally {
+      setWishlistPending(false);
+    }
   }
 
   async function handleShare() {
@@ -174,7 +230,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex flex-col mb-5">
           {optionKeys.map((optionName, idx) => {
             const values = optionMap[optionName];
-            const selectedValue = selection[optionName];
             const isOpen = openOption === optionName;
 
             return (
@@ -271,6 +326,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <button
           className="flex items-center gap-2 hover:opacity-70 transition-opacity"
           onClick={handleWishlist}
+          disabled={wishlistPending}
         >
           <Heart size={18} fill={wishlisted ? 'currentColor' : 'none'} /> Wishlist
         </button>

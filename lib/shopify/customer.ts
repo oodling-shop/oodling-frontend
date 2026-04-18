@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { shopifyFetch, ShopifyError } from './client';
+import { shopifyFetch } from './client';
 import { CUSTOMER_ADDRESS_FRAGMENT, ORDER_FRAGMENT } from './fragments';
 import type {
   ShopifyCustomer,

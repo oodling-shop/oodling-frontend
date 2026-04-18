@@ -232,9 +232,14 @@
     "dashboardDescription": "From your account dashboard you can view your recent orders, manage your shipping and billing addresses, and edit your password and account details."
   },
   "wishlist": {
+    "loading": "Loading wishlist...",
+    "connect": "Connect your Shopify customer account to use your wishlist.",
+    "connectAction": "Continue to Shopify sign in",
     "empty": "Your wishlist is empty.",
     "browse": "Browse products",
-    "savedItems": "{count} saved item(s)"
+    "savedItems": "{count} saved item(s)",
+    "remove": "Remove",
+    "removing": "Removing..."
   },
   "search": {
     "title": "Search results for: \"{q}\"",
