@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { AlertCircle, X } from 'lucide-react';
 import { Container } from '@/components/container';
 import { CartGoal } from '@/components/cart/cart-goal';
 import { CartItem } from '@/components/cart/cart-item';
@@ -10,10 +11,10 @@ import { useCart } from '@/providers/cart-provider';
 import { useTranslations } from 'next-intl';
 
 export const CartContent = () => {
-  const { cart, isLoading, updateItem, removeItem } = useCart();
+  const { lines, isLoading, checkoutUrl, error, clearError, updateItem, removeItem } = useCart();
   const t = useTranslations('cart');
 
-  const lines = cart?.lines.edges.map((e) => e.node) ?? [];
+  const cart = useCart().cart;
   const subtotalAmount = cart?.cost.totalAmount.amount ?? '0';
   const subtotal = parseFloat(subtotalAmount);
   const currency = cart?.cost.totalAmount.currencyCode ?? 'USD';
@@ -46,6 +47,16 @@ export const CartContent = () => {
             />
           </div>
         </div>
+
+        {error && (
+          <div className="mb-8 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 px-5 py-4 rounded-xl animate-in fade-in duration-300">
+            <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+            <p className="text-sm flex-1">{error}</p>
+            <button onClick={clearError} className="text-red-400 hover:text-red-600 transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           <div className="lg:col-span-8 animate-in fade-in slide-in-from-left-4 duration-700 delay-300">
@@ -91,7 +102,7 @@ export const CartContent = () => {
           </div>
 
           <div className="lg:col-span-4 animate-in fade-in slide-in-from-right-4 duration-700 delay-400">
-            <CartSummary subtotal={subtotal} currency={currency} checkoutUrl={cart?.checkoutUrl} />
+            <CartSummary subtotal={subtotal} currency={currency} checkoutUrl={checkoutUrl} />
           </div>
         </div>
       </Container>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/helpers';
 
@@ -13,7 +14,7 @@ interface ShippingOption {
 interface CartSummaryProps {
   subtotal: number;
   currency: string;
-  checkoutUrl?: string;
+  checkoutUrl: string | null;
 }
 
 const SHIPPING_OPTIONS: ShippingOption[] = [
@@ -23,6 +24,7 @@ const SHIPPING_OPTIONS: ShippingOption[] = [
 
 export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProps) => {
   const [selectedShipping, setSelectedShipping] = useState<string>('free');
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const shippingCost = SHIPPING_OPTIONS.find((opt) => opt.id === selectedShipping)?.price ?? 0;
   const total = subtotal + shippingCost;
@@ -31,9 +33,9 @@ export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProp
     new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount);
 
   const handleCheckout = () => {
-    if (checkoutUrl) {
-      window.location.href = checkoutUrl;
-    }
+    if (!checkoutUrl) return;
+    setIsRedirecting(true);
+    window.location.href = checkoutUrl;
   };
 
   return (
@@ -84,10 +86,17 @@ export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProp
 
       <Button
         onClick={handleCheckout}
-        disabled={!checkoutUrl}
+        disabled={!checkoutUrl || isRedirecting}
         className="w-full mt-10 h-14 text-base font-bold bg-slate-950 text-white rounded-xl hover:bg-slate-800 transition-all shadow-[0_10px_20px_-5px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_30px_-5px_rgba(0,0,0,0.4)] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Checkout
+        {isRedirecting ? (
+          <span className="flex items-center gap-2">
+            <Loader2 className="w-5 h-5 animate-spin" />
+            Redirecting…
+          </span>
+        ) : (
+          'Checkout'
+        )}
       </Button>
 
       <p className="text-center text-xs text-slate-400 mt-6 px-4">
