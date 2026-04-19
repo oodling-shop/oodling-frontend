@@ -35,6 +35,9 @@ export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProp
   const handleCheckout = () => {
     if (!checkoutUrl) return;
     setIsRedirecting(true);
+    // next.config.ts rewrites /cart/c/** → oodling.myshopify.com/cart/c/**
+    // so navigating to the raw checkoutUrl (oodling.com/cart/c/...) is safe —
+    // Next.js intercepts and proxies it to Shopify before route matching.
     window.location.href = checkoutUrl;
   };
 

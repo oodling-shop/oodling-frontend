@@ -92,6 +92,24 @@ async function deleteCartId() {
   cookieStore.delete(CART_COOKIE);
 }
 
+/**
+ * Shopify returns checkoutUrl using the store's primary domain (e.g. oodling.com).
+ * In a headless setup the Next.js app owns that domain, so /cart/c/... hits Next.js
+ * and 404s. We rewrite the hostname to the myshopify.com domain so Shopify handles
+ * the checkout page correctly.
+ */
+function normalizeCheckoutUrl(cart: ShopifyCart): ShopifyCart {
+  const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN;
+  if (!shopifyDomain || !cart.checkoutUrl) return cart;
+  try {
+    const url = new URL(cart.checkoutUrl);
+    url.hostname = shopifyDomain;
+    return { ...cart, checkoutUrl: url.toString() };
+  } catch {
+    return cart;
+  }
+}
+
 export async function createCart(): Promise<ShopifyCart> {
   const language = await getLanguage();
   const data = await shopifyFetch<CartCreateResponse>({
@@ -99,7 +117,7 @@ export async function createCart(): Promise<ShopifyCart> {
     variables: { language },
     cache: 'no-store',
   });
-  const cart = data.cartCreate.cart;
+  const cart = normalizeCheckoutUrl(data.cartCreate.cart);
   await setCartId(cart.id);
   return cart;
 }
@@ -119,7 +137,7 @@ export async function getCart(): Promise<ShopifyCart | null> {
     return await createCart();
   }
 
-  return data.cart;
+  return normalizeCheckoutUrl(data.cart);
 }
 
 export async function addToCart(
@@ -142,7 +160,7 @@ export async function addToCart(
     },
     cache: 'no-store',
   });
-  return data.cartLinesAdd.cart;
+  return normalizeCheckoutUrl(data.cartLinesAdd.cart);
 }
 
 export async function updateCartItem(
@@ -161,7 +179,7 @@ export async function updateCartItem(
     },
     cache: 'no-store',
   });
-  return data.cartLinesUpdate.cart;
+  return normalizeCheckoutUrl(data.cartLinesUpdate.cart);
 }
 
 export async function removeCartItem(lineId: string): Promise<ShopifyCart> {
@@ -173,5 +191,5 @@ export async function removeCartItem(lineId: string): Promise<ShopifyCart> {
     variables: { cartId, lineIds: [lineId], language },
     cache: 'no-store',
   });
-  return data.cartLinesRemove.cart;
+  return normalizeCheckoutUrl(data.cartLinesRemove.cart);
 }
