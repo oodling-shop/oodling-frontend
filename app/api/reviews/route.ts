@@ -144,9 +144,10 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error fetching reviews:', errorMessage, error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch reviews' },
+      { success: false, error: 'Failed to fetch reviews', details: errorMessage },
       { status: 500 }
     );
   }

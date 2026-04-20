@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Star, CheckCircle } from 'lucide-react';
 import { WriteReviewForm } from './write-review-form';
 import { AskQuestionForm } from './ask-question-form';
@@ -33,6 +33,7 @@ interface ProductTabsProps {
   descriptionHtml: string;
   options?: { name: string; values: string[] }[];
   productId: string;
+  reviewsData?: string; // JSON string of reviews from metafield
 }
 
 /**
@@ -241,9 +242,18 @@ function QuestionsContent({ productId }: { productId: string }) {
   );
 }
 
-function ReviewsContent({ productId }: { productId: string }) {
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [loading, setLoading] = useState(true);
+function ReviewsContent({ productId, reviewsData }: { productId: string; reviewsData?: string }) {
+  const initialReviews = useMemo(() => {
+    if (!reviewsData) return [];
+    try {
+      return JSON.parse(reviewsData) as Review[];
+    } catch {
+      return [];
+    }
+  }, [reviewsData]);
+
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
+  const [loading, setLoading] = useState(!reviewsData);
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -251,15 +261,25 @@ function ReviewsContent({ productId }: { productId: string }) {
     try {
       const res = await fetch(`/api/reviews?productId=${encodeURIComponent(productId)}`);
       const data = await res.json();
-      if (data.success) setReviews(data.data as Review[]);
+      if (data.success) {
+        setReviews(data.data as Review[]);
+      } else {
+        console.error('Failed to fetch reviews:', data.error);
+      }
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
     } finally {
       setLoading(false);
     }
   }, [productId]);
 
   useEffect(() => {
+    if (reviewsData) {
+      setLoading(false);
+      return;
+    }
     fetchReviews();
-  }, [fetchReviews]);
+  }, [fetchReviews, reviewsData]);
 
   const hasReviews = reviews.length > 0;
   const avgRating = hasReviews
@@ -375,7 +395,7 @@ function ReviewsContent({ productId }: { productId: string }) {
   );
 }
 
-export function ProductTabs({ descriptionHtml, options = [], productId }: ProductTabsProps) {
+export function ProductTabs({ descriptionHtml, options = [], productId, reviewsData }: ProductTabsProps) {
   const [activeTab, setActiveTab] = useState<Tab>('Description');
   const [openAccordion, setOpenAccordion] = useState<Tab | null>(null);
 
@@ -416,7 +436,7 @@ export function ProductTabs({ descriptionHtml, options = [], productId }: Produc
       }
     }
     if (tab === 'Reviews') {
-      return <ReviewsContent productId={productId} />;
+      return <ReviewsContent productId={productId} reviewsData={reviewsData} />;
     }
     if (tab === 'Questions') {
       return <QuestionsContent productId={productId} />;

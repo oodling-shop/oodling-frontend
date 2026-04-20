@@ -26,6 +26,12 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const images = product.images.edges.map((e) => e.node);
 
+  // Extract reviews from metafield
+  const reviewsMetafield = product.metafields?.find(
+    (m) => m && m.namespace === 'custom' && m.key === 'reviews'
+  );
+  const reviewsData = reviewsMetafield?.value;
+
   return (
     <main className="min-h-screen bg-white">
       {/* Hero section */}
@@ -46,7 +52,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
       {/* Tabs section */}
       <div className="max-w-6xl mx-auto px-4">
-        <ProductTabs descriptionHtml={product.descriptionHtml} options={product.options} productId={product.id} />
+        <ProductTabs descriptionHtml={product.descriptionHtml} options={product.options} productId={product.id} reviewsData={reviewsData} />
       </div>
 
       {/* Related products */}
