@@ -1,9 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { Container } from "@/components/container";
+import { toast } from "sonner";
+
+const LeafletMap = dynamic(() => import("@/components/leaflet-map"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-[#f0efed] flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-gray-300 border-t-black rounded-full animate-spin" />
+    </div>
+  ),
+});
 
 interface FaqItem {
   question: string;
@@ -102,10 +113,37 @@ export default function ContactUsPage() {
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
+
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/send-contact-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        toast.success("Message sent! We'll get back to you soon.");
+        setFormData({ firstName: "", lastName: "", email: "", message: "" });
+      } else {
+        toast.error(data.error ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -116,7 +154,7 @@ export default function ContactUsPage() {
           <h1 className="text-[40px] md:text-[56px] font-bold tracking-tight text-black leading-none mb-4">
             Contact us
           </h1>
-          <p className="text-gray-500 text-[14px] md:text-[15px] leading-relaxed max-w-[440px] mx-auto">
+          <p className="text-gray-500 text-[14px] md:text-[15px] leading-relaxed max-w-110 mx-auto">
             At vero eos et accusamus et iusto odio dignissimos ducimus qui
             blanditiis voluptatum deleniti.
           </p>
@@ -124,90 +162,18 @@ export default function ContactUsPage() {
       </section>
 
       {/* Map Section */}
-      <section className="w-full h-[280px] sm:h-[340px] md:h-[420px] relative overflow-hidden bg-gray-100">
-        {/* SVG street map pattern */}
-        <svg
-          className="absolute inset-0 w-full h-full"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ background: "#f0efed" }}
-        >
-          {/* Major roads - horizontal */}
-          <line x1="0" y1="18%" x2="100%" y2="14%" stroke="#dbd9d6" strokeWidth="12" />
-          <line x1="0" y1="34%" x2="100%" y2="30%" stroke="#dbd9d6" strokeWidth="18" />
-          <line x1="0" y1="52%" x2="100%" y2="56%" stroke="#dbd9d6" strokeWidth="14" />
-          <line x1="0" y1="70%" x2="100%" y2="68%" stroke="#dbd9d6" strokeWidth="20" />
-          <line x1="0" y1="85%" x2="100%" y2="88%" stroke="#dbd9d6" strokeWidth="10" />
-
-          {/* Major roads - vertical */}
-          <line x1="12%" y1="0" x2="14%" y2="100%" stroke="#dbd9d6" strokeWidth="14" />
-          <line x1="28%" y1="0" x2="26%" y2="100%" stroke="#dbd9d6" strokeWidth="10" />
-          <line x1="45%" y1="0" x2="47%" y2="100%" stroke="#dbd9d6" strokeWidth="22" />
-          <line x1="62%" y1="0" x2="60%" y2="100%" stroke="#dbd9d6" strokeWidth="12" />
-          <line x1="78%" y1="0" x2="80%" y2="100%" stroke="#dbd9d6" strokeWidth="16" />
-          <line x1="92%" y1="0" x2="93%" y2="100%" stroke="#dbd9d6" strokeWidth="10" />
-
-          {/* Diagonal roads */}
-          <line x1="0" y1="0" x2="40%" y2="100%" stroke="#dbd9d6" strokeWidth="8" />
-          <line x1="20%" y1="0" x2="70%" y2="100%" stroke="#dbd9d6" strokeWidth="6" />
-          <line x1="55%" y1="0" x2="100%" y2="80%" stroke="#dbd9d6" strokeWidth="8" />
-          <line x1="75%" y1="0" x2="100%" y2="50%" stroke="#dbd9d6" strokeWidth="6" />
-          <line x1="0" y1="40%" x2="30%" y2="100%" stroke="#dbd9d6" strokeWidth="6" />
-
-          {/* City blocks - rectangles */}
-          <rect x="15%" y="20%" width="10%" height="8%" fill="#e8e6e3" rx="1" />
-          <rect x="30%" y="10%" width="12%" height="18%" fill="#e8e6e3" rx="1" />
-          <rect x="50%" y="20%" width="8%" height="9%" fill="#e8e6e3" rx="1" />
-          <rect x="65%" y="8%" width="12%" height="20%" fill="#e8e6e3" rx="1" />
-          <rect x="82%" y="15%" width="7%" height="12%" fill="#e8e6e3" rx="1" />
-          <rect x="3%" y="38%" width="8%" height="15%" fill="#e8e6e3" rx="1" />
-          <rect x="15%" y="42%" width="9%" height="10%" fill="#e8e6e3" rx="1" />
-          <rect x="30%" y="38%" width="12%" height="16%" fill="#e8e6e3" rx="1" />
-          <rect x="50%" y="62%" width="8%" height="5%" fill="#e8e6e3" rx="1" />
-          <rect x="65%" y="58%" width="12%" height="8%" fill="#e8e6e3" rx="1" />
-          <rect x="82%" y="55%" width="7%" height="10%" fill="#e8e6e3" rx="1" />
-          <rect x="3%" y="72%" width="8%" height="12%" fill="#e8e6e3" rx="1" />
-          <rect x="15%" y="75%" width="9%" height="10%" fill="#e8e6e3" rx="1" />
-          <rect x="30%" y="72%" width="12%" height="12%" fill="#e8e6e3" rx="1" />
-          <rect x="50%" y="78%" width="8%" height="10%" fill="#e8e6e3" rx="1" />
-          <rect x="65%" y="75%" width="12%" height="8%" fill="#e8e6e3" rx="1" />
-
-          {/* Minor roads */}
-          <line x1="0" y1="25%" x2="100%" y2="22%" stroke="#e2e0dd" strokeWidth="5" />
-          <line x1="0" y1="44%" x2="100%" y2="46%" stroke="#e2e0dd" strokeWidth="5" />
-          <line x1="0" y1="60%" x2="100%" y2="62%" stroke="#e2e0dd" strokeWidth="4" />
-          <line x1="20%" y1="0" x2="22%" y2="100%" stroke="#e2e0dd" strokeWidth="5" />
-          <line x1="36%" y1="0" x2="38%" y2="100%" stroke="#e2e0dd" strokeWidth="4" />
-          <line x1="54%" y1="0" x2="55%" y2="100%" stroke="#e2e0dd" strokeWidth="5" />
-          <line x1="70%" y1="0" x2="71%" y2="100%" stroke="#e2e0dd" strokeWidth="4" />
-          <line x1="88%" y1="0" x2="87%" y2="100%" stroke="#e2e0dd" strokeWidth="5" />
-        </svg>
-
-        {/* Pin marker centered */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full z-10">
-          <div className="relative flex flex-col items-center">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-black rounded-full flex items-center justify-center shadow-lg">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                  fill="white"
-                />
-              </svg>
-            </div>
-            {/* Pin tail */}
-            <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[8px] border-l-transparent border-r-transparent border-t-black -mt-[1px]" />
-          </div>
-        </div>
+      <section className="w-full h-70 sm:h-85 md:h-105 relative overflow-hidden z-0">
+        <LeafletMap
+          lat={8.652542}
+          lng={76.927855}
+          zoom={25}
+          popupText="Our Location"
+        />
       </section>
 
       {/* Contact Form Section */}
       <section className="py-14 md:py-20">
-        <Container className="max-w-[800px] mx-auto">
+        <Container className="max-w-200 mx-auto">
           <h2 className="text-[28px] md:text-[36px] font-semibold text-black mb-10 md:mb-12 tracking-tight">
             Get in touch
           </h2>
@@ -263,7 +229,7 @@ export default function ContactUsPage() {
               <input
                 id="email"
                 type="email"
-                placeholder="Last name"
+                placeholder="your@email.com"
                 value={formData.email}
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
@@ -295,9 +261,10 @@ export default function ContactUsPage() {
             {/* Submit button */}
             <button
               type="submit"
-              className="w-full h-13 bg-black text-white text-[14px] font-medium tracking-wide py-4 hover:bg-gray-900 transition-colors duration-200"
+              disabled={isSubmitting}
+              className="w-full h-13 bg-black text-white text-[14px] font-medium tracking-wide py-4 hover:bg-gray-900 transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Send message
+              {isSubmitting ? "Sending..." : "Send message"}
             </button>
           </form>
         </Container>
@@ -305,7 +272,7 @@ export default function ContactUsPage() {
 
       {/* FAQ Section */}
       <section className="pb-20 md:pb-28">
-        <Container className="max-w-[800px] mx-auto">
+        <Container className="max-w-200 mx-auto">
           <h2 className="text-[28px] md:text-[36px] font-semibold text-black mb-10 md:mb-12 tracking-tight">
             Frequently asked
           </h2>
