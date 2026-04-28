@@ -145,7 +145,10 @@ export const PRODUCT_WITH_METAFIELDS_FRAGMENT = `
     handle
     title
     description
-    metafields(identifiers: [{ namespace: "custom", key: "short_description" }]) {
+    metafields(identifiers: [
+      { namespace: "custom", key: "short_description" },
+      { namespace: "custom", key: "featured_product" }
+    ]) {
       key
       value
       namespace

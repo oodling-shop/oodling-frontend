@@ -5,22 +5,32 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Container } from '../container';
+import { ShopifyProductWithMetafields } from '@/lib/shopify/types';
 
-export const FeaturedProduct = () => {
+interface FeaturedProductProps {
+  product: ShopifyProductWithMetafields;
+}
+
+export const FeaturedProduct = ({ product }: FeaturedProductProps) => {
+  const image = product.images.edges[0]?.node;
+  const shortDescription = product.metafields?.find(
+    (m) => m?.namespace === 'custom' && m?.key === 'short_description'
+  )?.value;
+
   return (
     <section className="py-20 bg-[#F8F8F8]">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           {/* Left Content */}
           <div className="flex flex-col items-start gap-6 max-w-xl">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900">
-              RUN SMART+
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 uppercase">
+              {product.title}
             </h2>
             <p className="text-lg text-neutral-600 leading-relaxed max-w-md">
-              Phosfluor escently engage worldwide methodologies with web-enabled process-centric technology.
+              {shortDescription || product.description}
             </p>
             <Link 
-              href="/products/apple-watch-ultra" 
+              href={`/products/${product.handle}`} 
               className="group flex items-center gap-2 text-base font-medium text-neutral-900 border-b border-neutral-900 pb-0.5 mt-4 hover:opacity-70 transition-all"
             >
               SHOP NOW
@@ -30,17 +40,16 @@ export const FeaturedProduct = () => {
 
           {/* Right Content - Image */}
           <div className="relative w-full aspect-square flex items-center justify-center">
-            {/* 
-                Using a cleaner placeholder.
-            */}
             <div className="relative w-full h-full flex items-center justify-center">
                  <div className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px]">
-                    <Image
-                      src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=1000&auto=format&fit=crop" 
-                      alt="Smart Watch"
-                      fill
-                      className="object-contain drop-shadow-xl"
-                    />
+                    {image && (
+                      <Image
+                        src={image.url} 
+                        alt={image.altText || product.title}
+                        fill
+                        className="object-contain drop-shadow-xl"
+                      />
+                    )}
                  </div>
             </div>
           </div>

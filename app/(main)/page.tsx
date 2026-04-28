@@ -6,7 +6,7 @@ import ProductGrid from '@/components/home/product-grid';
 import Features from '@/components/home/features';
 import Newsletter from '@/components/home/newsletter';
 import FeaturedProduct from '@/components/home/featured-product';
-import { getProducts, getHeroProducts } from '@/lib/shopify/products';
+import { getProducts, getHeroProducts, getFeaturedProduct } from '@/lib/shopify/products';
 import { getAllCollections } from '@/lib/shopify/collections';
 import type { ShopifyProduct, ShopifyProductWithMetafields, ShopifyCollection } from '@/lib/shopify/types';
 import { getLocale } from 'next-intl/server';
@@ -19,6 +19,7 @@ export default async function Home() {
   let newArrivals: ShopifyProduct[] = []
   let saleProducts: ShopifyProduct[] = []
   let heroProducts: ShopifyProductWithMetafields[] = []
+  let featuredProduct: ShopifyProductWithMetafields | null = null
   let collectionItems: ShopifyCollection[] = []
   let categoryItems: ShopifyCollection[] = []
 
@@ -26,18 +27,20 @@ export default async function Home() {
   const language = locale.toUpperCase();
 
   try {
-    const [bestSellerConn, newArrivalConn, saleConn, heroConn, allCollections] = await Promise.all([
+    const [bestSellerConn, newArrivalConn, saleConn, heroConn, allCollections, featured] = await Promise.all([
       getProducts({ first: 12, sortKey: 'BEST_SELLING' }, language),
       getProducts({ first: 12, sortKey: 'CREATED_AT', reverse: true }, language),
       getProducts({ first: 12, query: 'tag:sale' }, language),
       getHeroProducts(3, language),
       getAllCollections(50, language),
+      getFeaturedProduct(language),
     ])
 
     bestSellers = bestSellerConn.edges.map(e => e.node)
     newArrivals = newArrivalConn.edges.map(e => e.node)
     saleProducts = saleConn.edges.map(e => e.node)
     heroProducts = heroConn.edges.map(e => e.node)
+    featuredProduct = featured
     collectionItems = COLLECTION_HANDLES.flatMap(h => allCollections.filter(c => c.handle === h))
     categoryItems = CATEGORY_HANDLES.flatMap(h => allCollections.filter(c => c.handle === h))
 
@@ -57,7 +60,7 @@ export default async function Home() {
       <Categories categories={categoryItems} />
       <Collections collections={collectionItems} />
       <NewArrivals products={newArrivals} />
-      <FeaturedProduct />
+      {featuredProduct && <FeaturedProduct product={featuredProduct} />}
       <ProductGrid bestSellers={bestSellers} newArrivals={newArrivals} sale={saleProducts} />
       <div className="font-secondary"><Newsletter /></div>
       <div className="font-secondary"><Features /></div>

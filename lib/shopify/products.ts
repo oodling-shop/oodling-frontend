@@ -164,3 +164,31 @@ export async function getHeroProducts(
   })
   return data.products
 }
+
+export async function getFeaturedProduct(language = 'EN'): Promise<ShopifyProductWithMetafields | null> {
+  const data = await shopifyFetch<HeroProductsResponse>({
+    query: `
+      ${PRODUCT_WITH_METAFIELDS_FRAGMENT}
+      query GetFeaturedProducts($language: LanguageCode) @inContext(language: $language) {
+        products(first: 10) {
+          edges {
+            node {
+              ...ProductWithMetafieldsFields
+            }
+          }
+        }
+      }
+    `,
+    variables: { language },
+    cache: 'no-store',
+  })
+
+  const featuredProduct = data.products.edges.find((edge) => {
+    const metafield = edge.node.metafields?.find(
+      (m) => m?.namespace === 'custom' && m?.key === 'featured_product'
+    )
+    return metafield?.value === 'true'
+  })
+
+  return featuredProduct?.node || null
+}
