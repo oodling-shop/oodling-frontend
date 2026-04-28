@@ -221,6 +221,29 @@
       "submit": "Sign up",
       "submitting": "Creating account...",
       "brandName": "NAYZAK"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "description": "Enter your email address and we'll send you a link to reset your password.",
+      "emailPlaceholder": "Your email address",
+      "submit": "Send Reset Link",
+      "submitting": "Sending...",
+      "backToSignIn": "Back to Sign in",
+      "successTitle": "Check your email",
+      "successDescription": "We've sent a password reset link to your email address. Please check your inbox and spam folder."
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Please enter your new password below.",
+      "newPasswordPlaceholder": "New password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "submit": "Reset Password",
+      "submitting": "Resetting...",
+      "successTitle": "Password Reset Successful",
+      "successDescription": "Your password has been successfully reset. You can now sign in with your new password.",
+      "errorInvalidToken": "The reset link is invalid or has expired.",
+      "errorPasswordMismatch": "Passwords do not match.",
+      "errorWeakPassword": "Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters."
     }
   },
   "account": {

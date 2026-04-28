@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+lib/__tests__/
+tests/
 
 # next.js
 /.next/
@@ -23,6 +25,7 @@
 # misc
 .DS_Store
 *.pem
+docs/
 
 # debug
 npm-debug.log*

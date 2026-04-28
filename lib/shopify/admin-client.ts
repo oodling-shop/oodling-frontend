@@ -39,6 +39,12 @@ export async function shopifyAdminFetch<T>({
   }
 
   if (!res.ok) {
+    if (res.status === 401) {
+      throw new ShopifyError(
+        'Shopify Admin API Unauthorized: Please check your SHOPIFY_ADMIN_ACCESS_TOKEN and ensure it has the required permissions.',
+        'network'
+      );
+    }
     throw new ShopifyError(`Admin HTTP ${res.status}: ${res.statusText}`, 'network');
   }
 

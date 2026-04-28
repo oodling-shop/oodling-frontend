@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { shopifyFetch } from './client';
+import { shopifyFetch, ShopifyError } from './client';
 import { CUSTOMER_ADDRESS_FRAGMENT, ORDER_FRAGMENT } from './fragments';
 import type {
   ShopifyCustomer,
@@ -149,6 +149,137 @@ export async function register(
   }
 
   return login(email, password);
+}
+
+// --- Password Recovery ---
+
+export async function recoverPassword(email: string): Promise<{ error?: string }> {
+  type R = {
+    customerRecover: {
+      customerUserErrors: ShopifyUserError[];
+    };
+  };
+  try {
+    const data = await shopifyFetch<R>({
+      query: `
+        mutation CustomerRecover($email: String!) {
+          customerRecover(email: $email) {
+            customerUserErrors {
+              field
+              message
+            }
+          }
+        }
+      `,
+      variables: { email },
+      cache: 'no-store',
+    });
+
+    if (data.customerRecover.customerUserErrors.length > 0) {
+      return { error: data.customerRecover.customerUserErrors[0].message };
+    }
+
+    return {};
+  } catch (err) {
+    return { error: 'Failed to trigger password recovery. Please try again later.' };
+  }
+}
+
+export async function resetPassword(
+  id: string,
+  resetToken: string,
+  password: string
+): Promise<{ error?: string }> {
+  type R = {
+    customerReset: {
+      customer: { id: string } | null;
+      customerAccessToken: ShopifyCustomerAccessToken | null;
+      customerUserErrors: ShopifyUserError[];
+    };
+  };
+
+  try {
+    const data = await shopifyFetch<R>({
+      query: `
+        mutation CustomerReset($id: ID!, $input: CustomerResetInput!) {
+          customerReset(id: $id, input: $input) {
+            customer { id }
+            customerAccessToken {
+              accessToken
+              expiresAt
+            }
+            customerUserErrors {
+              field
+              message
+            }
+          }
+        }
+      `,
+      variables: {
+        id,
+        input: { resetToken, password },
+      },
+      cache: 'no-store',
+    });
+
+    const { customerAccessToken, customerUserErrors } = data.customerReset;
+
+    if (customerUserErrors.length) {
+      return { error: customerUserErrors[0].message };
+    }
+
+    if (!customerAccessToken) {
+      return { error: 'Password reset failed. Please try again.' };
+    }
+
+    await setTokenCookies(customerAccessToken);
+    return {};
+  } catch (err) {
+    console.error('Password reset error:', err);
+    return { error: 'An unexpected error occurred. Please try again later.' };
+  }
+}
+
+export async function checkCustomerExists(email: string): Promise<boolean> {
+  // Use Admin API to check if customer exists by email
+  // This is safer than using Storefront API which doesn't disclose if email exists
+  const { shopifyAdminFetch } = await import('./admin-client');
+
+  type R = {
+    customers: {
+      edges: { node: { id: string } }[];
+    };
+  };
+
+  try {
+    const data = await shopifyAdminFetch<R>({
+      query: `
+        query GetCustomerByEmail($query: String!) {
+          customers(first: 1, query: $query) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+      `,
+      variables: { query: `email:${email}` },
+    });
+
+    return data.customers.edges.length > 0;
+  } catch (err) {
+    // If it's a ShopifyError with 401, we should probably let it bubble up or log it more severely
+    console.error('Critical error checking customer existence:', err);
+    
+    // We re-throw if it's an authorization issue because the feature won't work without it
+    if (err instanceof ShopifyError && err.message.includes('Unauthorized')) {
+      throw err;
+    }
+    
+    // For other errors, we return false but log them
+    return false;
+  }
 }
 
 export async function renewCustomerToken(token: string): Promise<void> {
