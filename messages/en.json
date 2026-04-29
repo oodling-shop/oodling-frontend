@@ -157,8 +157,7 @@
           "description": "Sent when a customer changes their email address"
         }
       }
-    }
-  },
+    },
     "sections": {
       "shop": "Shop",
       "information": "Information",

@@ -98,6 +98,66 @@
   "footer": {
     "logoAlt": "شعار أودلينج",
     "tagline": "نقدم لكم أفضل تجربة تسوق عالمية مع منتجات مختارة بعناية.",
+    "notifications": {
+      "title": "تفضيلات الإشعارات",
+      "description": "اختر الإشعارات التي ترغب في تلقيها.",
+      "save": "حفظ التفضيلات",
+      "saving": "جاري الحفظ...",
+      "success": "تم تحديث تفضيلات الإشعارات بنجاح",
+      "error": "فشل تحديث التفضيلات",
+      "groups": {
+        "orderProcessing": "معالجة الطلبات",
+        "localPickup": "الاستلام المحلي",
+        "shippingUpdated": "تحديث الشحن",
+        "accountsAndOutreach": "الحسابات والتواصل"
+      },
+      "items": {
+        "orderConfirmation": {
+          "label": "تأكيد الطلب",
+          "description": "يُرسل عندما يقوم العميل بطلب"
+        },
+        "draftOrderInvoice": {
+          "label": "فاتورة طلب مسودة",
+          "description": "يُرسل عندما تقوم بإنشاء فاتورة في صفحة طلب المسودة"
+        },
+        "shippingConfirmation": {
+          "label": "تأكيد الشحن",
+          "description": "يُرسل عندما تقوم بتحديد الطلب كمكتمل"
+        },
+        "readyForLocalPickup": {
+          "label": "جاهز للاستلام المحلي",
+          "description": "يُرسل عندما يكون الطلب جاهزاً للاستلام"
+        },
+        "pickedUpByCustomer": {
+          "label": "تم الاستلام من قبل العميل",
+          "description": "يُرسل لتأكيد استلام الطلب من قبل العميل"
+        },
+        "shippingUpdate": {
+          "label": "تحديث الشحن",
+          "description": "يُرسل عندما تقوم بإضافة أو تحديث رقم تتبع الطلب"
+        },
+        "outForDelivery": {
+          "label": "خارج للتوصيل",
+          "description": "يُرسل عندما يكون الطلب مع رقم تتبع خارجاً للتوصيل"
+        },
+        "delivered": {
+          "label": "تم التوصيل",
+          "description": "يُرسل إذا تم توصيل الطلب مع رقم تتبع"
+        },
+        "customerAccountWelcome": {
+          "label": "ترحيب بحساب العميل",
+          "description": "يُرسل عندما يكمل العميل تفعيل حسابه"
+        },
+        "customerAccountPasswordReset": {
+          "label": "إعادة تعيين كلمة مرور حساب العميل",
+          "description": "يُرسل عندما يطلب العميل إعادة تعيين كلمة مرور حسابه"
+        },
+        "customerEmailChangeConfirmation": {
+          "label": "تأكيد تغيير عنوان البريد الإلكتروني للعميل",
+          "description": "يُرسل عندما يغير العميل عنوان بريده الإلكتروني"
+        }
+      }
+    },
     "sections": {
       "shop": "المتجر",
       "information": "معلومات",
