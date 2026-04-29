@@ -12,6 +12,7 @@ const menuItems = [
   { label: "Orders", href: "/my-account/orders" },
   { label: "Addresses", href: "/my-account/addresses" },
   { label: "Account details", href: "/my-account/details" },
+  { label: "Notifications", href: "/my-account/notifications" },
   { label: "Wishlist", href: "/my-account/wishlist" },
 ];
 

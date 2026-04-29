@@ -98,6 +98,67 @@
   "footer": {
     "logoAlt": "Oodling Logo",
     "tagline": "Phosf luorescently engage worldwide method process shopping.",
+    "notifications": {
+      "title": "Notification Preferences",
+      "description": "Choose which notifications you want to receive.",
+      "save": "Save Preferences",
+      "saving": "Saving...",
+      "success": "Notification preferences updated successfully",
+      "error": "Failed to update preferences",
+      "groups": {
+        "orderProcessing": "Order Processing",
+        "localPickup": "Local Pick Up",
+        "shippingUpdated": "Shipping Updated",
+        "accountsAndOutreach": "Accounts and Outreach"
+      },
+      "items": {
+        "orderConfirmation": {
+          "label": "Order confirmation",
+          "description": "Sent when a customer places an order"
+        },
+        "draftOrderInvoice": {
+          "label": "Draft order invoice",
+          "description": "Sent when you create an invoice on the draft order page"
+        },
+        "shippingConfirmation": {
+          "label": "Shipping confirmation",
+          "description": "Sent when you mark an order as fulfilled"
+        },
+        "readyForLocalPickup": {
+          "label": "Ready for local pickup",
+          "description": "Sent when an order is ready to be picked up"
+        },
+        "pickedUpByCustomer": {
+          "label": "Picked up by customer",
+          "description": "Sent to confirm an order was picked up by the customer"
+        },
+        "shippingUpdate": {
+          "label": "Shipping update",
+          "description": "Sent when you add or update an order tracking number"
+        },
+        "outForDelivery": {
+          "label": "Out for delivery",
+          "description": "Sent when an order with a tracking number is out for delivery"
+        },
+        "delivered": {
+          "label": "Delivered",
+          "description": "Sent if an order with a tracking number is delivered"
+        },
+        "customerAccountWelcome": {
+          "label": "Customer account welcome",
+          "description": "Sent when a customer completes their account activation"
+        },
+        "customerAccountPasswordReset": {
+          "label": "Customer account password reset",
+          "description": "Sent when a customer requests to reset their account password"
+        },
+        "customerEmailChangeConfirmation": {
+          "label": "Customer email address change confirmation",
+          "description": "Sent when a customer changes their email address"
+        }
+      }
+    }
+  },
     "sections": {
       "shop": "Shop",
       "information": "Information",
