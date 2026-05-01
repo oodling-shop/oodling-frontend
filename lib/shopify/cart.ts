@@ -1,17 +1,18 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { shopifyFetch } from './client';
+import { ShopifyError, shopifyFetch } from './client';
 import { CART_FRAGMENT } from './fragments';
-import type { ShopifyCart } from './types';
+import type { ShopifyCart, ShopifyUserError } from './types';
 
 const CART_COOKIE = 'shopify_cart_id';
 
 type CartResponse = { cart: ShopifyCart | null };
 type CartCreateResponse = { cartCreate: { cart: ShopifyCart } };
-type CartLinesAddResponse = { cartLinesAdd: { cart: ShopifyCart } };
-type CartLinesUpdateResponse = { cartLinesUpdate: { cart: ShopifyCart } };
-type CartLinesRemoveResponse = { cartLinesRemove: { cart: ShopifyCart } };
+type CartMutationPayload = { cart: ShopifyCart; userErrors: ShopifyUserError[] };
+type CartLinesAddResponse = { cartLinesAdd: CartMutationPayload };
+type CartLinesUpdateResponse = { cartLinesUpdate: CartMutationPayload };
+type CartLinesRemoveResponse = { cartLinesRemove: CartMutationPayload };
 
 async function getLanguage(): Promise<string> {
   const cookieStore = await cookies();
@@ -45,6 +46,10 @@ const CART_LINES_ADD_MUTATION = `
       cart {
         ...CartFields
       }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -56,6 +61,10 @@ const CART_LINES_UPDATE_MUTATION = `
       cart {
         ...CartFields
       }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -66,6 +75,10 @@ const CART_LINES_REMOVE_MUTATION = `
     cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
       cart {
         ...CartFields
+      }
+      userErrors {
+        field
+        message
       }
     }
   }
@@ -90,6 +103,11 @@ async function setCartId(cartId: string) {
 async function deleteCartId() {
   const cookieStore = await cookies();
   cookieStore.delete(CART_COOKIE);
+}
+
+function throwOnCartUserErrors(userErrors: ShopifyUserError[]) {
+  if (userErrors.length === 0) return;
+  throw new ShopifyError(userErrors[0].message, 'user', userErrors);
 }
 
 /**
@@ -160,6 +178,7 @@ export async function addToCart(
     },
     cache: 'no-store',
   });
+  throwOnCartUserErrors(data.cartLinesAdd.userErrors);
   return normalizeCheckoutUrl(data.cartLinesAdd.cart);
 }
 
@@ -179,6 +198,7 @@ export async function updateCartItem(
     },
     cache: 'no-store',
   });
+  throwOnCartUserErrors(data.cartLinesUpdate.userErrors);
   return normalizeCheckoutUrl(data.cartLinesUpdate.cart);
 }
 
@@ -191,5 +211,6 @@ export async function removeCartItem(lineId: string): Promise<ShopifyCart> {
     variables: { cartId, lineIds: [lineId], language },
     cache: 'no-store',
   });
+  throwOnCartUserErrors(data.cartLinesRemove.userErrors);
   return normalizeCheckoutUrl(data.cartLinesRemove.cart);
 }

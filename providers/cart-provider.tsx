@@ -29,7 +29,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const isLoading = isPending || isFetching;
 
   const cartId = cart?.id ?? null;
-  const lines = cart?.lines.edges.map((e) => e.node) ?? [];
+  const lines =
+    cart?.lines.edges
+      .map((e) => e.node)
+      .filter((line) => line.quantity > 0) ?? [];
   const checkoutUrl = cart?.checkoutUrl ?? null;
 
   const clearError = () => setError(null);
@@ -52,37 +55,52 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = async (variantId: string, quantity = 1) => {
     setError(null);
-    startTransition(async () => {
-      try {
-        const updated = await addToCart(variantId, quantity);
-        setCart(updated);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to add item to cart');
-      }
+    return await new Promise<void>((resolve, reject) => {
+      startTransition(async () => {
+        try {
+          const updated = await addToCart(variantId, quantity);
+          setCart(updated);
+          resolve();
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to add item to cart';
+          setError(message);
+          reject(err instanceof Error ? err : new Error(message));
+        }
+      });
     });
   };
 
   const updateItem = async (lineId: string, quantity: number) => {
     setError(null);
-    startTransition(async () => {
-      try {
-        const updated = await updateCartItem(lineId, quantity);
-        setCart(updated);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to update cart item');
-      }
+    return await new Promise<void>((resolve, reject) => {
+      startTransition(async () => {
+        try {
+          const updated = await updateCartItem(lineId, quantity);
+          setCart(updated);
+          resolve();
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to update cart item';
+          setError(message);
+          reject(err instanceof Error ? err : new Error(message));
+        }
+      });
     });
   };
 
   const removeItem = async (lineId: string) => {
     setError(null);
-    startTransition(async () => {
-      try {
-        const updated = await removeCartItem(lineId);
-        setCart(updated);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to remove item from cart');
-      }
+    return await new Promise<void>((resolve, reject) => {
+      startTransition(async () => {
+        try {
+          const updated = await removeCartItem(lineId);
+          setCart(updated);
+          resolve();
+        } catch (err) {
+          const message = err instanceof Error ? err.message : 'Failed to remove item from cart';
+          setError(message);
+          reject(err instanceof Error ? err : new Error(message));
+        }
+      });
     });
   };
 

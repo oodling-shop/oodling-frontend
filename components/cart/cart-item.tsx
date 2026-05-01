@@ -3,7 +3,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { Trash2, Plus, Minus } from 'lucide-react';
-import { cn } from '@/helpers';
 import type { ShopifyCartLine } from '@/lib/shopify/types';
 
 interface CartItemProps {
@@ -16,7 +15,8 @@ export const CartItem = ({ line, onUpdateQuantity, onRemove }: CartItemProps) =>
   const { id, quantity, merchandise, cost } = line;
   const product = merchandise.product;
   const image = product.images.edges[0]?.node;
-  const unitPrice = parseFloat(cost.totalAmount.amount) / quantity;
+  const lineTotal = parseFloat(cost.totalAmount.amount);
+  const unitPrice = quantity > 0 ? lineTotal / quantity : 0;
   const currency = cost.totalAmount.currencyCode;
 
   const fmt = (amount: number) =>
@@ -76,7 +76,7 @@ export const CartItem = ({ line, onUpdateQuantity, onRemove }: CartItemProps) =>
 
       <div className="md:col-span-2 text-right">
         <span className="md:hidden text-sm text-slate-400 mr-2 font-normal text-[12px] uppercase tracking-wider">Subtotal</span>
-        <span className="font-semibold text-lg text-slate-900">{fmt(parseFloat(cost.totalAmount.amount))}</span>
+        <span className="font-semibold text-lg text-slate-900">{fmt(lineTotal)}</span>
       </div>
     </div>
   );

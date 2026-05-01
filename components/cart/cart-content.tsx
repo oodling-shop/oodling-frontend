@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { AlertCircle, X } from 'lucide-react';
 import { Container } from '@/components/container';
 import { CartGoal } from '@/components/cart/cart-goal';
@@ -11,10 +12,9 @@ import { useCart } from '@/providers/cart-provider';
 import { useTranslations } from 'next-intl';
 
 export const CartContent = () => {
-  const { lines, isLoading, checkoutUrl, error, clearError, updateItem, removeItem } = useCart();
+  const { cart, lines, isLoading, checkoutUrl, error, clearError, updateItem, removeItem } = useCart();
   const t = useTranslations('cart');
 
-  const cart = useCart().cart;
   const subtotalAmount = cart?.cost.totalAmount.amount ?? '0';
   const subtotal = parseFloat(subtotalAmount);
   const currency = cart?.cost.totalAmount.currencyCode ?? 'USD';
@@ -91,12 +91,12 @@ export const CartContent = () => {
                   <h3 className="text-2xl font-medium text-slate-900">{t('empty.title')}</h3>
                   <p className="text-slate-500">{t('empty.description')}</p>
                 </div>
-                <a
+                <Link
                   href="/products"
                   className="mt-4 px-8 py-3 bg-slate-950 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
                 >
                   {t('empty.cta')}
-                </a>
+                </Link>
               </div>
             )}
           </div>

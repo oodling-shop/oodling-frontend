@@ -194,6 +194,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
   }, [variants, selection]);
 
   const variantId = activeVariant?.id ?? null;
+  const isActiveVariantAvailable = activeVariant?.availableForSale ?? false;
 
   // Prices
   const currentPrice = parseFloat(product.priceRange.minVariantPrice.amount);
@@ -320,7 +321,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       )}
 
       {/* Size guide + stock indicator */}
-      {firstAvailable?.availableForSale && (
+      {isActiveVariantAvailable && (
         <div className="flex items-center gap-6 text-sm mb-5">
           <a href="#" className="flex items-center gap-1.5 text-[#141718] font-medium uppercase text-xs tracking-wide">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -361,7 +362,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Add to Cart */}
-      <AddToCartButton variantId={variantId} quantity={quantity} productTitle={product.title} />
+      <AddToCartButton
+        variantId={variantId}
+        availableForSale={isActiveVariantAvailable}
+        quantity={quantity}
+        productTitle={product.title}
+      />
 
       {/* Action links */}
       <div className="flex items-center justify-between text-sm text-[#141718] py-4">
