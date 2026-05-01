@@ -1,4 +1,5 @@
 import { ShopifyError } from './client';
+import { SHOPIFY_DOMAIN } from './config';
 
 const SHOPIFY_ADMIN_API_VERSION = '2025-10';
 
@@ -11,17 +12,16 @@ export async function shopifyAdminFetch<T>({
   query,
   variables,
 }: ShopifyAdminFetchOptions): Promise<T> {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN;
   const accessToken = process.env.SHOPIFY_ADMIN_ACCESS_TOKEN;
 
-  if (!domain || !accessToken) {
+  if (!accessToken) {
     throw new ShopifyError(
-      'Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_ADMIN_ACCESS_TOKEN',
+      'Missing SHOPIFY_ADMIN_ACCESS_TOKEN',
       'network'
     );
   }
 
-  const url = `https://${domain}/admin/api/${SHOPIFY_ADMIN_API_VERSION}/graphql.json`;
+  const url = `https://${SHOPIFY_DOMAIN}/admin/api/${SHOPIFY_ADMIN_API_VERSION}/graphql.json`;
 
   let res: Response;
   try {

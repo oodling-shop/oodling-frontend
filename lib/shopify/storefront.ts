@@ -1,3 +1,5 @@
+import { SHOPIFY_DOMAIN } from './config'
+
 const SHOPIFY_API_VERSION = '2025-10'
 
 export type StorefrontFetchOptions<V = Record<string, unknown>> = {
@@ -29,17 +31,16 @@ export class StorefrontError extends Error {
 export async function storefrontFetch<TData, TVariables = Record<string, unknown>>(
   { query, variables, cache, next }: StorefrontFetchOptions<TVariables>
 ): Promise<TData> {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN
   const accessToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
-  if (!domain || !accessToken) {
+  if (!accessToken) {
     throw new StorefrontError(
-      'Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_STOREFRONT_ACCESS_TOKEN environment variables',
+      'Missing SHOPIFY_STOREFRONT_ACCESS_TOKEN environment variable',
       'network'
     )
   }
 
-  const endpoint = `https://${domain}/api/${SHOPIFY_API_VERSION}/graphql.json`
+  const endpoint = `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`
 
   let res: Response
   try {

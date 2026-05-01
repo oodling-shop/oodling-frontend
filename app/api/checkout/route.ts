@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCart } from '@/lib/shopify/cart';
+import { SHOPIFY_DOMAIN } from '@/lib/shopify/config';
 
 export async function GET(request: NextRequest) {
   const { origin } = new URL(request.url);
@@ -16,14 +17,9 @@ export async function GET(request: NextRequest) {
     // domain (e.g. oodling.com). In a headless setup that domain serves Next.js, so
     // /cart/c/... hits the app router and 404s. The myshopify.com domain always serves
     // Shopify's native checkout regardless of custom-domain configuration.
-    const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN;
-    let finalUrl = cart.checkoutUrl;
-
-    if (shopifyDomain) {
-      const parsed = new URL(cart.checkoutUrl);
-      parsed.hostname = shopifyDomain;
-      finalUrl = parsed.toString();
-    }
+    const parsed = new URL(cart.checkoutUrl);
+    parsed.hostname = SHOPIFY_DOMAIN;
+    const finalUrl = parsed.toString();
 
     return NextResponse.redirect(finalUrl);
   } catch {

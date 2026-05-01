@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { ShopifyError, shopifyFetch } from './client';
 import { CART_FRAGMENT } from './fragments';
 import type { ShopifyCart, ShopifyUserError } from './types';
+import { SHOPIFY_DOMAIN } from './config';
 
 const CART_COOKIE = 'shopify_cart_id';
 
@@ -117,11 +118,10 @@ function throwOnCartUserErrors(userErrors: ShopifyUserError[]) {
  * the checkout page correctly.
  */
 function normalizeCheckoutUrl(cart: ShopifyCart): ShopifyCart {
-  const shopifyDomain = process.env.SHOPIFY_STORE_DOMAIN;
-  if (!shopifyDomain || !cart.checkoutUrl) return cart;
+  if (!cart.checkoutUrl) return cart;
   try {
     const url = new URL(cart.checkoutUrl);
-    url.hostname = shopifyDomain;
+    url.hostname = SHOPIFY_DOMAIN;
     return { ...cart, checkoutUrl: url.toString() };
   } catch {
     return cart;

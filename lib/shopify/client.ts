@@ -1,3 +1,5 @@
+import { SHOPIFY_DOMAIN } from './config'
+
 const SHOPIFY_API_VERSION = '2025-10'
 
 type ShopifyFetchOptions = {
@@ -26,17 +28,16 @@ export async function shopifyFetch<T>({
   next,
   token,
 }: ShopifyFetchOptions): Promise<T> {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN
   const accessToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
 
-  if (!domain || !accessToken) {
+  if (!accessToken) {
     throw new ShopifyError(
-      'Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_STOREFRONT_ACCESS_TOKEN',
+      'Missing SHOPIFY_STOREFRONT_ACCESS_TOKEN',
       'network'
     )
   }
 
-  const url = `https://${domain}/api/${SHOPIFY_API_VERSION}/graphql.json`
+  const url = `https://${SHOPIFY_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',

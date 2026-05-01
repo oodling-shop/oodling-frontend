@@ -35,10 +35,8 @@ export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProp
   const handleCheckout = () => {
     if (!checkoutUrl) return;
     setIsRedirecting(true);
-    // next.config.ts rewrites /cart/c/** → oodling.myshopify.com/cart/c/**
-    // so navigating to the raw checkoutUrl (oodling.com/cart/c/...) is safe —
-    // Next.js intercepts and proxies it to Shopify before route matching.
-    window.location.href = checkoutUrl;
+    // Route through the server so checkout always lands on Shopify's domain.
+    window.location.href = '/api/checkout';
   };
 
   return (
@@ -58,14 +56,18 @@ export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProp
             )}
           >
             <div className="flex items-center gap-3">
-              <div className={cn(
-                'w-5 h-5 rounded-full border flex items-center justify-center transition-all',
-                selectedShipping === option.id ? 'border-slate-950' : 'border-slate-300'
-              )}>
-                <div className={cn(
-                  'w-2.5 h-2.5 rounded-full bg-slate-950 transition-transform duration-200',
-                  selectedShipping === option.id ? 'scale-100' : 'scale-0'
-                )} />
+              <div
+                className={cn(
+                  'w-5 h-5 rounded-full border flex items-center justify-center transition-all',
+                  selectedShipping === option.id ? 'border-slate-950' : 'border-slate-300'
+                )}
+              >
+                <div
+                  className={cn(
+                    'w-2.5 h-2.5 rounded-full bg-slate-950 transition-transform duration-200',
+                    selectedShipping === option.id ? 'scale-100' : 'scale-0'
+                  )}
+                />
               </div>
               <span className="text-sm font-medium text-slate-700">{option.name}</span>
             </div>
@@ -95,7 +97,7 @@ export const CartSummary = ({ subtotal, currency, checkoutUrl }: CartSummaryProp
         {isRedirecting ? (
           <span className="flex items-center gap-2">
             <Loader2 className="w-5 h-5 animate-spin" />
-            Redirecting…
+            Redirecting...
           </span>
         ) : (
           'Checkout'
