@@ -51,37 +51,42 @@ export async function login(
     };
   };
 
-  const data = await shopifyFetch<R>({
-    query: `
-      mutation CustomerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
-        customerAccessTokenCreate(input: $input) {
-          customerAccessToken {
-            accessToken
-            expiresAt
-          }
-          customerUserErrors {
-            field
-            message
+  try {
+    const data = await shopifyFetch<R>({
+      query: `
+        mutation CustomerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+          customerAccessTokenCreate(input: $input) {
+            customerAccessToken {
+              accessToken
+              expiresAt
+            }
+            customerUserErrors {
+              field
+              message
+            }
           }
         }
-      }
-    `,
-    variables: { input: { email, password } },
-    cache: 'no-store',
-  });
+      `,
+      variables: { input: { email, password } },
+      cache: 'no-store',
+    });
 
-  const { customerAccessToken, customerUserErrors } = data.customerAccessTokenCreate;
+    const { customerAccessToken, customerUserErrors } = data.customerAccessTokenCreate;
 
-  if (customerUserErrors.length) {
-    return { error: customerUserErrors[0].message };
+    if (customerUserErrors.length) {
+      return { error: customerUserErrors[0].message };
+    }
+
+    if (!customerAccessToken) {
+      return { error: 'Login failed. Please try again.' };
+    }
+
+    await setTokenCookies(customerAccessToken);
+    return {};
+  } catch (err) {
+    console.error('Login error:', err);
+    return { error: 'An unexpected error occurred. Please try again later.' };
   }
-
-  if (!customerAccessToken) {
-    return { error: 'Login failed. Please try again.' };
-  }
-
-  await setTokenCookies(customerAccessToken);
-  return {};
 }
 
 export async function logout(): Promise<void> {
