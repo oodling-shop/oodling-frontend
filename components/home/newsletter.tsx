@@ -28,7 +28,7 @@ export const Newsletter = () => {
           </div>
 
           {/* Left Side (Desktop) / Bottom Side (Mobile): Content */}
-          <div className="order-2 lg:order-1 bg-[#F5F5F5] p-8 md:p-16 lg:p-20 flex flex-col justify-center gap-8 lg:gap-10 z-10">
+          <div className="order-2 lg:order-1 bg-white lg:bg-[#F5F5F5] p-8 md:p-16 lg:p-20 flex flex-col justify-center gap-8 lg:gap-10 z-10">
             <div className="space-y-4 text-center lg:text-left">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-sans font-medium tracking-tight text-[#1A1A1A] leading-[1.15]">
                 {t('heading')} <br />
