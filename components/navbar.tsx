@@ -219,7 +219,7 @@ export const Navbar = () => {
       <Container className="flex items-center justify-between gap-4">
         <Link href="/" className="shrink-0">
           <Image
-            src="/images/logo.png"
+            src="/images/oodling-logo.png"
             alt={t('logoAlt')}
             width={140}
             height={40}

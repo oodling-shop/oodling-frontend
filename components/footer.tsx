@@ -178,7 +178,7 @@ export const Footer = () => {
           <div className="flex flex-col gap-6 max-w-sm">
             <Link href="/" className="inline-block">
               <Image
-                src="/images/logo.png"
+                src="/images/oodling-logo.png"
                 alt={t('logoAlt')}
                 width={140}
                 height={40}

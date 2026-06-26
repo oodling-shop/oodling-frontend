@@ -59,8 +59,8 @@ export const SearchPopup = ({ isOpen, onClose }: SearchPopupProps) => {
               <div className="flex items-center justify-between mb-8 md:mb-10">
                 <Link href="/" onClick={onClose}>
                   <Image
-                    src="/images/logo.png"
-                    alt="Nayzak Logo"
+                    src="/images/oodling-logo.png"
+                    alt="Oodling Logo"
                     width={140}
                     height={40}
                     className="h-7 md:h-8 w-auto object-contain"
