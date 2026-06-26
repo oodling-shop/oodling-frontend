@@ -34,10 +34,10 @@ export const Features = () => {
                   <Icon size={40} weight="thin" className="lg:w-12 lg:h-12" />
                 </div>
                 <div className="flex flex-col gap-1 text-center lg:text-left">
-                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 tracking-tight">
+                  <h3 className="text-base sm:text-lg font-sans font-semibold text-gray-900 tracking-tight">
                     {t(`${feature.key}.title`)}
                   </h3>
-                  <p className="text-sm text-gray-500 font-medium">
+                  <p className="text-sm text-gray-500 font-normal">
                     {t(`${feature.key}.description`)}
                   </p>
                 </div>

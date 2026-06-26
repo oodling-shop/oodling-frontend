@@ -13,7 +13,7 @@ export const Newsletter = () => {
   return (
     <section className="py-20 md:py-32">
       <Container>
-        <div className="rounded-xl md:rounded-xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 w-full shadow-sm">
+        <div className="rounded-lg md:rounded-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 w-full shadow-sm">
 
           {/* Right Side (Desktop) / Top Side (Mobile): Image and Glow */}
           <div className="order-1 lg:order-2 relative flex items-center justify-center p-8 md:p-12 lg:p-0 overflow-hidden min-h-[350px] bg-[#FFEFEB]">
@@ -40,7 +40,7 @@ export const Newsletter = () => {
           {/* Left Side (Desktop) / Bottom Side (Mobile): Content */}
           <div className="order-2 lg:order-1 bg-white p-8 md:p-16 lg:p-20 flex flex-col justify-center gap-8 lg:gap-10 z-10">
             <div className="space-y-4 text-center lg:text-left">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-[#1A1A1A] leading-[1.15]">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-sans font-medium tracking-tight text-[#1A1A1A] leading-[1.15]">
                 {t('heading')} <br />
                 <span className="block md:inline lg:block">{t('subheading')}</span>
               </h2>
@@ -48,7 +48,7 @@ export const Newsletter = () => {
 
             <form className="w-full max-w-md mx-auto lg:mx-0 space-y-6" onSubmit={(e) => e.preventDefault()}>
               <div className="relative flex items-center border-b border-black/10 pb-2 group transition-all focus-within:border-black/30">
-                <Mail className="w-5 h-5 text-black/40 mr-3 group-focus-within:text-black transition-colors" />
+                <Mail className="w-6 h-6 text-black/40 mr-3 group-focus-within:text-black transition-colors" />
                 <Input
                   type="email"
                   placeholder={t('emailPlaceholder')}
@@ -58,20 +58,19 @@ export const Newsletter = () => {
                 <Button
                   type="submit"
                   variant="ghost"
-                  className="text-base md:text-lg font-semibold text-black hover:opacity-60 transition-opacity px-2 h-auto hover:bg-transparent"
+                  className="text-base md:text-lg font-semibold font-sans text-black hover:opacity-60 transition-opacity px-2 h-auto hover:bg-transparent"
                 >
                   {t('signup')}
                 </Button>
               </div>
 
               <label className="flex items-center gap-3 cursor-pointer group select-none justify-center lg:justify-start">
-                <div className="relative w-5 h-5 flex items-center justify-center">
+                <div className="relative flex items-center justify-center">
                   <input type="checkbox" className="peer sr-only" />
-                  <div className="w-5 h-5 rounded-full border border-black/20 peer-checked:bg-black peer-checked:border-black transition-all flex items-center justify-center group-hover:border-black/30">
-                     <svg className="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                     </svg>
-                  </div>
+                  <div className="h-5 w-5 rounded-sm border border-black/20 transition-all peer-checked:bg-black peer-checked:border-black group-hover:border-black/30" />
+                  <svg className="absolute h-3.5 w-3.5 text-white opacity-0 transition-opacity peer-checked:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3.5">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
                 </div>
                 <span className="text-sm md:text-base text-black/60 transition-colors group-hover:text-black leading-tight">
                   {t('agreeMarketing')}
