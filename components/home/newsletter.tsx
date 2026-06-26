@@ -16,29 +16,19 @@ export const Newsletter = () => {
         <div className="rounded-lg md:rounded-lg overflow-hidden grid grid-cols-1 lg:grid-cols-2 w-full shadow-sm">
 
           {/* Right Side (Desktop) / Top Side (Mobile): Image and Glow */}
-          <div className="order-1 lg:order-2 relative flex items-center justify-center p-8 md:p-12 lg:p-0 overflow-hidden min-h-[350px] bg-[#FFEFEB]">
-             <div className="absolute inset-0 bg-gradient-to-br from-[#F4F7FC] via-[#FFEFEB] to-[#FFDFC4] opacity-100" />
-             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[10%] right-[10%] w-64 h-64 bg-[#A3C4F3]/20 blur-[80px] rounded-full mix-blend-multiply" />
-                <div className="absolute bottom-[20%] left-[20%] w-72 h-72 bg-[#FFD1C1]/30 blur-[80px] rounded-full mix-blend-multiply" />
-             </div>
-
-            <div className="relative w-full h-[280px] md:h-[400px] lg:h-full lg:w-[120%] lg:-mr-[10%] flex items-center justify-center z-10">
-              <div className="relative w-full h-full transition-transform duration-700 ease-out hover:scale-105">
-                <Image
-                  src="/images/shoes/airkan_ii.png"
-                  alt="Nike Basketball Shoe"
-                  fill
-                  className="object-contain drop-shadow-[0_25px_25px_rgba(0,0,0,0.15)] mix-blend-multiply"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
+          <div className="order-1 lg:order-2 relative min-h-[350px] overflow-hidden">
+            <Image
+              src="/images/shoes/kyrie_7.png"
+              alt="Nike Basketball Shoe"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
+            />
           </div>
 
           {/* Left Side (Desktop) / Bottom Side (Mobile): Content */}
-          <div className="order-2 lg:order-1 bg-white p-8 md:p-16 lg:p-20 flex flex-col justify-center gap-8 lg:gap-10 z-10">
+          <div className="order-2 lg:order-1 bg-[#F5F5F5] p-8 md:p-16 lg:p-20 flex flex-col justify-center gap-8 lg:gap-10 z-10">
             <div className="space-y-4 text-center lg:text-left">
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-sans font-medium tracking-tight text-[#1A1A1A] leading-[1.15]">
                 {t('heading')} <br />
@@ -78,7 +68,6 @@ export const Newsletter = () => {
               </label>
             </form>
           </div>
-
         </div>
       </Container>
     </section>
